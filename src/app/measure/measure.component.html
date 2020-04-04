@@ -1,0 +1,24 @@
+<ActionBar title="Indie-Pocket">
+</ActionBar>
+
+<StackLayout width="90%" marginTop="5%">
+    <StackLayout visibility="{{askPlacement?'visible':'collapse'}}">
+        <Label class="h1" textWrap="true" text="Placement of phone during last 30 seconds"></Label>
+        <Button text="Front Pocket" class="btn btn-primary" (tap)="placement('front pocket')"></Button>
+        <Button text="Back Pocket" class="btn btn-primary" (tap)="placement('back pocket')"></Button>
+        <Button text="Front Jacket Pocket" class="btn btn-primary" (tap)="placement('front jacket pocket')"></Button>
+        <Button text="Backpack" class="btn btn-primary" (tap)="placement('backpack')"></Button>
+        <Button text="On Table" class="btn btn-primary" (tap)="placement('on table')"></Button>
+    </StackLayout>
+
+    <StackLayout visibility="{{askActivity?'visible':'collapse'}}">
+        <Label class="h1" text="Activity"></Label>
+        <Button text="Sitting" class="btn btn-primary" (tap)="activity('sitting')"></Button>
+        <Button text="Walking" class="btn btn-primary" (tap)="activity('walking')"></Button>
+        <Button text="Going Upstairs" class="btn btn-primary" (tap)="activity('going upstairs')"></Button>
+        <Button text="Going Downstairs" class="btn btn-primary" (tap)="activity('going downstairs')"></Button>
+        <Button text="Bus" class="btn btn-primary" (tap)="activity('bus')"></Button>
+        <Button text="Train" class="btn btn-primary" (tap)="activity('train')"></Button>
+        <Button text="Car" class="btn btn-primary" (tap)="activity('car')"></Button>
+    </StackLayout>
+</StackLayout>

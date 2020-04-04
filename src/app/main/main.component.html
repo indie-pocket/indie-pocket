@@ -1,0 +1,30 @@
+<ActionBar title="Indie-Pocket">
+</ActionBar>
+
+<StackLayout width="90%" marginTop="5%">
+    <Label textWrap="true"
+           class="h3"
+           text="This project has been created for the LauzHack' CoVid 19 special edition. The project's goal is to help classify
+It's purpose is to collect data of the accelerometers and to allow the users to classify them.
+Once you turn on tracking, the app will beep every 2 minutes and ask you what you're doing and where you kept your phone.
+It will then send the data to a server hosted at EPFL.
+        THIS MEANS YOU HAVE TO TRUST US!
+The data we send is:"></Label>
+    <Label textWrap="true" class="h3" text="
+- GPS data
+- Accelerometer
+- Gyroscope
+- Time
+- Labels"></Label>
+    <StackLayout orientation="horizontal" width="100%">
+        <StackLayout orientation="horizontal" horizontalAlignment="center" width="50%">
+            <Label text="Track me!" verticalAlignment="center"></Label>
+            <Switch checked="true" (checkedChange)="trackToggle($event)"></Switch>
+        </StackLayout>
+    </StackLayout>
+    <StackLayout visibility="{{isTracking?'visible':'collapse'}}">
+        <Label text="YOU'RE BEING TRACKED" class="h1"></Label>
+        <Button text="Measure" class="btn btn-primary" [nsRouterLink]="['/measure']"></Button>
+        <Label class="h3" text="{{ 'Data collected so far: ' + dataSize }}"></Label>
+    </StackLayout>
+</StackLayout>
