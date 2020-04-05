@@ -164,12 +164,10 @@ export function startStepUpdates(callback: (data: StepData) => void, options?: S
 
     if (stepManager.stepAvailable) {
         var queue = NSOperationQueue.alloc().init();
-        stepManager.startSt(queue, (data, error) => {
+        stepManager.startPedometerEventUpdatesWithHandler((data, error) => {
             dispatch_async(main_queue, () => {
                 wrappedCallback({
-                    x: data.rotationRate.x,
-                    y: data.rotationRate.y,
-                    z: data.rotationRate.z
+                    counter: data.numberOfSteps
                 })
             })
         });
