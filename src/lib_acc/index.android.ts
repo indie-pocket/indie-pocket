@@ -67,6 +67,7 @@ export function startAccelerometerUpdates(callback: (data: AccelerometerData) =>
         },
         onSensorChanged: (event) => {
             wrappedCallback({
+                time: event.timestamp,
                 x: event.values[0] / baseAcceleration,
                 y: event.values[1] / baseAcceleration,
                 z: event.values[2] / baseAcceleration
@@ -128,6 +129,7 @@ export function startGyroscopeUpdates(callback: (data: GyroscopeData) => void, o
         },
         onSensorChanged: (event) => {
             wrappedCallback({
+                time: event.timestamp,
                 x: event.values[0],
                 y: event.values[1],
                 z: event.values[2]
@@ -189,6 +191,7 @@ export function startPressureUpdates(callback: (data: PressureData) => void, opt
         },
         onSensorChanged: (event) => {
             wrappedCallback({
+                time: event.timestamp,
                 mbar: event.values[0]
             })
         }
@@ -248,6 +251,7 @@ export function startLightUpdates(callback: (data: LightData) => void, options?:
         },
         onSensorChanged: (event) => {
             wrappedCallback({
+                time: event.timestamp,
                 lux: event.values[0]
             })
         }
@@ -308,6 +312,7 @@ export function startStepUpdates(callback: (data: StepData) => void, options?: S
         },
         onSensorChanged: (event) => {
             wrappedCallback({
+                time: event.timestamp,
                 counter: event.values[0]
             })
         }

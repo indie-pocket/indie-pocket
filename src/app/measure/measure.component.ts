@@ -47,10 +47,10 @@ export class MeasureComponent implements OnInit {
     public totalTime: string;
     public currentSpeed: string;
     public version = Version;
-    private db: DataBase;
-    private collector: Collector;
     public loaded = false;
     public recording = false;
+    private db: DataBase;
+    private collector: Collector;
 
     constructor(private routerExtensions: RouterExtensions,
                 private data: DataService) {
@@ -81,12 +81,12 @@ export class MeasureComponent implements OnInit {
         this.recording = a;
     }
 
-    setPlacement(p: number){
+    setPlacement(p: number) {
         this.labels.setPlacement(p);
         this.updateRecording();
     }
 
-    setActivity(a: number){
+    setActivity(a: number) {
         this.labels.setActivity(a);
         this.updateRecording();
     }
@@ -110,7 +110,7 @@ export class MeasureComponent implements OnInit {
             if (rows > 0) {
                 this.totalTime += `-- recording: ${rows} rows`;
             }
-            if (this.db.flushTime > 0){
+            if (this.db.flushTime > 0) {
                 this.totalTime += ` -- flush: ${this.db.flushTime}ms`
             }
             this.labels.update();
@@ -240,10 +240,10 @@ class Labels {
 }
 
 class DataBase {
-    static bufferSize = 16384;
+    static bufferSize = 32768;
     public people: Array<any>;
-    private buffer: string[] = [];
     public flushTime = 0;
+    private buffer: string[] = [];
 
     public constructor(
         private database: any,
@@ -283,7 +283,7 @@ class DataBase {
         }
     }
 
-    public async flush(){
+    public async flush() {
         const now = Date.now();
         await this.database.execSQL("INSERT INTO sensor_data " +
             "(phase, statusID, sensorName, accuracy, value, timestamp) VALUES " +
@@ -291,6 +291,7 @@ class DataBase {
         this.buffer.splice(0);
         this.flushTime = Date.now() - now;
         console.log("flushed DB in", this.flushTime / 1000);
+        this.labels.phase++;
     }
 
     public async close() {
@@ -392,62 +393,92 @@ interface ISensor {
 class Sensor extends ReplaySubject<ISensor> {
     static all = [SENSOR_ACCELEROMETER, SENSOR_PRESSURE, SENSOR_GYROSCOPE, SENSOR_LIGHT, SENSOR_STEP];
     static delay: SensorDelay = "game";
+    private latest = Date.now();
 
-    constructor(private sensor: string, newValues: ReplaySubject<Map<string, number>>) {
+    constructor(private sensor: string, newValues: ReplaySubject<ISensor>) {
         super(1);
         newValues.subscribe({
             next: (values) => {
-                this.next({sensor, values, time: Date.now()})
+                if (debugPoints && values.sensor === SENSOR_ACCELEROMETER){
+                    const now = Date.now();
+                    console.log("measurem:", now - this.latest);
+                    this.latest = now;
+                }
+                this.next(values)
             }
         })
     }
 
-    static getSensor(type: string): Sensor | undefined {
-        const rs = new ReplaySubject<Map<string, number>>(1);
+    static getSensor(sensor: string): Sensor | undefined {
+        const rs = new ReplaySubject<ISensor>(1);
         try {
-            switch (type) {
+            switch (sensor) {
                 case SENSOR_ACCELEROMETER:
                     startAccelerometerUpdates((ad) => {
-                        rs.next(new Map([
-                            ["x", ad.x],
-                            ["y", ad.y],
-                            ["z", ad.z],
-                        ]))
+                        rs.next({
+                            sensor,
+                            values: new Map([
+                                ["x", ad.x],
+                                ["y", ad.y],
+                                ["z", ad.z],
+                            ]),
+                            time: ad.time
+                        })
                     }, {sensorDelay: Sensor.delay});
                     break;
                 case SENSOR_PRESSURE:
                     startPressureUpdates((pressure) => {
-                        rs.next(new Map([["mbar", pressure.mbar]]));
+                        rs.next(
+                            {
+                                sensor,
+                                values: new Map([["mbar", pressure.mbar]]),
+                                time: pressure.time
+                            }
+                        );
                     }, {sensorDelay: Sensor.delay});
                     break;
                 case SENSOR_GYROSCOPE:
                     startGyroscopeUpdates((gyroscope) => {
-                        rs.next(new Map([
-                                ["x", gyroscope.x],
-                                ["y", gyroscope.y],
-                                ["z", gyroscope.z]
-                            ]
-                        ));
+                        rs.next({
+                            sensor,
+                            values: new Map([
+                                    ["x", gyroscope.x],
+                                    ["y", gyroscope.y],
+                                    ["z", gyroscope.z]
+                                ]
+                            ),
+                            time: gyroscope.time
+                        });
                     }, {sensorDelay: Sensor.delay});
                     break;
                 case SENSOR_LIGHT:
                     startLightUpdates((lux) => {
-                        rs.next(new Map([["lux", lux.lux]]));
+                        rs.next(
+                            {
+                                sensor,
+                                values: new Map([["lux", lux.lux]]),
+                                time: lux.time
+                            });
                     }, {sensorDelay: Sensor.delay});
                     break;
                 case SENSOR_STEP:
                     startStepUpdates((step) => {
-                        rs.next(new Map([["counter", step.counter]]));
+                        rs.next(
+                            {
+                                sensor,
+                                values: new Map([["counter", step.counter]]),
+                                time: step.time
+                            });
                     }, {sensorDelay: Sensor.delay});
                     break;
                 default:
                     return undefined;
             }
         } catch (e) {
-            console.log("couldn't get sensor", type, e);
+            console.log("couldn't get sensor", sensor, e);
             // rs.next(new Map([["not available", e]]));
         }
-        return new Sensor(type, rs)
+        return new Sensor(sensor, rs)
     }
 
     stop() {

@@ -1,8 +1,14 @@
-0.3.8
+0.4.0
     - adding iOS
+    
+0.3.8
+    - increase phase when flushing
+    - use event timestamps
+    - buffer at 32k
 
 0.3.7
     - even less jitter
+    - added "Crazy" speed
 
 0.3.6
     - buffering data
