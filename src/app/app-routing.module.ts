@@ -8,7 +8,7 @@ import {DebugComponent} from "~/app/debug/debug.component";
 import {ItemsComponent} from "~/app/item/items.component";
 
 const routes: Routes = [
-    {path: "", redirectTo: "/measure", pathMatch: "full"},
+    {path: "", redirectTo: "/main", pathMatch: "full"},
     {path: "item", component: ItemsComponent},
     {path: "debug", component: DebugComponent},
     {path: "main", component: MainComponent},

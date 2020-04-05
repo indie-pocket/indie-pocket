@@ -7,8 +7,7 @@ import {
     GyroscopeData, LightData,
     PressureData,
     SensorOptions,
-    startButNotStopped, StepData,
-    stopButNotStarted
+    StepData,
 } from "./messages";
 
 function getNativeDelay(options?: SensorOptions): number {
@@ -38,7 +37,6 @@ var accelerometerSensor: android.hardware.Sensor;
 
 export function startAccelerometerUpdates(callback: (data: AccelerometerData) => void, options?: SensorOptions) {
     if (isListeningAccelerometer()) {
-        console.log(startButNotStopped);
         stopAccelerometerUpdates();
     }
 
@@ -88,8 +86,6 @@ export function stopAccelerometerUpdates() {
     if (sensorAccelerometerListener) {
         sensorManager.unregisterListener(sensorAccelerometerListener);
         sensorAccelerometerListener = undefined;
-    } else {
-        console.log(stopButNotStarted);
     }
 }
 
@@ -102,7 +98,6 @@ var sensorGyroscopeListener: android.hardware.SensorEventListener;
 
 export function startGyroscopeUpdates(callback: (data: GyroscopeData) => void, options?: SensorOptions) {
     if (isListeningAccelerometer()) {
-        console.log(startButNotStopped);
         stopGyroscopeUpdates();
     }
 
@@ -152,8 +147,6 @@ export function stopGyroscopeUpdates() {
     if (sensorGyroscopeListener) {
         sensorManager.unregisterListener(sensorGyroscopeListener);
         sensorGyroscopeListener = undefined;
-    } else {
-        console.log(stopButNotStarted);
     }
 }
 
@@ -166,7 +159,6 @@ var sensorPressureListener: android.hardware.SensorEventListener;
 
 export function startPressureUpdates(callback: (data: PressureData) => void, options?: SensorOptions) {
     if (isListeningAccelerometer()) {
-        console.log(startButNotStopped);
         stopPressureUpdates();
     }
 
@@ -214,8 +206,6 @@ export function stopPressureUpdates() {
     if (sensorPressureListener) {
         sensorManager.unregisterListener(sensorPressureListener);
         sensorPressureListener = undefined;
-    } else {
-        console.log(stopButNotStarted);
     }
 }
 
@@ -228,7 +218,6 @@ var sensorLightListener: android.hardware.SensorEventListener;
 
 export function startLightUpdates(callback: (data: LightData) => void, options?: SensorOptions) {
     if (isListeningAccelerometer()) {
-        console.log(startButNotStopped);
         stopLightUpdates();
     }
 
@@ -276,8 +265,6 @@ export function stopLightUpdates() {
     if (sensorLightListener) {
         sensorManager.unregisterListener(sensorLightListener);
         sensorLightListener = undefined;
-    } else {
-        console.log(stopButNotStarted);
     }
 }
 
@@ -290,7 +277,6 @@ var sensorStepListener: android.hardware.SensorEventListener;
 
 export function startStepUpdates(callback: (data: StepData) => void, options?: SensorOptions) {
     if (isListeningAccelerometer()) {
-        console.log(startButNotStopped);
         stopStepUpdates();
     }
 
@@ -339,8 +325,6 @@ export function stopStepUpdates() {
     if (sensorStepListener) {
         sensorManager.unregisterListener(sensorStepListener);
         sensorStepListener = undefined;
-    } else {
-        console.log(stopButNotStarted);
     }
 }
 

@@ -29,7 +29,8 @@ import {
     stopPressureUpdates,
     stopStepUpdates
 } from "~/lib_acc";
-import {confirm} from "tns-core-modules/ui/dialogs";
+import {action, confirm} from "tns-core-modules/ui/dialogs";
+import {DataService} from "~/app/data.service";
 
 @Component({
     selector: 'ns-measure',
@@ -37,14 +38,17 @@ import {confirm} from "tns-core-modules/ui/dialogs";
     styleUrls: ['./measure.component.css']
 })
 export class MeasureComponent implements OnInit {
-    public labels = new Labels();
+    public labels: Labels;
     public zeroToFive = [...Array(6).keys()];
     public zeroToSeven = [...Array(8).keys()];
     public uploading = -1;
+    public totalTime: string;
     private db: DataBase;
     private collector: Collector;
+    public static speeds = ["Slow", "Medium", "Fast"];
 
-    constructor(private routerExtensions: RouterExtensions) {
+    constructor(private routerExtensions: RouterExtensions,
+                private data: DataService) {
     }
 
     get recording(): boolean {
@@ -59,9 +63,37 @@ export class MeasureComponent implements OnInit {
         return a;
     }
 
+    get currentSpeed(): string {
+        return "Recording speed is: " + this.speed;
+    }
+
+    get speed(): string{
+        return this.data.getKV("speed");
+    }
+
+    set speed(sp: string){
+        this.data.setKV("speed", sp);
+        Sensor.delay = ["normal", "ui", "game"][MeasureComponent.speeds.findIndex(s => s === sp)] as SensorDelay;
+    }
+
     async ngOnInit() {
+        this.labels = new Labels(this.data);
         this.db = await DataBase.createDB(this.labels);
-        this.collector = new Collector(this.db, this.labels);
+        this.collector = new Collector(this.db, this.labels, this.data);
+        if (this.speed === undefined){
+            this.speed = MeasureComponent.speeds[1];
+        }
+        setInterval(() => {
+            const tt = this.data.getTime(0);
+            this.totalTime = `Total time recorded: ${Math.floor(tt / 60)} min and ${tt % 60} sec`
+        }, 1000)
+    }
+
+    async setSpeed() {
+        const ret = await action("Choose speed", "Cancel", MeasureComponent.speeds);
+        if (ret && ret !== "Cancel") {
+            this.speed = ret;
+        }
     }
 
     async stop() {
@@ -83,7 +115,7 @@ export class MeasureComponent implements OnInit {
             if (ok) {
                 console.log("stop and upload");
                 this.uploading = 10;
-                const progress = setInterval(()=>{
+                const progress = setInterval(() => {
                     this.uploading = 100 - (100 - this.uploading) / 10;
                 }, 500);
                 await this.db.sendDB();
@@ -97,33 +129,59 @@ export class MeasureComponent implements OnInit {
             console.log("no confirmation");
         }
     }
+
+    async goMain() {
+        await this.data.setKV("again", "false");
+        this.routerExtensions.navigateByUrl("/");
+    }
 }
 
 class Labels {
-    private _placement: number;
-    private _activity: number;
     public phase: number;
 
-    constructor() {
+    constructor(private data: DataService) {
         this.clear();
     }
 
-    get placement(): number{
+    private _placement: number;
+
+    get placement(): number {
         return this._placement;
     }
 
-    set placement(p: number){
+    set placement(p: number) {
         this._placement = p;
         this.phase++;
     }
 
-    get activity(): number{
+    private _activity: number;
+
+    get activity(): number {
         return this._activity;
     }
 
-    set activity(p: number){
+    set activity(p: number) {
         this._activity = p;
         this.phase++;
+    }
+
+    placementClass(p: number): string {
+        const t = this.data.getTime(p);
+        return this.color(t);
+    }
+
+    activityClass(a: number): string {
+        const t = this.data.getTime(a * 10);
+        return this.color(t);
+    }
+
+    color(time: number): string {
+        if (time < 60) {
+            return "button-never";
+        } else if (time < 120) {
+            return "button-medium";
+        }
+        return "button-ok";
     }
 
     active(): boolean {
@@ -177,7 +235,7 @@ class DataBase {
     public async insert(sensor: ISensor, labels: Labels) {
         const values = `[${[...sensor.values.values()]}]`;
         return this.database.execSQL("INSERT INTO sensor_data " +
-            "(phase, statusID, sensorName, accuracy, value, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
+            "(phase, statusID, sensorName, accuracy, value, timestamp) VALUES (?, ?, ?, ?, ?, ?);",
             [labels.phase, labels.getNumeric(), sensor.sensor, -1, values, sensor.time]);
     }
 
@@ -218,8 +276,9 @@ class DataBase {
 
 class Collector {
     sensors: Sensor[] = [];
+    gamification: any;
 
-    constructor(private db: DataBase, private labels: Labels) {
+    constructor(private db: DataBase, private labels: Labels, private data: DataService) {
     }
 
     async start() {
@@ -235,6 +294,15 @@ class Collector {
             });
             this.sensors.push(s);
         }
+        if (this.gamification) {
+            clearInterval(this.gamification);
+        }
+        this.gamification = setInterval(() => {
+            console.log("incinterval", this.data.getTime(0));
+            this.data.incTime(0);
+            this.data.incTime(this.labels.placement);
+            this.data.incTime(this.labels.activity * 10);
+        }, 1000)
     }
 
     async stop() {
@@ -242,6 +310,7 @@ class Collector {
             await s.stop();
         }
         this.sensors.splice(0);
+        clearInterval(this.gamification);
     }
 
     isRunning(): boolean {

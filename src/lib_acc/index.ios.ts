@@ -1,7 +1,7 @@
 /// <reference path="../../node_modules/tns-platform-declarations/ios.d.ts" /> Needed for autocompletion and
 // compilation.
 
-import {AccelerometerData, SensorOptions, startButNotStopped, stopButNotStarted} from "./messages";
+import {AccelerometerData, SensorOptions} from "./messages";
 
 let accManager;
 let isListeningForUpdates = false;
@@ -26,7 +26,6 @@ function getNativeDelay(options?: SensorOptions): number {
 
 export function startAccelerometerUpdates(callback: (data: AccelerometerData) => void, options?: SensorOptions) {
     if (isListeningForUpdates) {
-        console.log(startButNotStopped);
         stopAccelerometerUpdates();
     }
 
@@ -60,8 +59,6 @@ export function stopAccelerometerUpdates() {
     if (isListeningForUpdates) {
         accManager.stopAccelerometerUpdates();
         isListeningForUpdates = false;
-    } else {
-        console.log(stopButNotStarted);
     }
 }
 

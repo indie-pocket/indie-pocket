@@ -1,6 +1,21 @@
 /* Add mobile styles for the component here.  */
-.button-clicked {
-    background-color:#00A3FF;
+.button-never {
+    background-color:#ffeeee;
+    color: black;
+}
+.button-medium {
+    background-color:#ffffee;
+    color: black;
+}
+.button-ok {
+    background-color:#eeffee;
+    color: black;
+}
+
+Button.-chosen {
+    border: 2px solid black;
+    color: red;
+    font-size: 16px;
 }
 
 .choose {

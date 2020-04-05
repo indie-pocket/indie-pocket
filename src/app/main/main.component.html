@@ -1,4 +1,4 @@
-<ActionBar title="Indie-Pocket">
+<ActionBar title="Indie-Pocket 0.3.1">
 </ActionBar>
 
 <StackLayout width="90%" marginTop="5%">
@@ -11,20 +11,12 @@ It will then send the data to a server hosted at EPFL.
         THIS MEANS YOU HAVE TO TRUST US!
 The data we send is:"></Label>
     <Label textWrap="true" class="h3" text="
-- GPS data
 - Accelerometer
 - Gyroscope
+- Light
+- Step-counter
+- Barometer
 - Time
 - Labels"></Label>
-    <StackLayout orientation="horizontal" width="100%">
-        <StackLayout orientation="horizontal" horizontalAlignment="center" width="50%">
-            <Label text="Track me!" verticalAlignment="center"></Label>
-            <Switch checked="true" (checkedChange)="trackToggle($event)"></Switch>
-        </StackLayout>
-    </StackLayout>
-    <StackLayout visibility="{{isTracking?'visible':'collapse'}}">
-        <Label text="YOU'RE BEING TRACKED" class="h1"></Label>
-        <Button text="Measure" class="btn btn-primary" [nsRouterLink]="['/measure']"></Button>
-        <Label class="h3" text="{{ 'Data collected so far: ' + dataSize }}"></Label>
-    </StackLayout>
+    <Button text="Start Measure" class="btn -primary" [nsRouterLink]="['/measure']"></Button>
 </StackLayout>

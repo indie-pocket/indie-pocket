@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {startAccelerometerUpdates} from "~/lib_acc";
+import {DataService} from "~/app/data.service";
+import { RouterExtensions } from "nativescript-angular/router";
 
 @Component({
     selector: 'ns-main',
@@ -7,37 +8,23 @@ import {startAccelerometerUpdates} from "~/lib_acc";
     styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-    public trackingText = "";
-    public isTracking = false;
-    public dataSize = 0;
-    private updateData;
-
-    constructor() {
+    constructor(private data: DataService,
+                private routerExtensions: RouterExtensions
+    ) {
     }
 
-    ngOnInit(): void {
-        this.updateTracking(true);
-    }
-
-    updateTracking(newT: boolean) {
-        if (newT === this.isTracking){
-            return;
+    async ngOnInit(){
+        try {
+            await this.data.connect();
+        } catch (e) {
+            console.log("couldn't start db:", e);
         }
-        this.isTracking = newT;
-        if (!this.isTracking) {
-            clearInterval(this.updateData);
-            this.dataSize = 0;
+        console.log("kv is", this.data.getKV("again"));
+        if (this.data.getKV("again") === "true"){
+            console.log("going measure");
+            this.routerExtensions.navigateByUrl("/measure");
         } else {
-            console.log("starting sensor tracking");
-            this.updateData = setInterval(() => {
-                // console.log("updating size");
-                this.dataSize++;
-            }, 1000);
+            await this.data.setKV("again", "true");
         }
-    }
-
-    trackToggle(t) {
-        this.updateTracking(t.object.checked);
-        this.trackingText = this.isTracking ? "YOU'RE BEING TRACKED" : "";
     }
 }
