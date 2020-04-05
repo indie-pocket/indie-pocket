@@ -46,9 +46,9 @@ export class MeasureComponent implements OnInit {
     public uploading = -1;
     public totalTime: string;
     public currentSpeed: string;
+    public version = Version;
     private db: DataBase;
     private collector: Collector;
-    public version = Version;
 
     constructor(private routerExtensions: RouterExtensions,
                 private data: DataService) {
@@ -96,6 +96,9 @@ export class MeasureComponent implements OnInit {
             this.totalTime = `Total time: ${Math.floor(tt / 60)}' ${tt % 60}''`;
             if (rows > 0) {
                 this.totalTime += `-- recording: ${rows} rows`;
+            }
+            if (this.db.flushTime > 0){
+                this.totalTime += ` -- flush: ${this.db.flushTime}ms`
             }
             this.labels.update();
         }, 1000)
@@ -211,7 +214,10 @@ class Labels {
 }
 
 class DataBase {
+    static bufferSize = 16384;
     public people: Array<any>;
+    private buffer: string[] = [];
+    public flushTime = 0;
 
     public constructor(
         private database: any
@@ -245,9 +251,20 @@ class DataBase {
 
     public async insert(sensor: ISensor, labels: Labels) {
         const values = `[${[...sensor.values.values()]}]`;
-        return this.database.execSQL("INSERT INTO sensor_data " +
-            "(phase, statusID, sensorName, accuracy, value, timestamp) VALUES (?, ?, ?, ?, ?, ?);",
-            [labels.phase, labels.getNumeric(), sensor.sensor, -1, values, sensor.time]);
+        this.buffer.push(`(${labels.phase}, ${labels.getNumeric()}, '${sensor.sensor}', -1, '${values}', ${sensor.time})`);
+        if (this.buffer.length > DataBase.bufferSize) {
+            await this.flush();
+        }
+    }
+
+    public async flush(){
+        const now = Date.now();
+        await this.database.execSQL("INSERT INTO sensor_data " +
+            "(phase, statusID, sensorName, accuracy, value, timestamp) VALUES " +
+            this.buffer.join(",") + ";");
+        this.buffer.splice(0);
+        this.flushTime = Date.now() - now;
+        console.log("flushed DB in", this.flushTime / 1000);
     }
 
     public async close() {
@@ -255,14 +272,18 @@ class DataBase {
     }
 
     public async count(): Promise<number> {
-        return (await this.database.get("SELECT COUNT(*) FROM sensor_data;"))[0];
+        return (await this.database.get("SELECT COUNT(*) FROM sensor_data;"))[0] + this.buffer.length;
     }
 
     public async clean() {
+        this.buffer.splice(0);
         await this.database.execSQL("DELETE FROM sensor_data;");
+        this.flushTime = 0;
     }
 
     public async sendDB() {
+        await this.flush();
+        console.log("counter is:", await this.count());
         let dbFile;
         if (platform.isAndroid) {
             var context = utils.ad.getApplicationContext();
