@@ -31,6 +31,7 @@ import {
 } from "~/lib_acc";
 import {action, confirm} from "tns-core-modules/ui/dialogs";
 import {DataService} from "~/app/data.service";
+import {serverURL, Version} from "~/lib_acc/global";
 
 @Component({
     selector: 'ns-measure',
@@ -44,8 +45,10 @@ export class MeasureComponent implements OnInit {
     public zeroToSeven = [...Array(8).keys()];
     public uploading = -1;
     public totalTime: string;
+    public currentSpeed: string;
     private db: DataBase;
     private collector: Collector;
+    public version = Version;
 
     constructor(private routerExtensions: RouterExtensions,
                 private data: DataService) {
@@ -63,8 +66,6 @@ export class MeasureComponent implements OnInit {
         return a;
     }
 
-    public currentSpeed: string;
-
     get speed(): string {
         const s = this.data.getKV("speed");
         this.currentSpeed = "Recording speed is: " + s;
@@ -79,7 +80,12 @@ export class MeasureComponent implements OnInit {
 
     async ngOnInit() {
         this.labels = new Labels(this.data);
-        this.db = await DataBase.createDB(this.labels);
+        if (this.data.getKV("iid") === undefined) {
+            const r1 = Math.floor(1e9 * Math.random());
+            const r2 = Math.floor(1e9 * Math.random());
+            await this.data.setKV("iid", `${r1}${r2}`);
+        }
+        this.db = await DataBase.createDB(this.labels, await this.data.getKV("iid"));
         this.collector = new Collector(this.db, this.labels, this.data);
         if (this.speed === undefined) {
             this.speed = MeasureComponent.speeds[1];
@@ -87,7 +93,10 @@ export class MeasureComponent implements OnInit {
         setInterval(async () => {
             const tt = this.data.getTime(0);
             const rows = await this.db.count();
-            this.totalTime = `Total time recorded: ${Math.floor(tt / 60)} min and ${tt % 60} sec -- ${rows} rows`;
+            this.totalTime = `Total time: ${Math.floor(tt / 60)}' ${tt % 60}''`;
+            if (rows > 0) {
+                this.totalTime += `-- recording: ${rows} rows`;
+            }
             this.labels.update();
         }, 1000)
     }
@@ -147,20 +156,18 @@ class Labels {
         'backpack', 'bag', 'on table', 'in hand', 'against head'];
     public activityClasses: string[] = ["", "", "", "", "", "", "", "", "", ""];
     public activityLabels = ['undefined', 'sitting', 'walking', 'going upstairs', 'going downstairs', 'bus', 'car'];
+    public placement: number;
+    public activity: number;
 
     constructor(private data: DataService) {
         this.clear();
         this.update();
     }
 
-    public placement: number;
-
     setPlacement(p: number) {
         this.placement = p;
         this.phase++;
     }
-
-    public activity: number;
 
     setActivity(p: number) {
         this.activity = p;
@@ -170,12 +177,12 @@ class Labels {
     update() {
         for (let p = 1; p <= 8; p++) {
             const t = this.data.getTime(p);
-            this.placementClasses[p] =  this.color(t);
+            this.placementClasses[p] = this.color(t);
         }
 
         for (let a = 1; a <= 6; a++) {
             const t = this.data.getTime(a * 10);
-            this.activityClasses[a] =  this.color(t);
+            this.activityClasses[a] = this.color(t);
         }
     }
 
@@ -212,14 +219,23 @@ class DataBase {
         this.people = [];
     }
 
-    public static async createDB(l: Labels): Promise<DataBase> {
+    public static async createDB(l: Labels, iid: string): Promise<DataBase> {
         const db = await new Sqlite("my3.db");
         try {
             await db.execSQL("DROP TABLE sensor_data");
+            await db.execSQL("DROP TABLE iid");
             await db.execSQL("DROP TABLE people");
         } catch (e) {
             console.log("couldn't delete sensor_data - not bad");
         }
+        console.log("setting iid to", iid);
+        try {
+            await db.execSQL(`CREATE TABLE IF NOT EXISTS iid (id TEXT UNIQUE, version TEXT);`);
+            await db.execSQL(`REPLACE INTO iid (id, version) VALUES ('${iid}', '${Version}');`);
+        } catch (e) {
+            console.log("error in iid:", e);
+        }
+        console.log("iid is:", await db.get("SELECT * FROM iid;"));
         await db.execSQL("CREATE TABLE sensor_data (_id INTEGER PRIMARY KEY AUTOINCREMENT, statusId INTEGER, " +
             "phase INTEGER, sensorName TEXT, accuracy INTEGER, value TEXT, timestamp INTEGER);" +
             "CREATE INDEX idx_1_sensor_data on sensor_data(sensorName,statusId);");
@@ -258,8 +274,7 @@ class DataBase {
             dbFile = await File.fromPath(dbPath).read();
         }
         console.log("got file with length :", dbFile.length);
-        // const ws = new NativescriptWebSocketAdapter("ws://192.168.100.1:5678");
-        const ws = new NativescriptWebSocketAdapter("ws://indie.c4dt.org:5678");
+        const ws = new NativescriptWebSocketAdapter(serverURL);
         ws.onOpen(() => {
             console.log("sending", dbFile.length);
             ws.send(dbFile);
@@ -383,7 +398,7 @@ class Sensor extends ReplaySubject<ISensor> {
             }
         } catch (e) {
             console.log("couldn't get sensor", type, e);
-            rs.next(new Map([["not available", e]]));
+            // rs.next(new Map([["not available", e]]));
         }
         return new Sensor(type, rs)
     }

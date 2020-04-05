@@ -1,7 +1,7 @@
 /// <reference path="../../node_modules/tns-platform-declarations/ios.d.ts" /> Needed for autocompletion and
 // compilation.
 
-import {AccelerometerData, GyroscopeData, LightData, PressureData, SensorOptions} from "./messages";
+import {AccelerometerData, GyroscopeData, LightData, PressureData, SensorOptions, StepData} from "./messages";
 
 let main_queue = dispatch_get_current_queue();
 
@@ -140,24 +140,31 @@ export function stopGyroscopeUpdates() {
     }
 }
 
-let lightManager;
-let lightListening = false;
 export function startLightUpdates(callback: (data: LightData) => void, options?: SensorOptions) {
-    if (lightListening) {
-        stopLightUpdates();
+        throw new Error("Light not available on iOS")
+}
+
+export function stopLightUpdates() {
+}
+
+let stepManager;
+let stepListening = false;
+export function startStepUpdates(callback: (data: StepData) => void, options?: SensorOptions) {
+    if (stepListening) {
+        stopStepUpdates();
     }
 
     const wrappedCallback = zonedCallback(callback);
 
-    if (!lightManager) {
-        lightManager = CMMotionManager.alloc().init();
+    if (!stepManager) {
+        stepManager = CMMotionManager.alloc().init();
     }
 
-    lightManager.lightUpdateInterval = getNativeDelay(options);
+    stepManager.stepUpdateInterval = getNativeDelay(options);
 
-    if (lightManager.lightAvailable) {
+    if (stepManager.stepAvailable) {
         var queue = NSOperationQueue.alloc().init();
-        lightManager.startLightUpdatesToQueueWithHandler(queue, (data, error) => {
+        stepManager.startSt(queue, (data, error) => {
             dispatch_async(main_queue, () => {
                 wrappedCallback({
                     x: data.rotationRate.x,
@@ -167,15 +174,15 @@ export function startLightUpdates(callback: (data: LightData) => void, options?:
             })
         });
 
-        lightListening = true;
+        stepListening = true;
     } else {
-        throw new Error("Light not available.")
+        throw new Error("Step not available.")
     }
 }
 
-export function stopLightUpdates() {
-    if (lightListening) {
-        lightManager.stopLightUpdates();
-        lightListening = false;
+export function stopStepUpdates() {
+    if (stepListening) {
+        stepManager.stopStepUpdates();
+        stepListening = false;
     }
 }

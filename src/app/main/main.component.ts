@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "~/app/data.service";
 import { RouterExtensions } from "nativescript-angular/router";
+import {Version} from "~/lib_acc/global";
 
 @Component({
     selector: 'ns-main',
@@ -8,6 +9,8 @@ import { RouterExtensions } from "nativescript-angular/router";
     styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
+    public version = Version;
+
     constructor(private data: DataService,
                 private routerExtensions: RouterExtensions
     ) {
