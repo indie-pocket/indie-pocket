@@ -1,1 +1,9 @@
 /* Add mobile styles for the component here.  */
+.button-clicked {
+    background-color:#00A3FF;
+}
+
+.choose {
+    background-color: lightsalmon;
+    text-align: center;
+}
