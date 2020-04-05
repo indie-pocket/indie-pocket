@@ -38,6 +38,7 @@ import {DataService} from "~/app/data.service";
     styleUrls: ['./measure.component.css']
 })
 export class MeasureComponent implements OnInit {
+    public static speeds = ["Slow", "Medium", "Fast"];
     public labels: Labels;
     public zeroToFive = [...Array(6).keys()];
     public zeroToSeven = [...Array(8).keys()];
@@ -45,7 +46,6 @@ export class MeasureComponent implements OnInit {
     public totalTime: string;
     private db: DataBase;
     private collector: Collector;
-    public static speeds = ["Slow", "Medium", "Fast"];
 
     constructor(private routerExtensions: RouterExtensions,
                 private data: DataService) {
@@ -63,29 +63,32 @@ export class MeasureComponent implements OnInit {
         return a;
     }
 
-    get currentSpeed(): string {
-        return "Recording speed is: " + this.speed;
+    public currentSpeed: string;
+
+    get speed(): string {
+        const s = this.data.getKV("speed");
+        this.currentSpeed = "Recording speed is: " + s;
+        return s;
     }
 
-    get speed(): string{
-        return this.data.getKV("speed");
-    }
-
-    set speed(sp: string){
+    set speed(sp: string) {
         this.data.setKV("speed", sp);
         Sensor.delay = ["normal", "ui", "game"][MeasureComponent.speeds.findIndex(s => s === sp)] as SensorDelay;
+        console.log("speed is:", this.speed);
     }
 
     async ngOnInit() {
         this.labels = new Labels(this.data);
         this.db = await DataBase.createDB(this.labels);
         this.collector = new Collector(this.db, this.labels, this.data);
-        if (this.speed === undefined){
+        if (this.speed === undefined) {
             this.speed = MeasureComponent.speeds[1];
         }
-        setInterval(() => {
+        setInterval(async () => {
             const tt = this.data.getTime(0);
-            this.totalTime = `Total time recorded: ${Math.floor(tt / 60)} min and ${tt % 60} sec`
+            const rows = await this.db.count();
+            this.totalTime = `Total time recorded: ${Math.floor(tt / 60)} min and ${tt % 60} sec -- ${rows} rows`;
+            this.labels.update();
         }, 1000)
     }
 
@@ -125,8 +128,9 @@ export class MeasureComponent implements OnInit {
                 }, 1000);
                 clearInterval(progress);
             }
+            await this.db.clean();
         } catch (e) {
-            console.log("no confirmation");
+            console.log("no confirmation:", e);
         }
     }
 
@@ -138,41 +142,41 @@ export class MeasureComponent implements OnInit {
 
 class Labels {
     public phase: number;
+    public placementClasses: string[] = ["", "", "", "", "", "", "", "", "", ""];
+    public placementLabels = ['undefined', 'front pocket', 'back pocket', 'front jacket pocket',
+        'backpack', 'bag', 'on table', 'in hand', 'against head'];
+    public activityClasses: string[] = ["", "", "", "", "", "", "", "", "", ""];
+    public activityLabels = ['undefined', 'sitting', 'walking', 'going upstairs', 'going downstairs', 'bus', 'car'];
 
     constructor(private data: DataService) {
         this.clear();
+        this.update();
     }
 
-    private _placement: number;
+    public placement: number;
 
-    get placement(): number {
-        return this._placement;
-    }
-
-    set placement(p: number) {
-        this._placement = p;
+    setPlacement(p: number) {
+        this.placement = p;
         this.phase++;
     }
 
-    private _activity: number;
+    public activity: number;
 
-    get activity(): number {
-        return this._activity;
-    }
-
-    set activity(p: number) {
-        this._activity = p;
+    setActivity(p: number) {
+        this.activity = p;
         this.phase++;
     }
 
-    placementClass(p: number): string {
-        const t = this.data.getTime(p);
-        return this.color(t);
-    }
+    update() {
+        for (let p = 1; p <= 8; p++) {
+            const t = this.data.getTime(p);
+            this.placementClasses[p] =  this.color(t);
+        }
 
-    activityClass(a: number): string {
-        const t = this.data.getTime(a * 10);
-        return this.color(t);
+        for (let a = 1; a <= 6; a++) {
+            const t = this.data.getTime(a * 10);
+            this.activityClasses[a] =  this.color(t);
+        }
     }
 
     color(time: number): string {
@@ -192,15 +196,6 @@ class Labels {
         this.placement = 0;
         this.activity = 0;
         this.phase = -2;
-    }
-
-    stringPl(p = this.placement): string {
-        return ['undefined', 'front pocket', 'back pocket', 'front jacket pocket',
-            'backpack', 'bag', 'on table', 'in hand', 'against head'][p]
-    }
-
-    stringAct(a = this.activity): string {
-        return ['undefined', 'sitting', 'walking', 'going upstairs', 'going downstairs', 'bus', 'car'][a]
     }
 
     getNumeric(): number {
@@ -241,6 +236,14 @@ class DataBase {
 
     public async close() {
         await this.database.close();
+    }
+
+    public async count(): Promise<number> {
+        return (await this.database.get("SELECT COUNT(*) FROM sensor_data;"))[0];
+    }
+
+    public async clean() {
+        await this.database.execSQL("DELETE FROM sensor_data;");
     }
 
     public async sendDB() {

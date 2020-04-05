@@ -1,10 +1,8 @@
 /// <reference path="../../node_modules/tns-platform-declarations/ios.d.ts" /> Needed for autocompletion and
 // compilation.
 
-import {AccelerometerData, SensorOptions} from "./messages";
+import {AccelerometerData, GyroscopeData, LightData, PressureData, SensorOptions} from "./messages";
 
-let accManager;
-let isListeningForUpdates = false;
 let main_queue = dispatch_get_current_queue();
 
 function getNativeDelay(options?: SensorOptions): number {
@@ -24,8 +22,10 @@ function getNativeDelay(options?: SensorOptions): number {
     }
 }
 
+let accManager;
+let accListening = false;
 export function startAccelerometerUpdates(callback: (data: AccelerometerData) => void, options?: SensorOptions) {
-    if (isListeningForUpdates) {
+    if (accListening) {
         stopAccelerometerUpdates();
     }
 
@@ -49,19 +49,133 @@ export function startAccelerometerUpdates(callback: (data: AccelerometerData) =>
             })
         });
 
-        isListeningForUpdates = true;
+        accListening = true;
     } else {
         throw new Error("Accelerometer not available.")
     }
 }
 
 export function stopAccelerometerUpdates() {
-    if (isListeningForUpdates) {
+    if (accListening) {
         accManager.stopAccelerometerUpdates();
-        isListeningForUpdates = false;
+        accListening = false;
     }
 }
 
-export function isListening(): boolean {
-    return isListeningForUpdates;
+let baroManager;
+let baroListening = false;
+export function startBarometerUpdates(callback: (data: PressureData) => void, options?: SensorOptions) {
+    if (baroListening) {
+        stopBarometerUpdates();
+    }
+
+    const wrappedCallback = zonedCallback(callback);
+
+    if (!baroManager) {
+        baroManager = CMMotionManager.alloc().init();
+    }
+
+    baroManager.barometerUpdateInterval = getNativeDelay(options);
+
+    if (baroManager.barometerAvailable) {
+        var queue = NSOperationQueue.alloc().init();
+        baroManager.startRelativeAltitudeUpdatesToQueueWithHandler(queue, (data, error) => {
+            dispatch_async(main_queue, () => {
+                wrappedCallback({
+                    mbar: data.pressure
+                })
+            })
+        });
+
+        baroListening = true;
+    } else {
+        throw new Error("Barometer not available.")
+    }
+}
+
+export function stopBarometerUpdates() {
+    if (baroListening) {
+        baroManager.stopRelativeAltitudeUpdates();
+        baroListening = false;
+    }
+}
+
+let gyroManager;
+let gyroListening = false;
+export function startGyroscopeUpdates(callback: (data: GyroscopeData) => void, options?: SensorOptions) {
+    if (gyroListening) {
+        stopGyroscopeUpdates();
+    }
+
+    const wrappedCallback = zonedCallback(callback);
+
+    if (!gyroManager) {
+        gyroManager = CMMotionManager.alloc().init();
+    }
+
+    gyroManager.gyroscopeUpdateInterval = getNativeDelay(options);
+
+    if (gyroManager.gyroscopeAvailable) {
+        var queue = NSOperationQueue.alloc().init();
+        gyroManager.startGyroUpdatesToQueueWithHandler(queue, (data, error) => {
+            dispatch_async(main_queue, () => {
+                wrappedCallback({
+                    x: data.rotationRate.x,
+                    y: data.rotationRate.y,
+                    z: data.rotationRate.z
+                })
+            })
+        });
+
+        gyroListening = true;
+    } else {
+        throw new Error("Gyroscope not available.")
+    }
+}
+
+export function stopGyroscopeUpdates() {
+    if (gyroListening) {
+        gyroManager.stopGyroUpdates();
+        gyroListening = false;
+    }
+}
+
+let lightManager;
+let lightListening = false;
+export function startLightUpdates(callback: (data: LightData) => void, options?: SensorOptions) {
+    if (lightListening) {
+        stopLightUpdates();
+    }
+
+    const wrappedCallback = zonedCallback(callback);
+
+    if (!lightManager) {
+        lightManager = CMMotionManager.alloc().init();
+    }
+
+    lightManager.lightUpdateInterval = getNativeDelay(options);
+
+    if (lightManager.lightAvailable) {
+        var queue = NSOperationQueue.alloc().init();
+        lightManager.startLightUpdatesToQueueWithHandler(queue, (data, error) => {
+            dispatch_async(main_queue, () => {
+                wrappedCallback({
+                    x: data.rotationRate.x,
+                    y: data.rotationRate.y,
+                    z: data.rotationRate.z
+                })
+            })
+        });
+
+        lightListening = true;
+    } else {
+        throw new Error("Light not available.")
+    }
+}
+
+export function stopLightUpdates() {
+    if (lightListening) {
+        lightManager.stopLightUpdates();
+        lightListening = false;
+    }
 }
