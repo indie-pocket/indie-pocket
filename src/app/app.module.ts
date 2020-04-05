@@ -7,6 +7,7 @@ import { ItemsComponent } from "./item/items.component";
 import { ItemDetailComponent } from "./item/item-detail.component";
 import { MainComponent } from './main/main.component';
 import { MeasureComponent } from './measure/measure.component';
+import { DebugComponent } from './debug/debug.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -27,7 +28,8 @@ import { MeasureComponent } from './measure/measure.component';
         ItemsComponent,
         ItemDetailComponent,
         MainComponent,
-        MeasureComponent
+        MeasureComponent,
+        DebugComponent
     ],
     providers: [],
     schemas: [

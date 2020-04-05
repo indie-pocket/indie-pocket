@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {startAccelerometerUpdates} from "~/lib_acc";
 
 @Component({
     selector: 'ns-main',
@@ -7,7 +8,7 @@ import {Component, OnInit} from '@angular/core';
 })
 export class MainComponent implements OnInit {
     public trackingText = "";
-    public isTracking = true;
+    public isTracking = false;
     public dataSize = 0;
     private updateData;
 
@@ -15,25 +16,28 @@ export class MainComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.updateTracking();
+        this.updateTracking(true);
     }
 
-    updateTracking() {
+    updateTracking(newT: boolean) {
+        if (newT === this.isTracking){
+            return;
+        }
+        this.isTracking = newT;
         if (!this.isTracking) {
             clearInterval(this.updateData);
             this.dataSize = 0;
         } else {
+            console.log("starting sensor tracking");
             this.updateData = setInterval(() => {
-                console.log("updating size");
+                // console.log("updating size");
                 this.dataSize++;
             }, 1000);
         }
     }
 
     trackToggle(t) {
-        this.isTracking = t.object.checked;
-        this.updateTracking();
-        console.log("toggle is", this.isTracking);
+        this.updateTracking(t.object.checked);
         this.trackingText = this.isTracking ? "YOU'RE BEING TRACKED" : "";
     }
 }

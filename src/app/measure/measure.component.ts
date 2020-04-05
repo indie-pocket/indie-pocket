@@ -33,3 +33,7 @@ export class MeasureComponent implements OnInit {
   }
 
 }
+
+/*
+ * 500Hz
+ */
