@@ -100,11 +100,30 @@ export class MeasureComponent implements OnInit {
 }
 
 class Labels {
-    public placement: number;
-    public activity: number;
+    private _placement: number;
+    private _activity: number;
+    public phase: number;
 
     constructor() {
         this.clear();
+    }
+
+    get placement(): number{
+        return this._placement;
+    }
+
+    set placement(p: number){
+        this._placement = p;
+        this.phase++;
+    }
+
+    get activity(): number{
+        return this._activity;
+    }
+
+    set activity(p: number){
+        this._activity = p;
+        this.phase++;
     }
 
     active(): boolean {
@@ -114,6 +133,7 @@ class Labels {
     clear() {
         this.placement = 0;
         this.activity = 0;
+        this.phase = -2;
     }
 
     stringPl(p = this.placement): string {
@@ -147,25 +167,18 @@ class DataBase {
         } catch (e) {
             console.log("couldn't delete sensor_data - not bad");
         }
-        await db.execSQL("CREATE TABLE sensor_data (_id INTEGER PRIMARY KEY AUTOINCREMENT, statusId INTEGER," +
-            " sensorName TEXT, accuracy INTEGER, value TEXT, timestamp INTEGER);" +
+        await db.execSQL("CREATE TABLE sensor_data (_id INTEGER PRIMARY KEY AUTOINCREMENT, statusId INTEGER, " +
+            "phase INTEGER, sensorName TEXT, accuracy INTEGER, value TEXT, timestamp INTEGER);" +
             "CREATE INDEX idx_1_sensor_data on sensor_data(sensorName,statusId);");
         console.log("created db successfully");
         return new DataBase(db);
-        /**
-         * CREATE TABLE sensor_data (_id INTEGER PRIMARY KEY AUTOINCREMENT, statusId INTEGER, sensorName TEXT, accuracy INTEGER, value TEXT, timestamp INTEGER);
-         CREATE INDEX idx_1_sensor_data on sensor_data(sensorName,statusId);
-
-         329511|2|BMI160 accelerometer|3|[-7.688013,-3.9182522,-2.0070264]|1586335489958
-         329512|2|BMI160 gyroscope|3|[-0.034222744,-0.010902308,0.007479864]|1586335489959
-         */
     }
 
     public async insert(sensor: ISensor, labels: Labels) {
         const values = `[${[...sensor.values.values()]}]`;
         return this.database.execSQL("INSERT INTO sensor_data " +
-            "(statusID, sensorName, accuracy, value, timestamp) VALUES (?, ?, ?, ?, ?)",
-            [labels.getNumeric(), sensor.sensor, -1, values, sensor.time]);
+            "(phase, statusID, sensorName, accuracy, value, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
+            [labels.phase, labels.getNumeric(), sensor.sensor, -1, values, sensor.time]);
     }
 
     public async close() {

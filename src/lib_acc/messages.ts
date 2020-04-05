@@ -26,11 +26,11 @@ export interface StepData {
 }
 
 export const SENSOR_ACCELEROMETER = "accelerometer";
-export const SENSOR_PRESSURE = "pressure";
+export const SENSOR_PRESSURE = "barometer";
 export const SENSOR_GYROSCOPE = "gyroscope";
-export const SENSOR_LIGHT = "light";
+export const SENSOR_LIGHT = "lux";
 export const SENSOR_STEP = "step";
-export type SensorType = "accelerometer" | "pressure" | "gyroscope" | "light" | "step";
+export type SensorType = "accelerometer" | "barometer" | "gyroscope" | "lux" | "step";
 export type SensorDelay = "normal" | "game" | "ui" | "fastest";
 export interface SensorOptions {
     sensorDelay?: SensorDelay;
