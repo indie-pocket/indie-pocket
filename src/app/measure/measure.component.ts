@@ -31,7 +31,7 @@ import {
 } from "~/lib_acc";
 import {action, confirm} from "tns-core-modules/ui/dialogs";
 import {DataService} from "~/app/data.service";
-import {serverURL, Version} from "~/lib_acc/global";
+import {debugPoints, serverURL, Version} from "~/lib_acc/global";
 
 @Component({
     selector: 'ns-measure',
@@ -39,7 +39,7 @@ import {serverURL, Version} from "~/lib_acc/global";
     styleUrls: ['./measure.component.css']
 })
 export class MeasureComponent implements OnInit {
-    public static speeds = ["Slow", "Medium", "Fast"];
+    public static speeds = ["Slow", "Medium", "Fast", "Crazy"];
     public labels: Labels;
     public zeroToFive = [...Array(6).keys()];
     public zeroToSeven = [...Array(8).keys()];
@@ -49,21 +49,11 @@ export class MeasureComponent implements OnInit {
     public version = Version;
     private db: DataBase;
     private collector: Collector;
+    public loaded = false;
+    public recording = false;
 
     constructor(private routerExtensions: RouterExtensions,
                 private data: DataService) {
-    }
-
-    get recording(): boolean {
-        const a = this.labels.active();
-        if (this.collector) {
-            if (a && !this.collector.isRunning()) {
-                this.collector.start()
-            } else if (!a && this.collector.isRunning()) {
-                this.collector.stop();
-            }
-        }
-        return a;
     }
 
     get speed(): string {
@@ -74,8 +64,31 @@ export class MeasureComponent implements OnInit {
 
     set speed(sp: string) {
         this.data.setKV("speed", sp);
-        Sensor.delay = ["normal", "ui", "game"][MeasureComponent.speeds.findIndex(s => s === sp)] as SensorDelay;
+        Sensor.delay = ["normal", "ui", "game", "fastest"][MeasureComponent.speeds.findIndex(s => s === sp)] as SensorDelay;
         console.log("speed is:", this.speed);
+    }
+
+    async updateRecording() {
+        const a = this.labels.active();
+        if (this.collector) {
+            if (a && !this.collector.isRunning()) {
+                await this.collector.start()
+            } else if (!a && this.collector.isRunning()) {
+                console.log("stopping collector");
+                await this.collector.stop();
+            }
+        }
+        this.recording = a;
+    }
+
+    setPlacement(p: number){
+        this.labels.setPlacement(p);
+        this.updateRecording();
+    }
+
+    setActivity(a: number){
+        this.labels.setActivity(a);
+        this.updateRecording();
     }
 
     async ngOnInit() {
@@ -101,7 +114,19 @@ export class MeasureComponent implements OnInit {
                 this.totalTime += ` -- flush: ${this.db.flushTime}ms`
             }
             this.labels.update();
-        }, 1000)
+        }, 1000);
+        console.log("loaded");
+        this.loaded = true;
+        if (debugPoints) {
+            console.log("DEBUGGING POINTS");
+            this.setPlacement(1);
+            this.setActivity(1);
+            setTimeout(() => {
+                this.labels.clear();
+                this.updateRecording();
+                this.db.clean();
+            }, 1000);
+        }
     }
 
     async setSpeed() {
@@ -144,6 +169,7 @@ export class MeasureComponent implements OnInit {
         } catch (e) {
             console.log("no confirmation:", e);
         }
+        this.updateRecording();
     }
 
     async goMain() {
@@ -220,7 +246,8 @@ class DataBase {
     public flushTime = 0;
 
     public constructor(
-        private database: any
+        private database: any,
+        public labels: Labels
     ) {
         this.people = [];
     }
@@ -230,7 +257,6 @@ class DataBase {
         try {
             await db.execSQL("DROP TABLE sensor_data");
             await db.execSQL("DROP TABLE iid");
-            await db.execSQL("DROP TABLE people");
         } catch (e) {
             console.log("couldn't delete sensor_data - not bad");
         }
@@ -246,7 +272,7 @@ class DataBase {
             "phase INTEGER, sensorName TEXT, accuracy INTEGER, value TEXT, timestamp INTEGER);" +
             "CREATE INDEX idx_1_sensor_data on sensor_data(sensorName,statusId);");
         console.log("created db successfully");
-        return new DataBase(db);
+        return new DataBase(db, l);
     }
 
     public async insert(sensor: ISensor, labels: Labels) {

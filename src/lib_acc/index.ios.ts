@@ -64,9 +64,9 @@ export function stopAccelerometerUpdates() {
 
 let baroManager;
 let baroListening = false;
-export function startBarometerUpdates(callback: (data: PressureData) => void, options?: SensorOptions) {
+export function startPressureUpdates(callback: (data: PressureData) => void, options?: SensorOptions) {
     if (baroListening) {
-        stopBarometerUpdates();
+        stopPressureUpdates();
     }
 
     const wrappedCallback = zonedCallback(callback);
@@ -93,7 +93,7 @@ export function startBarometerUpdates(callback: (data: PressureData) => void, op
     }
 }
 
-export function stopBarometerUpdates() {
+export function stopPressureUpdates() {
     if (baroListening) {
         baroManager.stopRelativeAltitudeUpdates();
         baroListening = false;

@@ -1,5 +1,8 @@
-0.3.7
+0.3.8
     - adding iOS
+
+0.3.7
+    - even less jitter
 
 0.3.6
     - buffering data
