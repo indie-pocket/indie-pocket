@@ -14,14 +14,14 @@ android-compile:
 
 android-release-copy:
 	@mkdir -p releases && \
-	REL=$$( grep versionName app/App_Resources/Android/src/main/AndroidManifest.xml | sed -e "s:.*\"\(.*\)\".*:\1:" ) && \
+	REL=$$( grep versionName App_Resources/Android/src/main/AndroidManifest.xml | sed -e "s:.*\"\(.*\)\".*:\1:" ) && \
 	cp -n platforms/android/app/build/outputs/apk/release/app-release.apk releases/indiePocket.$$REL.apk
 
 android-release: android-compile android-release-copy
 
 android-release-32-copy:
 	@mkdir -p releases && \
-	REL=$$( grep versionName app/App_Resources/Android/src/main/AndroidManifest.xml | sed -e "s:.*\"\(.*\)\".*:\1:" ) && \
+	REL=$$( grep versionName App_Resources/Android/src/main/AndroidManifest.xml | sed -e "s:.*\"\(.*\)\".*:\1:" ) && \
 	cp -n platforms/android/app/build/outputs/apk/release/app-release.apk releases/indiePocket-32.$$REL.apk
 
 android-release-32: gradle-simul roster-check apply-patches android-compile android-release-32-copy
@@ -41,7 +41,7 @@ ios-release: apply-patches
 	tns prepare ios --release
 	rm -rf platforms/ios/build
 	xcodebuild -workspace platforms/ios/mobile.xcworkspace -scheme mobile -destination generic/platform=iOS archive -archivePath `pwd`/platforms/ios/build/mobile.xcarchive
-	xcodebuild -exportArchive -archivePath `pwd`/platforms/ios/build/mobile.xcarchive -exportOptionsPlist app/App_Resources/iOS/ExportOptions.plist -exportPath `pwd`/platforms/ios/build
+	xcodebuild -exportArchive -archivePath `pwd`/platforms/ios/build/mobile.xcarchive -exportOptionsPlist App_Resources/iOS/ExportOptions.plist -exportPath `pwd`/platforms/ios/build
 
 xcode-dev: ios-dev
 	open platforms/ios/mobile.xcworkspace/

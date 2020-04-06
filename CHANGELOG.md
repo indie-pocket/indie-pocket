@@ -1,5 +1,10 @@
+0.4.2
+    - better iOS icon
+
 0.4.1
     - increasing phase when pausing
+    - UI improvements
+    - signed apps
 
 0.4.0
     - adding iOS
