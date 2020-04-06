@@ -1,7 +1,7 @@
 import {isAndroid} from "tns-core-modules/platform"
 
 // The Version comes from the package.json!
-export let Version = "0.4.4";
+export let Version = "0.4.5";
 export let serverURL = "wss://indie.c4dt.org";
 export let debugPoints = false;
 export let gameButtons = 60;

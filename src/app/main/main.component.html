@@ -1,10 +1,11 @@
 <ActionBar title="{{'Indie-Pocket ' + version}}">
 </ActionBar>
 
-<StackLayout width="90%" marginTop="5%">
-    <Label textWrap="true"
-           class="h3"
-           text="This project has been created for the LauzHack' CoVid 19 special edition.
+<ScrollLayout>
+    <StackLayout width="90%" marginTop="5%">
+        <Label textWrap="true"
+               class="h3"
+               text="This project has been created for the LauzHack' CoVid 19 special edition.
 It's purpose is to collect data of the accelerometers and to allow the users to classify them.
 Once you choose the placement of the phone and your action, the app will start tracking the sensors.
 Select the 'placement' and the 'action' before starting 'record'. You can change it anytime while the phone is recording. Once you're done, click on 'Stop' and choose 'Stop and upload'.
@@ -13,5 +14,7 @@ It will then send the data to a server hosted at EPFL.
 We send data about your internal sensors, but NO GPS OR LOCATION-BASED DATA!.
 As a gamification, the buttons start red. After one minute of recording, the buttons turn yellow. After two minutes of recording, the buttons turn green!
 Can you get all buttons to green?"></Label>
-    <Button text="Start Measure" class="btn -primary" [nsRouterLink]="['/measure']"></Button>
-</StackLayout>
+        <Button text="Start Measure" class="btn -primary" [nsRouterLink]="['/measure']"></Button>
+        <Label style="text-align: right;" width="100%" textWrap="true" text="(c) by the indie-pocket team 2020"></Label>
+    </StackLayout>
+</ScrollLayout>

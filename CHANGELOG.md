@@ -1,3 +1,6 @@
+0.4.5
+    - test for nativescript-app-sync
+
 0.4.4
     - automatic update using nativescript-app-sync
 

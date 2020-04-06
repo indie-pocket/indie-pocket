@@ -41,3 +41,7 @@ xcode-dev: ios-dev
 
 release: android-compile android-release-copy ios-prepare
 	open platforms/ios/indiepocket.xcworkspace/
+
+app-sync:
+	nativescript-app-sync release indiepocketAndroid android --targetBinaryVersion ~0.4.0 --d Production
+	nativescript-app-sync release indiepocketIOS ios --targetBinaryVersion ~0.4.0 --d Production
