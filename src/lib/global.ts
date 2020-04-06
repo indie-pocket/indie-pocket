@@ -1,6 +1,6 @@
 // The Version comes from the package.json!
-export let Version = "0.4.2";
-export let serverURL = "ws://indie.c4dt.org:5678";
+export let Version = "0.4.3";
+export let serverURL = "wss://indie.c4dt.org";
 export let debugPoints = false;
 export let gameButtons = 60;
 

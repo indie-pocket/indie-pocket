@@ -1,3 +1,7 @@
+0.4.3
+    - correct row update in display
+    - wss connection
+
 0.4.2
     - better iOS icon
     - Have best speed by default

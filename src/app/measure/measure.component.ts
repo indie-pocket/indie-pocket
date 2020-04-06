@@ -104,9 +104,7 @@ export class MeasureComponent implements OnInit {
             if (rec > 0 || this.recording > 0) {
                 this.times += ` -- Recording time: ${Math.floor(rec / 60)}' ${rec % 60}''`;
             }
-            if (rows > 0) {
-                this.rows = `Recording rows: ${rows}`;
-            }
+            this.rows = rows === 0 ? "" : `Recording rows: ${rows}`;
             if (this.db.flushTime > 0) {
                 this.rows += ` -- flush: ${this.db.flushTime}ms`
             }
