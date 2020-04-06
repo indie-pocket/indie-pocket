@@ -4,6 +4,7 @@
 import {Component, OnInit} from '@angular/core';
 import {RouterExtensions} from "nativescript-angular/router";
 import * as platform from "tns-core-modules/platform"
+import {device} from "tns-core-modules/platform"
 import * as utils from "tns-core-modules/utils/utils"
 import {File, Folder, knownFolders} from "tns-core-modules/file-system"
 import * as Sqlite from "nativescript-sqlite";
@@ -32,7 +33,6 @@ import {
 import {action, confirm} from "tns-core-modules/ui/dialogs";
 import {DataService} from "~/app/data.service";
 import {debugPoints, gameButtons, serverURL, Version} from "~/lib/global";
-import { isAndroid, isIOS, device, screen } from "tns-core-modules/platform";
 
 @Component({
     selector: 'ns-measure',
@@ -72,14 +72,14 @@ export class MeasureComponent implements OnInit {
 
     setPlacement(p: number) {
         this.labels.setPlacement(p);
-        if (this.recording === 0 && this.labels.active){
+        if (this.recording === 0 && this.labels.active) {
             this.start();
         }
     }
 
     setActivity(a: number) {
         this.labels.setActivity(a);
-        if (this.recording === 0 && this.labels.active){
+        if (this.recording === 0 && this.labels.active) {
             this.start();
         }
     }
@@ -93,8 +93,8 @@ export class MeasureComponent implements OnInit {
         }
         this.db = await DataBase.createDB(this.labels, await this.data.getKV("iid"));
         this.collector = new Collector(this.db, this.labels, this.data);
-        if (this.speed === undefined) {
-            this.speed = MeasureComponent.speeds[1];
+        if (this.speed === undefined || Version === "0.4.2") {
+            this.speed = MeasureComponent.speeds[3];
         }
         setInterval(async () => {
             const tt = this.data.getTime(0);
@@ -142,7 +142,7 @@ export class MeasureComponent implements OnInit {
     }
 
     async pause() {
-        switch(this.recording){
+        switch (this.recording) {
             case 0:
                 return;
             case 1:
@@ -307,7 +307,7 @@ class DataBase {
                 "phase INTEGER, sensorName TEXT, accuracy INTEGER, value TEXT, timestamp INTEGER);" +
                 "CREATE INDEX idx_1_sensor_data on sensor_data(sensorName,statusId);");
             console.log("created db successfully");
-        } catch(e){
+        } catch (e) {
             console.log("couldn't create table:", e);
         }
         return new DataBase(db, l);

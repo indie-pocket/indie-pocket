@@ -1,5 +1,6 @@
 0.4.2
     - better iOS icon
+    - Have best speed by default
 
 0.4.1
     - increasing phase when pausing
