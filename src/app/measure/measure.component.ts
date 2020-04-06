@@ -86,11 +86,6 @@ export class MeasureComponent implements OnInit {
 
     async ngOnInit() {
         this.labels = new Labels(this.data);
-        if (this.data.getKV("iid") === undefined) {
-            const r1 = Math.floor(1e9 * Math.random());
-            const r2 = Math.floor(1e9 * Math.random());
-            await this.data.setKV("iid", `${r1}${r2}`);
-        }
         this.db = await DataBase.createDB(this.labels, await this.data.getKV("iid"));
         this.collector = new Collector(this.db, this.labels, this.data);
         if (this.speed === undefined || Version === "0.4.2") {

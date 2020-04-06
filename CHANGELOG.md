@@ -1,3 +1,6 @@
+0.4.6
+    - update on next resume
+
 0.4.5
     - test for nativescript-app-sync
 
