@@ -44,9 +44,9 @@ export class DataService {
         return this.kv.get(key);
     }
 
-    async incTime(statusID: number) {
+    async incTime(statusID: number, delta = 1) {
         const old = this.time.get(statusID) || 0;
-        this.time.set(statusID, old + 1);
+        this.time.set(statusID, old + delta);
         return this.db.execSQL("REPLACE INTO time(statusId, timeSpent) VALUES (?, ?);",
             [statusID, old + 1]);
     }

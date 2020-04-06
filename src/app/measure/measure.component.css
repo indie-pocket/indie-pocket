@@ -12,13 +12,36 @@
     color: black;
 }
 
-Button.-chosen {
-    border: 2px solid black;
-    color: red;
+Button.recording{
+    background-color: #ff4444;
+}
+
+Button.chosen {
     font-size: 16px;
+    color: #ffffff;
+}
+
+Button.inactive {
+    color: #cccccc;
+}
+
+Button.chosen.button-never {
+    background-color: #aa2222;
+}
+
+Button.chosen.button-medium {
+    background-color: #aaaa00;
+}
+
+Button.chosen.button-ok {
+    background-color: #44aa44;
 }
 
 .choose {
     background-color: lightsalmon;
     text-align: center;
+}
+
+.debug {
+    color: #bbbbbb;
 }
