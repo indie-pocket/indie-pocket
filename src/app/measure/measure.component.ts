@@ -7,7 +7,7 @@ import * as platform from "tns-core-modules/platform"
 import * as utils from "tns-core-modules/utils/utils"
 import {File, Folder, knownFolders} from "tns-core-modules/file-system"
 import * as Sqlite from "nativescript-sqlite";
-import {NativescriptWebSocketAdapter} from "~/lib_acc/websocket";
+import {NativescriptWebSocketAdapter} from "~/lib/websocket";
 import {ReplaySubject} from "rxjs";
 import {
     SENSOR_ACCELEROMETER,
@@ -16,7 +16,7 @@ import {
     SENSOR_PRESSURE,
     SENSOR_STEP,
     SensorDelay
-} from "~/lib_acc/messages";
+} from "~/lib/messages";
 import {
     startAccelerometerUpdates,
     startGyroscopeUpdates,
@@ -28,10 +28,10 @@ import {
     stopLightUpdates,
     stopPressureUpdates,
     stopStepUpdates
-} from "~/lib_acc";
+} from "~/lib";
 import {action, confirm} from "tns-core-modules/ui/dialogs";
 import {DataService} from "~/app/data.service";
-import {debugPoints, gameButtons, serverURL, Version} from "~/lib_acc/global";
+import {debugPoints, gameButtons, serverURL, Version} from "~/lib/global";
 import { isAndroid, isIOS, device, screen } from "tns-core-modules/platform";
 
 @Component({
@@ -148,6 +148,7 @@ export class MeasureComponent implements OnInit {
             case 1:
                 return this.start();
             default:
+                this.labels.phase++;
                 this.recording = 1;
                 return this.collector.stop();
         }

@@ -36,14 +36,14 @@
 
         <Label class="h2" text="Control"></Label>
         <StackLayout orientation="horizontal">
-            <Button text="Record" (tap)="start()"
+            <Button text="Record" (tap)="start()" horizontalAlignment="left"
                     [class.inactive]="!labels.active"
                     [class.recording]="recording === 2"></Button>
-            <Button text="Pause" (tap)="pause()"
+            <Button text="Pause" (tap)="pause()" horizontalAlignment="center"
                     [class.inactive]="recording === 0"
                     [class.recording]="recording === 1"
             ></Button>
-            <Button text="Stop" (tap)="stop()"
+            <Button text="Stop" (tap)="stop()" horizontalAlignment="right"
                     [class.inactive]="recording === 0"></Button>
         </StackLayout>
 

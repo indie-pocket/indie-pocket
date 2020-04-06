@@ -1,3 +1,10 @@
+update-version:
+	@REL=$$( grep version package.json | head -n 1 | sed -e "s/.*: .\(.*\).,/\1/" ) && \
+	RELCODE=$${REL//\./} && \
+	perl -pi -e "s/(versionName=\").*\"/\$${1}$$REL\"/" App_Resources/Android/src/main/AndroidManifest.xml && \
+	perl -pi -e "s/(versionCode=\").*\"/\$${1}$$RELCODE\"/" App_Resources/Android/src/main/AndroidManifest.xml && \
+	perl -0pi -e "s:(<key>CFBundleVersion</key>.*?<string>).*?</:\$${1}$$REL</:s" App_Resources/iOS/Info.plist && \
+	perl -pi -e "s/Version =.*/Version = \"$$REL\";/" src/lib/global.ts
 
 android-compile:
 	[ -n "$$INDIE_POCKET_ANDROID_PASS" ]
@@ -10,7 +17,7 @@ android-release-copy:
 	REL=$$( grep versionName app/App_Resources/Android/src/main/AndroidManifest.xml | sed -e "s:.*\"\(.*\)\".*:\1:" ) && \
 	cp -n platforms/android/app/build/outputs/apk/release/app-release.apk releases/indiePocket.$$REL.apk
 
-android-release: roster-check apply-patches gradle-prod android-compile gradle-simul android-release-copy
+android-release: android-compile android-release-copy
 
 android-release-32-copy:
 	@mkdir -p releases && \

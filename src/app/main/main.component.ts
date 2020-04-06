@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "~/app/data.service";
 import { RouterExtensions } from "nativescript-angular/router";
-import {Version} from "~/lib_acc/global";
+import {Version} from "~/lib/global";
 
 @Component({
     selector: 'ns-main',

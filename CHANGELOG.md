@@ -1,3 +1,6 @@
+0.4.1
+    - increasing phase when pausing
+
 0.4.0
     - adding iOS
     - updating UI

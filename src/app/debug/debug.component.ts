@@ -5,14 +5,14 @@ import {
     startPressureUpdates,
     startLightUpdates,
     startStepUpdates
-} from "~/lib_acc";
+} from "~/lib";
 import {
     SENSOR_ACCELEROMETER,
     SENSOR_GYROSCOPE, SENSOR_LIGHT,
     SENSOR_PRESSURE,
     SENSOR_STEP,
     SensorType
-} from "~/lib_acc/messages";
+} from "~/lib/messages";
 import {ReplaySubject} from "rxjs";
 
 @Component({
