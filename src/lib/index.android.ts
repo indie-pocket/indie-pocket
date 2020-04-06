@@ -57,7 +57,7 @@ export function startAccelerometerUpdates(callback: (data: AccelerometerData) =>
     if (!accelerometerSensor) {
         accelerometerSensor = sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_ACCELEROMETER);
         if (!accelerometerSensor) {
-            throw Error("Could get accelerometer sensor.")
+            throw Error("Could not get accelerometer sensor.")
         }
     }
 
@@ -119,7 +119,7 @@ export function startGyroscopeUpdates(callback: (data: GyroscopeData) => void, o
     if (!gyroscopeSensor) {
         gyroscopeSensor = sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_GYROSCOPE);
         if (!gyroscopeSensor) {
-            throw Error("Could get gyroscope sensor.")
+            throw Error("Could not get gyroscope sensor.")
         }
     }
 
@@ -181,7 +181,7 @@ export function startPressureUpdates(callback: (data: PressureData) => void, opt
     if (!pressureSensor) {
         pressureSensor = sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_PRESSURE);
         if (!pressureSensor) {
-            throw Error("Could get pressure sensor.")
+            throw Error("Could not get pressure sensor.")
         }
     }
 
@@ -241,7 +241,7 @@ export function startLightUpdates(callback: (data: LightData) => void, options?:
     if (!lightSensor) {
         lightSensor = sensorManager.getDefaultSensor(android.hardware.Sensor.TYPE_LIGHT);
         if (!lightSensor) {
-            throw Error("Could get light sensor.")
+            throw Error("Could not get light sensor.")
         }
     }
 
@@ -302,7 +302,7 @@ export function startStepUpdates(callback: (data: StepData) => void, options?: S
         // 19 is TYPE_STEP_COUNTER, but it is not defined...
         stepSensor = sensorManager.getDefaultSensor(19);
         if (!stepSensor) {
-            throw Error("Could get step sensor.")
+            throw Error("Could not get step sensor.")
         }
     }
 

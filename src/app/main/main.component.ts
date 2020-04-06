@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DataService} from "~/app/data.service";
-import { RouterExtensions } from "nativescript-angular/router";
+import {RouterExtensions} from "nativescript-angular/router";
 import {Version} from "~/lib/global";
 
 @Component({
@@ -17,24 +17,31 @@ export class MainComponent implements OnInit {
     ) {
     }
 
-    async ngOnInit(){
+    async ngOnInit() {
         try {
             await this.data.connect();
         } catch (e) {
             console.log("couldn't start db:", e);
         }
         console.log("kv is", this.data.getKV("again"));
-        if (this.data.getKV("iid") === undefined) {
+        let iid = this.data.getKV("iid");
+        console.log("iid is:", iid);
+        if (iid === undefined || iid.length > 0) {
             const r1 = Math.floor(1e9 * Math.random());
             const r2 = Math.floor(1e9 * Math.random());
-            await this.data.setKV("iid", `${r1}${r2}`);
+            iid = `${r1}${r2}`;
+            await this.data.setKV("iid", iid);
         }
-        if (this.data.getKV("again") === "true"){
+        this.id = "Unique ID: " + iid;
+        if (this.data.getKV("again") === "true") {
             console.log("going measure");
-            this.routerExtensions.navigateByUrl("/measure");
+            return this.routerExtensions.navigateByUrl("/measure");
         } else {
-            this.id = "Unique ID: " + await this.data.getKV("iid");
             await this.data.setKV("again", "true");
         }
+    }
+
+    goDebug(){
+        this.routerExtensions.navigateByUrl("/debug");
     }
 }

@@ -30,9 +30,9 @@ import {
     stopPressureUpdates,
     stopStepUpdates
 } from "~/lib";
-import {action, confirm} from "tns-core-modules/ui/dialogs";
+import {action, confirm, alert} from "tns-core-modules/ui/dialogs";
 import {DataService} from "~/app/data.service";
-import {debugPoints, gameButtons, serverURL, Version} from "~/lib/global";
+import {debugPoints, gameButtons, serverURL, Update, Version} from "~/lib/global";
 
 @Component({
     selector: 'ns-measure',
@@ -54,8 +54,9 @@ export class MeasureComponent implements OnInit {
     private db: DataBase;
     private collector: Collector;
 
-    constructor(private routerExtensions: RouterExtensions,
-                private data: DataService) {
+    constructor(
+        private routerExtensions: RouterExtensions,
+        private data: DataService) {
     }
 
     get speed(): string {
@@ -85,6 +86,7 @@ export class MeasureComponent implements OnInit {
     }
 
     async ngOnInit() {
+        Update.block = false;
         this.labels = new Labels(this.data);
         this.db = await DataBase.createDB(this.labels, await this.data.getKV("iid"));
         this.collector = new Collector(this.db, this.labels, this.data);
@@ -127,6 +129,7 @@ export class MeasureComponent implements OnInit {
     }
 
     async start() {
+        Update.block = true;
         if (!this.labels.active || this.recording === 2) {
             return;
         }
@@ -151,6 +154,7 @@ export class MeasureComponent implements OnInit {
         if (this.recording === 0) {
             return;
         }
+        Update.block = false;
         let options = {
             title: "Finish Recording",
             message: "Stop recording and upload data to server?",
@@ -174,14 +178,16 @@ export class MeasureComponent implements OnInit {
                 console.log("stop and upload");
                 this.uploading = 10;
                 const progress = setInterval(() => {
-                    this.uploading = 100 - (100 - this.uploading) / 10;
-                }, 500);
-                await this.db.uploadDB();
-                this.uploading = 100;
-                setTimeout(() => {
-                    this.uploading = -1
-                }, 1000);
+                    this.uploading += (100 - this.uploading) / 10;
+                }, 250);
+                try {
+                    await this.db.uploadDB();
+                    await confirm("Successfully uploaded data");
+                } catch (e) {
+                    await alert("Couldn't upload data: " + e.toString());
+                }
                 clearInterval(progress);
+                this.uploading = -1;
                 await this.data.incTime(0, this.collector.time);
             }
             this.collector.time = 0;
@@ -358,21 +364,27 @@ class DataBase {
             dbFile = await File.fromPath(dbPath).read();
         }
         console.log("got file with length :", dbFile.length);
-        const ws = new NativescriptWebSocketAdapter(serverURL);
-        ws.onOpen(() => {
-            console.log("sending", dbFile.length);
-            ws.send(dbFile);
+        return new Promise((resolve, reject) => {
+            const ws = new NativescriptWebSocketAdapter(serverURL);
+            ws.onOpen(() => {
+                console.log("sending", dbFile.length);
+                ws.send(dbFile);
+                resolve();
+            });
+            ws.onMessage((msg) => {
+                console.log("returned", msg);
+                ws.close(1000);
+                resolve();
+            });
+            ws.onError((err) => {
+                console.log("error:", err);
+                reject(err);
+            });
+            ws.onClose((a, b) => {
+                console.log("closed:", a, b);
+                resolve();
+            })
         });
-        ws.onMessage((msg) => {
-            console.log("returned", msg);
-            ws.close(1000);
-        });
-        ws.onError((err) => {
-            console.log("error:", err);
-        });
-        ws.onClose((a, b) => {
-            console.log("closed:", a, b);
-        })
     }
 }
 

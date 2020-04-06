@@ -1,8 +1,22 @@
+0.4.9
+    - Add version of the update to the view
+
+0.4.8
+    - Final cleanup
+        - ScrollView and not ScrollLayout
+        - upload bar nicer
+        - hide other elements while uploading
+        - show dialog at the end of the upload
+
+0.4.7
+    - Add debug-screen by clicking on (c)
+
 0.4.6
-    - update on next resume
+    - fix ios measurements
 
 0.4.5
     - test for nativescript-app-sync
+    -1 update on next resume
 
 0.4.4
     - automatic update using nativescript-app-sync

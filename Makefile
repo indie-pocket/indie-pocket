@@ -23,6 +23,9 @@ release-key:
 	if [ -e indie-pocket-dev.jks ]; then echo "Please remove indie-pocket-dev.jks first"; exit 1; fi
 	keytool -genkey -v -storetype pkcs12 -keystore indie-pocket-dev.jks -keyalg RSA -keysize 4096 -validity 10000 -alias indiePocket
 
+android-prepare:
+	tns prepare android
+
 ios-prepare:
 	tns prepare ios
 
@@ -39,9 +42,9 @@ ios-release: apply-patches
 xcode-dev: ios-dev
 	open platforms/ios/indiepocket.xcworkspace/
 
-release: android-compile android-release-copy ios-prepare
-	open platforms/ios/indiepocket.xcworkspace/
-
 app-sync:
 	nativescript-app-sync release indiepocketAndroid android --targetBinaryVersion ~0.4.0 --d Production
 	nativescript-app-sync release indiepocketIOS ios --targetBinaryVersion ~0.4.0 --d Production
+
+release: android-compile android-release-copy ios-prepare app-sync
+	open platforms/ios/indiepocket.xcworkspace/

@@ -24,6 +24,7 @@ function getNativeDelay(options?: SensorOptions): number {
 
 let accManager;
 let accListening = false;
+
 export function startAccelerometerUpdates(callback: (data: AccelerometerData) => void, options?: SensorOptions) {
     if (accListening) {
         stopAccelerometerUpdates();
@@ -38,7 +39,7 @@ export function startAccelerometerUpdates(callback: (data: AccelerometerData) =>
     accManager.accelerometerUpdateInterval = getNativeDelay(options);
 
     if (accManager.accelerometerAvailable) {
-        var queue = NSOperationQueue.alloc().init();
+        const queue = NSOperationQueue.alloc().init();
         accManager.startAccelerometerUpdatesToQueueWithHandler(queue, (data, error) => {
             dispatch_async(main_queue, () => {
                 wrappedCallback({
@@ -65,6 +66,7 @@ export function stopAccelerometerUpdates() {
 
 let baroManager;
 let baroListening = false;
+
 export function startPressureUpdates(callback: (data: PressureData) => void, options?: SensorOptions) {
     if (baroListening) {
         stopPressureUpdates();
@@ -78,21 +80,17 @@ export function startPressureUpdates(callback: (data: PressureData) => void, opt
 
     baroManager.barometerUpdateInterval = getNativeDelay(options);
 
-    if (baroManager.barometerAvailable) {
-        var queue = NSOperationQueue.alloc().init();
-        baroManager.startRelativeAltitudeUpdatesToQueueWithHandler(queue, (data, error) => {
-            dispatch_async(main_queue, () => {
-                wrappedCallback({
-                    time: data.timestamp,
-                    mbar: data.pressure
-                })
+    const queue = NSOperationQueue.alloc().init();
+    baroManager.startRelativeAltitudeUpdatesToQueueWithHandler(queue, (data, error) => {
+        dispatch_async(main_queue, () => {
+            wrappedCallback({
+                time: data.timestamp,
+                mbar: data.pressure
             })
-        });
+        })
+    });
 
-        baroListening = true;
-    } else {
-        throw new Error("Barometer not available.")
-    }
+    baroListening = true;
 }
 
 export function stopPressureUpdates() {
@@ -104,6 +102,7 @@ export function stopPressureUpdates() {
 
 let gyroManager;
 let gyroListening = false;
+
 export function startGyroscopeUpdates(callback: (data: GyroscopeData) => void, options?: SensorOptions) {
     if (gyroListening) {
         stopGyroscopeUpdates();
@@ -117,8 +116,8 @@ export function startGyroscopeUpdates(callback: (data: GyroscopeData) => void, o
 
     gyroManager.gyroscopeUpdateInterval = getNativeDelay(options);
 
-    if (gyroManager.gyroscopeAvailable) {
-        var queue = NSOperationQueue.alloc().init();
+    if (gyroManager.gyroAvailable) {
+        const queue = NSOperationQueue.alloc().init();
         gyroManager.startGyroUpdatesToQueueWithHandler(queue, (data, error) => {
             dispatch_async(main_queue, () => {
                 wrappedCallback({
@@ -144,7 +143,7 @@ export function stopGyroscopeUpdates() {
 }
 
 export function startLightUpdates(callback: (data: LightData) => void, options?: SensorOptions) {
-        throw new Error("Light not available on iOS")
+    throw new Error("Light not available on iOS")
 }
 
 export function stopLightUpdates() {
@@ -152,6 +151,7 @@ export function stopLightUpdates() {
 
 let stepManager;
 let stepListening = false;
+
 export function startStepUpdates(callback: (data: StepData) => void, options?: SensorOptions) {
     if (stepListening) {
         stopStepUpdates();
@@ -165,20 +165,16 @@ export function startStepUpdates(callback: (data: StepData) => void, options?: S
 
     stepManager.stepUpdateInterval = getNativeDelay(options);
 
-    if (stepManager.stepAvailable) {
-        stepManager.startPedometerEventUpdatesWithHandler((data, error) => {
-            dispatch_async(main_queue, () => {
-                wrappedCallback({
-                    time: data.timestamp,
-                    counter: data.numberOfSteps
-                })
+    stepManager.startPedometerEventUpdatesWithHandler((data, error) => {
+        dispatch_async(main_queue, () => {
+            wrappedCallback({
+                time: data.timestamp,
+                counter: data.numberOfSteps
             })
-        });
+        })
+    });
 
-        stepListening = true;
-    } else {
-        throw new Error("Step not available.")
-    }
+    stepListening = true;
 }
 
 export function stopStepUpdates() {

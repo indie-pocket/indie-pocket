@@ -1,15 +1,22 @@
+import {RouterExtensions} from "nativescript-angular/router";
 import {Component, OnInit} from '@angular/core';
 import {
     startAccelerometerUpdates,
     startGyroscopeUpdates,
     startPressureUpdates,
     startLightUpdates,
-    startStepUpdates
+    startStepUpdates,
+    stopAccelerometerUpdates,
+    stopPressureUpdates,
+    stopGyroscopeUpdates,
+    stopLightUpdates,
+    stopStepUpdates
 } from "~/lib";
 import {
     SENSOR_ACCELEROMETER,
     SENSOR_GYROSCOPE, SENSOR_LIGHT,
     SENSOR_PRESSURE,
+
     SENSOR_STEP,
     SensorType
 } from "~/lib/messages";
@@ -23,7 +30,9 @@ import {ReplaySubject} from "rxjs";
 export class DebugComponent implements OnInit {
     public sensors = new Array<Sensor>();
 
-    constructor() {
+    constructor(
+        private routerExtensions: RouterExtensions,
+    ) {
         console.log("new component");
     }
 
@@ -50,6 +59,12 @@ export class DebugComponent implements OnInit {
         }
     }
 
+    goMeasure(){
+        for (const sensor of this.sensors){
+            sensor.stop();
+        }
+        this.routerExtensions.navigateByUrl("/");
+    }
 }
 
 class Sensor {
@@ -112,5 +127,25 @@ class Sensor {
         this.buffer.push(newV);
         this.values = [...newV].toString();
         console.log(this.values);
+    }
+
+    stop(){
+        switch (this.name) {
+            case SENSOR_ACCELEROMETER:
+                stopAccelerometerUpdates();
+                break;
+            case SENSOR_PRESSURE:
+                stopPressureUpdates();
+                break;
+            case SENSOR_GYROSCOPE:
+                stopGyroscopeUpdates();
+                break;
+            case SENSOR_LIGHT:
+                stopLightUpdates();
+                break;
+            case SENSOR_STEP:
+                stopStepUpdates();
+                break;
+        }
     }
 }

@@ -1,7 +1,7 @@
 <ActionBar title="{{'Indie-Pocket ' + version}}">
 </ActionBar>
 
-<ScrollLayout>
+<ScrollView>
     <StackLayout width="90%" marginTop="5%">
         <Label textWrap="true"
                class="h3"
@@ -16,6 +16,7 @@ As a gamification, the buttons start red. After one minute of recording, the but
 Can you get all buttons to green?"></Label>
         <Button text="Start Measure" class="btn -primary" [nsRouterLink]="['/measure']"></Button>
         <Label class="h3" [text]="id"></Label>
-        <Label style="text-align: right;" width="100%" textWrap="true" text="(c) by the indie-pocket team 2020"></Label>
+        <Label (tap)="goDebug()" style="text-align: right;" width="100%" textWrap="true"
+               text="(c) by the indie-pocket team 2020"></Label>
     </StackLayout>
-</ScrollLayout>
+</ScrollView>
