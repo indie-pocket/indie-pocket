@@ -42,6 +42,7 @@ export function startAccelerometerUpdates(callback: (data: AccelerometerData) =>
         accManager.startAccelerometerUpdatesToQueueWithHandler(queue, (data, error) => {
             dispatch_async(main_queue, () => {
                 wrappedCallback({
+                    time: data.timestamp,
                     x: data.acceleration.x,
                     y: data.acceleration.y,
                     z: data.acceleration.z
@@ -82,6 +83,7 @@ export function startPressureUpdates(callback: (data: PressureData) => void, opt
         baroManager.startRelativeAltitudeUpdatesToQueueWithHandler(queue, (data, error) => {
             dispatch_async(main_queue, () => {
                 wrappedCallback({
+                    time: data.timestamp,
                     mbar: data.pressure
                 })
             })
@@ -120,6 +122,7 @@ export function startGyroscopeUpdates(callback: (data: GyroscopeData) => void, o
         gyroManager.startGyroUpdatesToQueueWithHandler(queue, (data, error) => {
             dispatch_async(main_queue, () => {
                 wrappedCallback({
+                    time: data.timestamp,
                     x: data.rotationRate.x,
                     y: data.rotationRate.y,
                     z: data.rotationRate.z
@@ -163,10 +166,10 @@ export function startStepUpdates(callback: (data: StepData) => void, options?: S
     stepManager.stepUpdateInterval = getNativeDelay(options);
 
     if (stepManager.stepAvailable) {
-        var queue = NSOperationQueue.alloc().init();
         stepManager.startPedometerEventUpdatesWithHandler((data, error) => {
             dispatch_async(main_queue, () => {
                 wrappedCallback({
+                    time: data.timestamp,
                     counter: data.numberOfSteps
                 })
             })

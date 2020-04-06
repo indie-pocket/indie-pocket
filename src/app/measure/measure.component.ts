@@ -5,7 +5,7 @@ import {Component, OnInit} from '@angular/core';
 import {RouterExtensions} from "nativescript-angular/router";
 import * as platform from "tns-core-modules/platform"
 import * as utils from "tns-core-modules/utils/utils"
-import {File, knownFolders} from "tns-core-modules/file-system"
+import {File, Folder, knownFolders} from "tns-core-modules/file-system"
 import * as Sqlite from "nativescript-sqlite";
 import {NativescriptWebSocketAdapter} from "~/lib_acc/websocket";
 import {ReplaySubject} from "rxjs";
@@ -31,7 +31,8 @@ import {
 } from "~/lib_acc";
 import {action, confirm} from "tns-core-modules/ui/dialogs";
 import {DataService} from "~/app/data.service";
-import {debugPoints, serverURL, Version} from "~/lib_acc/global";
+import {debugPoints, gameButtons, serverURL, Version} from "~/lib_acc/global";
+import { isAndroid, isIOS, device, screen } from "tns-core-modules/platform";
 
 @Component({
     selector: 'ns-measure',
@@ -44,11 +45,12 @@ export class MeasureComponent implements OnInit {
     public zeroToFive = [...Array(6).keys()];
     public zeroToSeven = [...Array(8).keys()];
     public uploading = -1;
-    public totalTime: string;
+    public times: string;
+    public rows: string;
     public currentSpeed: string;
     public version = Version;
     public loaded = false;
-    public recording = false;
+    public recording = 0;
     private db: DataBase;
     private collector: Collector;
 
@@ -68,27 +70,18 @@ export class MeasureComponent implements OnInit {
         console.log("speed is:", this.speed);
     }
 
-    async updateRecording() {
-        const a = this.labels.active();
-        if (this.collector) {
-            if (a && !this.collector.isRunning()) {
-                await this.collector.start()
-            } else if (!a && this.collector.isRunning()) {
-                console.log("stopping collector");
-                await this.collector.stop();
-            }
-        }
-        this.recording = a;
-    }
-
     setPlacement(p: number) {
         this.labels.setPlacement(p);
-        this.updateRecording();
+        if (this.recording === 0 && this.labels.active){
+            this.start();
+        }
     }
 
     setActivity(a: number) {
         this.labels.setActivity(a);
-        this.updateRecording();
+        if (this.recording === 0 && this.labels.active){
+            this.start();
+        }
     }
 
     async ngOnInit() {
@@ -106,12 +99,16 @@ export class MeasureComponent implements OnInit {
         setInterval(async () => {
             const tt = this.data.getTime(0);
             const rows = await this.db.count();
-            this.totalTime = `Total time: ${Math.floor(tt / 60)}' ${tt % 60}''`;
+            this.times = `Uploaded time: ${Math.floor(tt / 60)}' ${tt % 60}''`;
+            const rec = this.collector.time;
+            if (rec > 0 || this.recording > 0) {
+                this.times += ` -- Recording time: ${Math.floor(rec / 60)}' ${rec % 60}''`;
+            }
             if (rows > 0) {
-                this.totalTime += `-- recording: ${rows} rows`;
+                this.rows = `Recording rows: ${rows}`;
             }
             if (this.db.flushTime > 0) {
-                this.totalTime += ` -- flush: ${this.db.flushTime}ms`
+                this.rows += ` -- flush: ${this.db.flushTime}ms`
             }
             this.labels.update();
         }, 1000);
@@ -119,11 +116,11 @@ export class MeasureComponent implements OnInit {
         this.loaded = true;
         if (debugPoints) {
             console.log("DEBUGGING POINTS");
-            this.setPlacement(1);
-            this.setActivity(1);
+            this.labels.setPlacement(1);
+            this.labels.setActivity(1);
+            await this.collector.start();
             setTimeout(() => {
                 this.labels.clear();
-                this.updateRecording();
                 this.db.clean();
             }, 1000);
         }
@@ -136,40 +133,68 @@ export class MeasureComponent implements OnInit {
         }
     }
 
+    async start() {
+        if (!this.labels.active || this.recording === 2) {
+            return;
+        }
+        this.recording = 2;
+        await this.collector.start();
+    }
+
+    async pause() {
+        switch(this.recording){
+            case 0:
+                return;
+            case 1:
+                return this.start();
+            default:
+                this.recording = 1;
+                return this.collector.stop();
+        }
+    }
+
     async stop() {
+        if (this.recording === 0) {
+            return;
+        }
         let options = {
             title: "Finish Recording",
             message: "Stop recording and upload data to server?",
             okButtonText: "Stop and upload",
-            cancelButtonText: "Only stop",
+            cancelButtonText: "Stop and discard",
             neutralButtonText: "Continue Recording"
         };
 
         try {
             const ok = await confirm(options);
+            console.log("confirm is", ok);
             if (ok === undefined) {
                 console.log("nothing");
                 return;
             }
             this.labels.clear();
+            await this.collector.stop();
+            this.recording = 0;
+            this.rows = "";
             if (ok) {
                 console.log("stop and upload");
                 this.uploading = 10;
                 const progress = setInterval(() => {
                     this.uploading = 100 - (100 - this.uploading) / 10;
                 }, 500);
-                await this.db.sendDB();
+                await this.db.uploadDB();
                 this.uploading = 100;
                 setTimeout(() => {
                     this.uploading = -1
                 }, 1000);
                 clearInterval(progress);
+                await this.data.incTime(0, this.collector.time);
             }
+            this.collector.time = 0;
             await this.db.clean();
         } catch (e) {
             console.log("no confirmation:", e);
         }
-        this.updateRecording();
     }
 
     async goMain() {
@@ -181,12 +206,17 @@ export class MeasureComponent implements OnInit {
 class Labels {
     public phase: number;
     public placementClasses: string[] = ["", "", "", "", "", "", "", "", "", ""];
-    public placementLabels = ['undefined', 'front pocket', 'back pocket', 'front jacket pocket',
-        'backpack', 'bag', 'on table', 'in hand', 'against head'];
+    public placementLabels = ['undefined',
+        'on table', 'in hand', 'against head',
+        'front pocket', 'back pocket', 'front jacket pkt',
+        'handbag', 'backpack'
+    ];
     public activityClasses: string[] = ["", "", "", "", "", "", "", "", "", ""];
-    public activityLabels = ['undefined', 'sitting', 'walking', 'going upstairs', 'going downstairs', 'bus', 'car'];
+    public activityLabels = ['undefined', 'walking', 'standing', 'sitting',
+        'going upstairs', 'going downstairs', 'transports'];
     public placement: number;
     public activity: number;
+    public active: boolean;
 
     constructor(private data: DataService) {
         this.clear();
@@ -196,11 +226,13 @@ class Labels {
     setPlacement(p: number) {
         this.placement = p;
         this.phase++;
+        this.update();
     }
 
     setActivity(p: number) {
         this.activity = p;
         this.phase++;
+        this.update();
     }
 
     update() {
@@ -208,24 +240,24 @@ class Labels {
             const t = this.data.getTime(p);
             this.placementClasses[p] = this.color(t);
         }
+        this.placementClasses[this.placement] += " chosen";
 
         for (let a = 1; a <= 6; a++) {
             const t = this.data.getTime(a * 10);
             this.activityClasses[a] = this.color(t);
         }
+        this.activityClasses[this.activity] += " chosen";
+
+        this.active = this.activity > 0 && this.placement > 0;
     }
 
     color(time: number): string {
-        if (time < 60) {
+        if (time < gameButtons) {
             return "button-never";
-        } else if (time < 120) {
+        } else if (time < 2 * gameButtons) {
             return "button-medium";
         }
         return "button-ok";
-    }
-
-    active(): boolean {
-        return this.activity > 0 && this.placement > 0;
     }
 
     clear() {
@@ -262,16 +294,21 @@ class DataBase {
         }
         console.log("setting iid to", iid);
         try {
-            await db.execSQL(`CREATE TABLE IF NOT EXISTS iid (id TEXT UNIQUE, version TEXT);`);
-            await db.execSQL(`REPLACE INTO iid (id, version) VALUES ('${iid}', '${Version}');`);
+            await db.execSQL(`CREATE TABLE IF NOT EXISTS iid (id TEXT UNIQUE, version TEXT, device TEXT);`);
+            let deviceString = `${device.os} ${device.osVersion} - ${device.deviceType} - ${device.manufacturer} ${device.model}`;
+            await db.execSQL(`REPLACE INTO iid (id, version, device) VALUES ('${iid}', '${Version}', '${deviceString}');`);
         } catch (e) {
             console.log("error in iid:", e);
         }
         console.log("iid is:", await db.get("SELECT * FROM iid;"));
-        await db.execSQL("CREATE TABLE sensor_data (_id INTEGER PRIMARY KEY AUTOINCREMENT, statusId INTEGER, " +
-            "phase INTEGER, sensorName TEXT, accuracy INTEGER, value TEXT, timestamp INTEGER);" +
-            "CREATE INDEX idx_1_sensor_data on sensor_data(sensorName,statusId);");
-        console.log("created db successfully");
+        try {
+            await db.execSQL("CREATE TABLE sensor_data (_id INTEGER PRIMARY KEY AUTOINCREMENT, statusId INTEGER, " +
+                "phase INTEGER, sensorName TEXT, accuracy INTEGER, value TEXT, timestamp INTEGER);" +
+                "CREATE INDEX idx_1_sensor_data on sensor_data(sensorName,statusId);");
+            console.log("created db successfully");
+        } catch(e){
+            console.log("couldn't create table:", e);
+        }
         return new DataBase(db, l);
     }
 
@@ -308,7 +345,7 @@ class DataBase {
         this.flushTime = 0;
     }
 
-    public async sendDB() {
+    public async uploadDB() {
         await this.flush();
         console.log("counter is:", await this.count());
         let dbFile;
@@ -318,6 +355,11 @@ class DataBase {
             dbFile = await File.fromPath(dbPath).read();
         } else { // (iOS)
             const dbFolder = knownFolders.documents().path;
+            const f = Folder.fromPath(dbFolder);
+            const files = await f.getEntities();
+            files.forEach(file => {
+                console.log(file.name);
+            });
             const dbPath = dbFolder + "/" + "my3.db";
             dbFile = await File.fromPath(dbPath).read();
         }
@@ -343,6 +385,7 @@ class DataBase {
 class Collector {
     sensors: Sensor[] = [];
     gamification: any;
+    time: number = 0;
 
     constructor(private db: DataBase, private labels: Labels, private data: DataService) {
     }
@@ -364,10 +407,14 @@ class Collector {
             clearInterval(this.gamification);
         }
         this.gamification = setInterval(() => {
-            console.log("incinterval", this.data.getTime(0));
-            this.data.incTime(0);
-            this.data.incTime(this.labels.placement);
-            this.data.incTime(this.labels.activity * 10);
+            this.time++;
+            if (this.labels.active) {
+                if (this.labels.placement === 0 || this.labels.activity === 0) {
+                    console.log("something is wrong");
+                }
+                this.data.incTime(this.labels.placement);
+                this.data.incTime(this.labels.activity * 10);
+            }
         }, 1000)
     }
 
@@ -399,7 +446,7 @@ class Sensor extends ReplaySubject<ISensor> {
         super(1);
         newValues.subscribe({
             next: (values) => {
-                if (debugPoints && values.sensor === SENSOR_ACCELEROMETER){
+                if (debugPoints && values.sensor === SENSOR_ACCELEROMETER) {
                     const now = Date.now();
                     console.log("measurem:", now - this.latest);
                     this.latest = now;

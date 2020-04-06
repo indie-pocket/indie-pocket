@@ -1,5 +1,18 @@
 0.4.0
     - adding iOS
+    - updating UI
+    - adding device string
+    - changing icon
+    
+0.3.9
+    - time:
+        - uploaded
+        - current
+    - two buttons below:
+        - record
+        - pause (optional)
+        - stop
+    - rows recorded below
     
 0.3.8
     - increase phase when flushing
