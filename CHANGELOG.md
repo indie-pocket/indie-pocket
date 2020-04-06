@@ -1,3 +1,6 @@
+0.4.4
+    - automatic update using nativescript-app-sync
+
 0.4.3
     - correct row update in display
     - wss connection
