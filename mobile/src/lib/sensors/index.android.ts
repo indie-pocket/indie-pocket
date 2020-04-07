@@ -1,4 +1,4 @@
-/// <reference path="../../node_modules/tns-platform-declarations/android.d.ts" /> Needed for autocompletion and
+/// <reference path="../../../node_modules/tns-platform-declarations/android.d.ts" /> Needed for autocompletion and
 // compilation.
 
 import { ad as androidUtils } from "tns-core-modules/utils/utils";
@@ -8,7 +8,7 @@ import {
     PressureData,
     SensorOptions,
     StepData,
-} from "./messages";
+} from "~/lib/sensors/messages";
 
 function getNativeDelay(options?: SensorOptions): number {
     if (!options || !options.sensorDelay) {

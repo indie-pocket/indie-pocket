@@ -1,7 +1,7 @@
-/// <reference path="../../node_modules/tns-platform-declarations/ios.d.ts" /> Needed for autocompletion and
+/// <reference path="../../../node_modules/tns-platform-declarations/ios.d.ts" /> Needed for autocompletion and
 // compilation.
 
-import {AccelerometerData, GyroscopeData, LightData, PressureData, SensorOptions, StepData} from "./messages";
+import {AccelerometerData, GyroscopeData, LightData, PressureData, SensorOptions, StepData} from "~/lib/sensors/messages";
 
 let main_queue = dispatch_get_current_queue();
 

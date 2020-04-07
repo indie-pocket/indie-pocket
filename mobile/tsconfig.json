@@ -8,6 +8,7 @@
         "noEmitHelpers": true,
         "noEmitOnError": true,
         "skipLibCheck": true,
+        "resolveJsonModule": true,
         "lib": [
             "es6",
             "dom",

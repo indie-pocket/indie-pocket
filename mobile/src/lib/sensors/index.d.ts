@@ -1,4 +1,4 @@
-import {AccelerometerData, GyroscopeData, LuxData, PressureData, SensorOptions, StepData} from "~/lib_acc/messages";
+import {AccelerometerData, GyroscopeData, LightData, PressureData, SensorOptions, StepData} from "~/lib/sensors/messages";
 
 export function startAccelerometerUpdates(callback: (data: AccelerometerData) => void, options?: SensorOptions): void;
 export function stopAccelerometerUpdates(): void;

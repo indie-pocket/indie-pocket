@@ -153,5 +153,4 @@ export class Logger {
 }
 
 // tslint:disable-next-line
-let Log = new Logger(defaultLvl);
-export default Log;
+export let Log = new Logger(defaultLvl);

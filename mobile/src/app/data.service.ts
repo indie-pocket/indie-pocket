@@ -1,6 +1,11 @@
 import {Injectable} from '@angular/core';
 import * as Sqlite from "nativescript-sqlite";
 
+/**
+ * DataService holds two tables that allow to store information over multiple runs of the app.
+ * - Time holds the values of the different actions / placements
+ * - keyvalue is a generic storage of data for iid and others
+ */
 @Injectable({
     providedIn: 'root'
 })
@@ -12,13 +17,15 @@ export class DataService {
     constructor() {
     }
 
-    async connect() {
+    async connect(drop = false) {
         this.db = await new Sqlite("main_data.db");
-        try {
-            // await this.db.execSQL("DROP TABLE time;");
-            // await this.db.execSQL("DROP TABLE keyvalue;");
-        } catch (e) {
-            console.log("couldn't init tables:", e)
+        if (drop) {
+            try {
+                await this.db.execSQL("DROP TABLE time;");
+                await this.db.execSQL("DROP TABLE keyvalue;");
+            } catch (e) {
+                console.log("couldn't init tables:", e)
+            }
         }
         await this.db.execSQL("CREATE TABLE IF NOT EXISTS time (statusId INTEGER UNIQUE, timeSpent INTEGER UNIQUE);");
         await this.db.execSQL("CREATE TABLE IF NOT EXISTS keyvalue (key TEXT UNIQUE, value TEXT);");

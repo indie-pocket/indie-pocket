@@ -1,3 +1,9 @@
+node_modules
+    npm ci
+
+sqlite: node_modules
+    touch node_modules/nativescript-sqlite/index.js
+
 update-version:
 	@REL=$$( grep version package.json | head -n 1 | sed -e "s/.*: .\(.*\).,/\1/" ) && \
 	RELCODE=$${REL//\./} && \

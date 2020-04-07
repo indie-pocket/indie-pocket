@@ -11,7 +11,7 @@ import {
     stopGyroscopeUpdates,
     stopLightUpdates,
     stopStepUpdates
-} from "~/lib";
+} from "~/lib/sensors";
 import {
     SENSOR_ACCELEROMETER,
     SENSOR_GYROSCOPE, SENSOR_LIGHT,
@@ -19,9 +19,13 @@ import {
 
     SENSOR_STEP,
     SensorType
-} from "~/lib/messages";
+} from "~/lib/sensors/messages";
 import {ReplaySubject} from "rxjs";
 
+/**
+ * DebugComponent gives a live view of the different sensors.
+ * @TODO: use the same sensor-library as MeasureComponent
+ */
 @Component({
     selector: 'ns-debug',
     templateUrl: './debug.component.html',
