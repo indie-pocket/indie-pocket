@@ -26,5 +26,19 @@ https://ineiti.applivery.io/indie-pocket
 
 The app works for both Android and iOS.
 
+## Results so far
+
+This is the main screen of our mobile app to gather data:
+
+![Indie-Pocket Mobile App](images/mobile-record.png)
+
+Here some captured data and it's Fast Fourier Transform (FFT):
+
+![IMU and FFT](images/IMU-FFT.png)
+
+And the simplest classification which shows a lot of promise to distinguish the data:
+
+![PC Classifier](images/PC-Classifier.png)
+
 ## Literature
 https://www.researchgate.net/publication/287126682_Physical_Human_Activity_Recognition_Using_Wearable_Sensors
