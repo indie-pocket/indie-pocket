@@ -18,6 +18,9 @@ Then we finalized a first training model in Matlab that you can find in the `mat
 Now we would like to get back and use the trained model in the mobile app to verify if it's correct.
 For more information, go to https://www.notion.so/Indie-Pocket-518e0803ecd345a3b1dccfd532551872
 
+For a more detailed view how it works, you can go here: 
+https://htmlpreview.github.io/?https://github.com/indie-pocket/indie-pocket/doc
+
 ## Participate
 
 If you want to participate in the collection of data, you can download the app and start using it:

@@ -1,0 +1,688 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>&quot;Indie-Pocket&quot; user guide</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="ba3e6c07-fec0-4aba-a330-448b4e2ed590" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🐛</span></div><h1 class="page-title">&quot;Indie-Pocket&quot; user guide</h1></header><div class="page-body"><p id="85821342-69d0-45bc-874b-52b5cf81a1b4" class="">
+</p><h3 id="266eb040-bf4a-4f94-91fd-0755c42c5f73" class="">English version (En français plus bas)</h3><p id="46f9cae3-7f00-49fe-bf66-6f96a1eb6955" class="">
+</p><p id="3ce49892-322c-4413-83b3-c5f86c172cb4" class=""><strong>0. INTRODUCTION</strong>
+The experiment we suggest you participate should contribute to fight AGAIST COVID-19.
+It&#x27;s part the &quot;<a href="https://devpost.com/software/pd4pepp-pt-aka-indie-pocket-proposal">Indie-Pocket</a>&quot; project created for &quot;<a href="https://covid19.lauzhack.com/">LauzHack</a>&quot; hackathon supported by EPFL.
+
+It&#x27;s a 72-hour challenge so we have to go fast! Help us gather enough data until TODAY APRIL 6 at 2:00 PM so we can present preliminary result at the LauzHack COVID-19 edition. If you feel like, you can keep collecting data until monday April 13 as a well, we&#x27;ll keep improving it!</p><p id="9a3c9b9f-30f0-4de0-9a8b-ec5d4a77bf10" class=""><strong>1.INSTALL
+</strong>Thank you for your contribution. First, download and install the &quot;Indie-Pocket&quot; smartphone application. Follow this link on your smartphone to download and open the file: <a href="https://go.epfl.ch/indie-pocket-download">https://go.epfl.ch/indie-pocket-download</a>
+-EPFL is still an &quot;Untrusted enterprise developer&quot; on iOS? This is how to install custom enterprise apps: <a href="https://support.apple.com/en-gb/HT204460">https://support.apple.com/en-gb/HT204460</a>
+(-Can&#x27;t find the file? It&#x27;s probably on your &quot;download forder&quot; named like : &quot;app-debug-0.4.1.apk&quot;)
+</p><p id="56e38d75-8b1c-496e-8882-78c112ff2161" class="">It&#x27;s a beta version. When you open the file to install, you should probably skip some &quot;security warnings&quot; depending on your smartphone.</p><figure id="ff3e6f53-e636-4259-87ec-58906f6815e6" class="image"><a href="Indie%20Pocket%20user%20guide/app1.jpg"><img style="width:192px" src="Indie%20Pocket%20user%20guide/app1.jpg"/></a></figure><p id="f58ee4bb-d381-4ad0-884d-efd5d4121c6a" class=""><strong>2. OPEN </strong>
+The app will record data from different sensors. It&#x27;s explained in the description page when you open the app. Please read it before selecting &quot;Start Measure&quot;.</p><figure id="feeccf15-049c-4a3e-bd70-a8c8fc1cb7bd" class="image"><a href="Indie%20Pocket%20user%20guide/app2.jpg"><img style="width:192px" src="Indie%20Pocket%20user%20guide/app2.jpg"/></a></figure><p id="1acb3540-362f-4260-bb4a-8e6f7ab20f0f" class=""><strong>3. START/RECORD</strong>
+3.1 CHOOSE YOUR ACTIVITY
+The app will collect data during different defined activities. To indicate the activity you plan to do for the next few minutes, select one &quot;placement&quot; (where your phone will be located) and one &quot;action&quot;. Then press &quot;Record&quot; to start recording data.
+(By front/back pocket we mean pants or shorts pockets)
+3.2 CHANGE YOUR ACTIVITY
+You can modify the activity you plan to do anytime. Just select another combination of &quot;placement&quot; and &quot;action&quot;. It&#x27;s still recording, ready for your next activity. No need to use &quot;pause&quot; button.</p><p id="6c2a1500-5486-41f1-a7c8-fcdfa43428bb" class=""><strong>4. PAUSE RECORDING/INTERRUPT YOUR ACTIVITY</strong>
+You can interrupt your activity anytime or choose not to record for a moment. Press &quot;pause&quot; and it will suspend the data recording. Then press &quot;Record&quot; to continue or &quot;Stop&quot; to finish. You can change your activity during &quot;Pause&quot; mode if you want.</p><p id="ae628194-b542-41cb-8858-0ba5e143d706" class=""><strong>5. STOP/FINISH</strong>
+When you finished recording press &quot;Stop&quot;.
+5.1 You&#x27;re happy with your data collection? Sent it to our server and press &quot;STOP AND UPLOAD&quot;
+5.2 It was just an exercice? Don&#x27;t collect these data and press &quot;STOP AND DISCARD&quot; 
+5.3 You pressed &quot;Stop&quot; by mistake? Just press &quot;CONTINUE RECORDING&quot;</p><p id="6bf51e46-19c1-490b-bf90-6cf89ded7920" class=""><strong>6. CLOSE THE APP</strong>
+You are encouraged to start over as much as you want. But if you&#x27;re done for today, close the app and it wont recorded anything</p><p id="22c22ff4-0d3f-4ac3-897e-db6292ff5589" class=""><strong>7. TIME COUNTER</strong>
+A line at the bottom of your screen give you informations about:
+7.1 &quot;Uploaded time&quot;: It&#x27;s the activity duration you already recorded and uploaded data since you install this app. The more you have, the better for research :-)
+7.2 &quot;Recording now&quot;: It&#x27;s the duration recorded since your last upload. It also turns to 0&#x27; if you choose to &quot;stop and discard&quot;</p><p id="da1470d9-73fb-4b5b-be5c-67f15170adf6" class=""><strong>8. COLORS OF &quot;PLACEMENT&quot; AND &quot;ACTIONS&quot;</strong>
+After some records, boxes will turn from red to yellow and then green. The green are the ones you recorded the most. You&#x27;re encouraged to try the red and yellow ones to tun it to green.</p><p id="04c871d3-562a-443d-9377-8c92fa59a900" class=""><strong>9. DEVELOPPER INFORMATION</strong>
+The last line indicates the number of datapoints you&#x27;ve recorded.</p><p id="ec4005e1-8611-4f12-9156-133ae57de45d" class=""><strong>10. RECORDING SPEED</strong></p><p id="349a1871-014e-4acf-9944-9c528f8b9bf4" class="">Refresh rate may depend on your phone, and we made it possible for it to keep up with the data if necessary. Please try to use the fastest rate first (Crazy) and slow down if you experience issues with the app.</p><p id="ce18222c-1197-4881-837a-93b63a86085b" class="">
+</p><h3 id="9170f1ba-4ab2-4b82-87ca-ab6644978924" class="">
+FRANCAIS</h3><p id="fadedaaa-dcc6-46f0-b23c-21f9ba8c06f2" class=""><strong>0. INTRODUCTION</strong>
+L&#x27;expérience à laquelle nous te proposons de participer pourra contribuer à la lutte contre le COVID-19. Elle fait partie du projet &quot;<a href="https://devpost.com/software/pd4pepp-pt-aka-indie-pocket-proposal">Indie-Pocket</a>&quot; créé pour le Hackaton &quot;<a href="https://covid19.lauzhack.com/">LauzHack</a>&quot; soutenu par l&#x27;EPFL.</p><p id="b41ae9ab-4806-4089-8c8e-0551f7a4be77" class="">C&#x27;est un challenge sur 72-heures donc nous devons aller vite! Aides nous à récolter suffisamment de données avant AUJOUR&#x27;HUI 6 AVRIL 14:00 pour que nous présentions un résultat préliminaire à l&#x27;édition &quot;LauzHack COVID-19&quot;. Si tu le veux bien, tu peux continuer a collecter des données jusqu&#x27;au lundi 13 avril également, nous continurons à améliorer notre expérience.</p><p id="94ed34c1-3cab-4587-af53-6a492e8b7c84" class=""><strong>1.INSTALLER</strong>
+Merci pour ta contribution. Avant tout, télécharge et installes l&#x27;application pour smartphone &quot;Indie-Pocket&quot; (&quot;C&#x27;est-dans-la-poche!&quot;). Ouvres ce lien sur ton smartphone pour télécharger le fichier: <a href="https://go.epfl.ch/indie-pocket-download">https://go.epfl.ch/indie-pocket-download</a>
+-EPFL est encore un &quot;Developpeur entreprise non approuvé&quot; on iOS? Voici comment installer une Installation application d’entreprise personnalisée: <a href="https://support.apple.com/fr-ch/HT204460">https://support.apple.com/fr-ch/HT204460</a>
+(-Tu ne retrouves pas le fichier? Il est probablement dans ton &quot;dossier download/telechargement&quot; sous un nom comme: &quot;app-debug-0.4.1.apk)
+
+C&#x27;est une version préliminaire. Quand tu ouvres le fichier pour installer, tu devras probablement ignorer quelques &quot;avertissements de securité&quot; selon ton model de smartphone.</p><figure id="f1d79bf8-3859-43de-aafa-2eb3ee779d99" class="image"><a href="Indie%20Pocket%20user%20guide/app1.jpg"><img style="width:132px" src="Indie%20Pocket%20user%20guide/app1.jpg"/></a></figure><p id="5230be19-097d-434e-ad14-26f4d0367e01" class=""><strong>2. OUVRIR</strong>
+L&#x27;application va collecter les données de différents capteurs. Ceci est détaillé dans la page de description (en anglais) lorsque tu ouvre l&#x27;application. Lis ces informations* avant de selectionner &quot;Start Measure (commencer les mesures)&quot;</p><p id="3a58d12f-77e9-4512-a2f6-2df1b7399a7a" class="">*traduction de la page de présentation:<em>
+Ce projet à été créé pour l&#x27;édition spéciale du LauzHack&#x27;CoVid19.
+Son but est de collecter des données des accelerometres et permettre aux utilisateurs de les classifier
+Une fois que tu as choisi &quot;l&#x27;emplacement&quot; de ton téléphone et &quot;l&#x27;action&quot;, l&#x27;application va commencer à suivre les capteurs.
+Choisi le &quot;placement&quot; et &quot;l&#x27;action&quot; avant de commencer à &quot;enregistrer&quot;. Tu peux les modifier à tout moment pendant que le téléphone enregistre. Une fois que tu as fini, click sur &quot;Stop&quot; et choisi &quot;Stop and upload&quot;. Cela va envoyer les données à un serveur hébergé à l&#x27;EPFL.
+CA SIGNIFIE QUE TU DOIS NOUS FAIRE CONFIANCE!
+Les données envoyées sont:</em></p><p id="0cfb4500-1cbc-4948-965b-94878ba16073" class=""><em>-Acceleromètre
+-Gyroscope
+-Lumière
+-Conteur de pas
+-Barometre
+-Heure
+-Labels (activité choisie)</em></p><figure id="6ed06b0d-d7ad-4a5c-8c8a-0ebad0a41c07" class="image"><a href="Indie%20Pocket%20user%20guide/app2.jpg"><img style="width:192px" src="Indie%20Pocket%20user%20guide/app2.jpg"/></a></figure><p id="a265872c-9634-45eb-81a6-27c3301726f5" class=""><strong>3. START/RECORD</strong>
+3.1 CHOISIR UNE ACTIVITÉ
+L&#x27;application va collecter des données durant différentes activités. Pour indiquer l&#x27;activité que tu prévois de faire durant les prochaines minutes, selectionnes un &quot;placement&quot; (emplacement, là où ton téléphone se trouvera) et une &quot;action&quot;. Ensuite presses &quot;Record&quot; (Enregistrer) pour commencer à collecter des données.
+(Par front/back pocket, on entends les poches de pantalons ou de shorts)
+3.2 CHANGER D&#x27;ACTIVITÉ
+Tu peux modifier l&#x27;activité que tu prévois de faire à tout moment. Selectionne simplement une autre combinaison d&#x27;emplacement et d&#x27;action. Pas besoin d&#x27;utiliser le bouton &quot;Pause&quot; pour celà. </p><p id="883dc549-91f3-4457-88ac-8bb3aafd2000" class=""><strong>4. PAUSE DE L&#x27;ENREGISTREMENT/INTERRUPTION DE L&#x27;ACTIVITÉ</strong>
+Tu peux interrompre ton activité nimporte quand ou choisir de ne pas enregistrer pour un moment. Presses &quot;Pause&quot; et celà va suspendre l&#x27;enregistrement. Ensuite presses &quot;Record&quot; pour continuer ou &quot;Stop&quot; pour terminer. Tu peux modifier ton activité durant le mode &quot;pause&quot; si tu veux.</p><p id="8300cac9-99ec-4f44-a1d6-594eb85b6ab4" class=""><strong>5. STOP/TERMINER</strong>
+Quand tu as terminer d&#x27;enregistrer presses &quot;Stop&quot;
+5.1 Tu es satisfait de ta collecte de données? Envoies-les sur notre serveur et presses &quot;STOP AND UPLOAD&quot;
+5.2 C&#x27;était juste un exercice? Ne conserve pas ces données et presses &quot;STOP AND DISCARD&quot;
+5.3 Tu as pressé &quot;Stop&quot; par erreur? Presses simplement &quot;CONTINUE RECORDING&quot; (Continuer d&#x27;erregistrer)</p><p id="a2b5b488-b181-467c-8ed0-2ba2435984d0" class=""><strong>6. FERMER L&#x27;APPLICATION</strong>
+Tu es encourragé à recommencer autant de fois que tu veux. Mais si tu as terminé pour l&#x27;instant, ferme l&#x27;application et elle n&#x27;enregistrera plus rien.</p><p id="684961ac-bc75-42a2-92d1-5fd2214f0810" class=""><strong>7. COMPTEUR DE TEMPS</strong>
+Une ligne au bas de ton écran te renseignes au sujet de:
+7.1 &quot;Uploaded time&quot; (temps transféré): c&#x27;est la durée des activités que tu as déjà collecté et envoyé sur notre serveur depuis l&#x27;installation de l&#x27;application. Plus tu en as, mieux c&#x27;est pour la recherche :-)
+7.2 &quot;Recording now&quot; (Enregistrement actuel): c&#x27;est la durée enregistrée depuis ton dernier transfert. Elle revient également à 0&#x27; si tu choisi d&#x27;arreter sans conserver les données.</p><p id="959271cb-c605-4da4-99ff-146697e884ad" class=""><strong>8. COULEURS DE &quot;PLACEMENT&quot; ET &quot;ACTIONS&quot;</strong>
+Après quelques enregistrements les cases vont changer du rouge au vert (en passant par le jaune). Les vertes sont celles que tu as le plus enregistrer. Tu es encouragé à essayer les rouges et les jaunes pour les faire devenir vertes</p><p id="93a64baf-1203-42c7-9be8-a9193cf698eb" class=""><strong>9. INFORMATIONS POUR DÉVELLOPEURS</strong>
+La dernière ligne indique la quantité de lignes que tu enregistres et à quelle vitesse</p><p id="080ba20d-90fa-4056-9c0c-22c2c652fda9" class=""><strong>10. VITESSE D&#x27;ENREGISTREMENT</strong></p><p id="5ca2e4ba-d519-4440-b3d2-c03a1d40c1d1" class="">La fréquence d&#x27;acquisition des données peut varier d&#x27;un téléphone à l&#x27;autre. On a donc permis de changer la vitesse d&#x27;enregistrement pour lui permettre de tenir le rythme. Commence avec la vitesse la plus haute (crazy) et réduis-la si tu rencontres des problèmes avec l&#x27;application.</p><p id="f7747448-9321-44cc-92b2-d54be2cc7732" class="">
+</p><p id="93ec087f-208f-4c70-af1b-a8ed0324299a" class="">
+</p></div></article></body></html>

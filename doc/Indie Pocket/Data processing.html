@@ -1,0 +1,643 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Data processing</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="b0e4e7f5-31dd-4ae3-aa49-bac22c08819b" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">👓</span></div><h1 class="page-title">Data processing</h1></header><div class="page-body"><h1 id="6b3de720-a6bc-4390-a4ef-050c7fbec241" class="">Summary of results</h1><p id="24b24e93-e891-4ca0-bdfa-3397783f6f4c" class="">The processing occurred on Matlab using the data recorded using the cellphones. In total, more than 100 datasets have been collected from the indie-pocket app, from 12 different users, amounting to about 400 5-second bins of labelled data.</p><p id="8be8511d-d190-4904-a2da-c012a3649208" class="">Using a KNN classifier in the 7-principal components domain, the prediction accuracy was 95.6%, as shown in the confusion matrix below.</p><figure id="00ca7026-6ffb-4c15-bf73-899ddcbb8d24" class="image"><a href="Data%20processing/Untitled.png"><img style="width:791px" src="Data%20processing/Untitled.png"/></a><figcaption>Confusion matrix for the six pocket types {&#x27;On table&#x27; &#x27;In Hand&#x27; &#x27;Against Head&#x27; &#x27;Front Pocket&#x27; &#x27;Back Pocket&#x27; &#x27;Front Jacket Pocket&#x27; &#x27;Handbag&#x27; &#x27;Backpack&#x27;};</figcaption></figure><h1 id="3035d724-997e-4abf-8949-532558ea3ce6" class="">Description of recording data </h1><p id="6f0290e0-7ff8-4654-a383-a4b627d4841f" class="">Data from smartphone recording are stored as SQLite database. They contain the following information:</p><pre id="90c9a663-c2dd-4c9d-aea1-4eab55a80d78" class="code"><code>// Add sensors.db definition here
+</code></pre><figure id="58540eee-61df-4a8a-a0fe-54c012e17626" class="image"><a href="Data%20processing/Untitled%201.png"><img style="width:195px" src="Data%20processing/Untitled%201.png"/></a></figure><p id="975431b7-e03d-4a9f-b6e7-3599b129b8fe" class="">The <code>iid</code> table contains a random phone id, the app version and basic information about the smartphone:</p><figure id="4fd361bd-a524-4711-b32e-dd47c0927f3c" class="image"><a href="Data%20processing/Untitled%202.png"><img style="width:449px" src="Data%20processing/Untitled%202.png"/></a></figure><p id="7e7947fb-2aa6-4faa-9f55-a0f66b39ed3f" class="">
+</p><p id="c0aa2b01-be63-444d-b252-4679178968b7" class="">The sensor_data table contains all recording rows:</p><figure id="970da030-4b46-4b55-8e6b-933890aea6b2" class="image"><a href="Data%20processing/Untitled%203.png"><img style="width:831px" src="Data%20processing/Untitled%203.png"/></a></figure><ul id="982d1a52-1d90-4e9d-b849-94e7508cffad" class="bulleted-list"><li>The <code>_id</code> variable is the row number.</li></ul><ul id="4bc47f0b-797b-4009-bb07-7fdefc7c3374" class="bulleted-list"><li>The <code>status_id</code> field corresponds to the activities (tens) and pocket locations (units).</li></ul><ul id="1cb9faa5-c1da-4b66-a4d9-cca5a10fda84" class="bulleted-list"><li>The <code>sensorName </code>field describes which sensor data is stored in the row.</li></ul><ul id="6f362ba6-3d07-4d2f-a9e5-fccf58789395" class="bulleted-list"><li>The <code>phase</code> variable is incremented each time the activity changes or when the recording is paused and resumed.</li></ul><ul id="55ac0861-292c-470d-a4ee-a39dfbc5fef8" class="bulleted-list"><li>The <code>accuracy</code> field is not used at this time.</li></ul><ul id="03cd2d8b-2723-42a8-9925-4c97e23b21c1" class="bulleted-list"><li>The <code>sensors</code> field contains the sensors readout formated as a character string.</li></ul><ul id="f9e64c84-494a-41a0-9c5a-2f5015cbfc50" class="bulleted-list"><li>The <code>timestamp</code> field is filled by the OS upon sensor readout and represented in nanoseconds.</li></ul><h1 id="6fdbfd17-cf5a-46a6-9c37-0393791ed4c1" class="">Pre-processing</h1><h2 id="2e10b120-bec4-4ab5-ba0f-5c157a90c562" class="">Clean-up and integrity check</h2><p id="ef2ce79d-20a6-48ed-8469-e58ae9061735" class="">Data are first retrieved from the app vie the server. They are extracted into the Matlab workspace as a Table</p><pre id="186e93d0-ea96-4500-b20b-fae8c1da4342" class="code"><code>conn = sqlite(dbfile);
+
+C = fetch(conn, &#x27;SELECT * FROM sensor_data&#x27;);
+
+T = cell2table(C, &#x27;VariableNames&#x27;,...
+							 {&#x27;line&#x27; &#x27;label_num&#x27; &#x27;phase&#x27; &#x27;sensor&#x27; &#x27;void&#x27; &#x27;data_s&#x27; &#x27;timestamp&#x27;});</code></pre><p id="6bfc3960-76ec-4cc8-820d-5586de551d85" class="">The rows are sorted chronologically and invalid timestamps are removed</p><pre id="64a7cc5a-43f5-46b9-a719-56202381fa6e" class="code"><code>T = sortrows(T,&#x27;timestamp&#x27;,&#x27;ascend&#x27;);
+
+T = T(T.timestamp ~= 0, :);</code></pre><p id="8cf6f343-37ba-4710-8347-fd7f45ab8132" class="">
+</p><p id="01f25be4-b766-4abc-8dcd-ebb8af12b2f6" class="">For each sensor type <code>i</code>, the <code>data_s</code> string of each row is parsed to retrieve the sensor measurement.</p><pre id="dd717ac8-1e7b-43fc-b943-395ddeddc4ee" class="code"><code>S{i} = extract_data_snsrlog(T, snsr_list(i), n_axes(i));
+
+% Excerpt from extract_data_snsrlog():
+format_str = [&#x27;[&#x27; repmat(&#x27;%f, &#x27;, 1, n_axes-1) &#x27;%f]&#x27;];
+
+for i = 1:N
+	dat(i,:) = sscanf(data_s(i), format_str)&#x27;;
+end</code></pre><p id="27a85a9c-249c-4278-b332-1d1f6b5d5f51" class="">The data are then separated in phases of continuous recording and similar labels. </p><h2 id="fb17fcaa-5d0a-47f8-b09f-76d4948831d0" class="">Chopping</h2><p id="0bc1aa10-e58a-4ca4-b0a9-90646b5aba13" class="">For each phase, the data are chopped into bins of 5 seconds each.</p><figure id="f8466f81-bed1-49ed-8c05-9c6e9d3172e7" class="image"><a href="Data%20processing/bins.png"><img style="width:586px" src="Data%20processing/bins.png"/></a><figcaption>Accelerometer data chopped in bins of 5 seconds</figcaption></figure><p id="3458601b-3b94-49a4-a470-905ee1ceeeb8" class="">One bin is discarded at the beginning and end of each continuous recording phase to retain only valid information.</p><h2 id="b17c60ce-594b-44c5-9c83-96c8a2c31759" class="">Common timebase interpolation</h2><p id="160cc678-e31a-4f1e-bb13-b04143b37ae3" class="">To create a consistent amount of sensor data at each bin, the timeseries of each sensor are interpolated in a consistent time base. For IMU data (accelerometer and gyroscope) the sampling period is set to <code>IMU_DT</code> which is currently 2ms. Other sensors are currently not in use because they are not consistently present on all phones. All IMU data rows are resampled at this frequency in a common timebase using linear interpolation. </p><p id="4b6c5283-74ce-4e83-9579-18c15015e50f" class="">When discontinuities of more than 500% are detected  in the sampling period, the bin is discarded.</p><h1 id="05269324-172e-455c-9abb-6c32618eea31" class="">Frequency domain analysis</h1><p id="ff79a3d0-9e18-436a-a933-b85b4a5a7361" class="">The IMU data are passed into the frequency domain using Fast Fourier Transform (FFT). The amplitude of the frequency signal is calculated, to discard phase information.</p><figure id="964391a5-d652-4a27-b015-1059fcf5ffcd" class="image"><a href="Data%20processing/Untitled%204.png"><img style="width:1172px" src="Data%20processing/Untitled%204.png"/></a><figcaption>Example of sensor data and corresponding FFT signal. In this example, the phone is receiving a notification and vibrating, which can be seen both in the IMU data as ripples in the time domain and as peaks in the frequency domain.</figcaption></figure><h1 id="4079c87f-1ceb-4d1a-a1a0-9f3191ddf1b1" class="">Principal Components Analysis (PCA)</h1><p id="254a29df-144a-4f4d-85ff-c5f083d81534" class="">To reduce its dimensionality, the data is projected onto its principal components using PCA. In order to perform this step, all sensor data are reshaped into a single-column vector with a fixed length. This is possible thanks to the the consistent timebase accross all recording rows.</p><p id="04bf7e1c-e5b8-45f3-8ce3-4afc15359b54" class="">
+</p><div id="6df9d9a2-9420-4633-a147-3da90f42a4fd" class="column-list"><div id="f7b92445-9c9e-409f-902a-171f2e86a772" style="width:75%" class="column"><figure id="360bf3f0-b3c6-4691-b315-04fb6b6c498a" class="image"><a href="Data%20processing/Untitled%205.png"><img style="width:533px" src="Data%20processing/Untitled%205.png"/></a></figure><p id="62aaabc3-18ec-416a-b9ba-fc5c01ce5e66" class="">
+</p><figure id="f86fb981-3662-4fe3-82b9-6b7234697a59" class="image"><a href="Data%20processing/Untitled%206.png"><img style="width:535px" src="Data%20processing/Untitled%206.png"/></a></figure></div><div id="69c70aa5-f71b-4084-94f8-83f3d6657158" style="width:24.999999999999996%" class="column"><p id="cf3ec1fd-9c12-48be-a04c-7e72a725338c" class="">
+</p><figure id="bf3d1e1a-8dae-4f15-9a0b-53c82e249ef2" class="image"><a href="Data%20processing/Untitled%207.png"><img style="width:202px" src="Data%20processing/Untitled%207.png"/></a></figure><p id="7f0ee9e3-365c-4ac7-bbb6-5b145c671fd8" class="">
+</p></div></div><h1 id="4ed7a133-3d9b-4719-bb8e-6faf530128ef" class="">Classifier training</h1><p id="29200181-6516-448f-9b07-4f34dad83747" class="">The data is fed to a series of classifiers to compare their performance. Among the candidates were the following classifiers:</p><ul id="44a25930-2fc5-4702-a4e3-d7cde47ed04d" class="bulleted-list"><li>Discriminant analysis</li></ul><ul id="e6f66d78-82c8-414d-a774-2952a95da460" class="bulleted-list"><li>Decision trees</li></ul><ul id="635c731d-0861-4590-8158-3a40c6b31fd1" class="bulleted-list"><li>Support vector machine (SVM)</li></ul><ul id="7ea4c58b-1c6c-433a-a002-983fb4361063" class="bulleted-list"><li>Nearest neighbor, multiple classes (KNN)</li></ul><ul id="e6f142cf-9731-47b0-9746-896f1e4568e6" class="bulleted-list"><li>Boosted trees and bagged trees</li></ul><h3 id="e0cb931f-f070-4078-a895-c64b932fe091" class="">Cross-validation</h3><p id="1221a656-d430-4159-ac4b-e0b93acb0e75" class="">The training occurs using a five-fold cross-validation, meaning that 80% of the data are randomly picked and used for training, while the remaining 20% are kept for validation. This is repeated five times over. Prediction accuracy is calculated as the percentage of correct classifications.</p><h1 id="f4618eea-60d7-4fcd-8300-8ad0ac6d3138" class="">Results</h1><p id="0829ec80-986a-4715-ab86-37f95db6a19d" class="">The best performance is obtained using the KNN classifier, with single neighbor, Euclidean distance metric and equal weighting. The effect of the number of predictors is shown on the parallel coordinates plot, revealing the importance of including at least five PCs. This yields a classification accuracy of 95.6%. Restricting the predictors to only the first three PCs yields a performance of 90.9% instead.</p><div id="e988cf18-64eb-4ba2-82c7-13613769d3c0" class="column-list"><div id="2f5e5129-81db-4b75-a8c0-19b8d3400828" style="width:87.5%" class="column"><figure id="6c19a1f8-a950-4b2a-aa56-0b0bdc988428" class="image"><a href="Data%20processing/Untitled%208.png"><img style="width:799px" src="Data%20processing/Untitled%208.png"/></a><figcaption>Parallel coordinates plot of the first seven PCs.</figcaption></figure></div><div id="d78ebcc2-0ced-449c-a677-77ef270fec06" style="width:12.499999999999996%" class="column"><figure id="c0aeaf7f-9ccf-449a-9b7c-a96838ea06c6" class="image"><a href="Data%20processing/Untitled%209.png"><img style="width:54px" src="Data%20processing/Untitled%209.png"/></a></figure></div></div><p id="c63d476e-563a-4461-83cd-7b0d582e5e76" class="">Comparison of prediction results between using only two PCs and seven PCs.</p><figure id="f26c037a-5db4-425b-8a5e-0a3ef47446ce" class="image"><a href="Data%20processing/Untitled%2010.png"><img style="width:784px" src="Data%20processing/Untitled%2010.png"/></a><figcaption>Prediction results using KNN, based on 7 PCs. Datapoints are displayed along the two first PCs. False predictions are marked with a X.</figcaption></figure><p id="59583583-f908-4564-b1fe-6e1334b1ba1b" class="">The same classifier is summarized by its confusion matrix below.  </p><figure id="508eb3ef-cfb7-4a2e-a040-7adeb2ac57b0" class="image"><a href="Data%20processing/Untitled.png"><img style="width:791px" src="Data%20processing/Untitled.png"/></a><figcaption>Confusion matrix for the six pocket types {&#x27;On table&#x27; &#x27;In Hand&#x27; &#x27;Against Head&#x27; &#x27;Front Pocket&#x27; &#x27;Back Pocket&#x27; &#x27;Front Jacket Pocket&#x27; &#x27;Handbag&#x27; &#x27;Backpack&#x27;};</figcaption></figure></div></article></body></html>
