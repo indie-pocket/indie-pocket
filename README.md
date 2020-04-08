@@ -1,7 +1,7 @@
 # Indie-Pocket
 
 Here is a longer documentation with more details: 
-[IndiePocket-Documentation](https://htmlpreview.github.io/?https://htmlpreview.github.io/?https://github.com/indie-pocket/indie-pocket/blob/master/doc/Indie%20Pocket.html)
+[IndiePocket-Documentation](https://htmlpreview.github.io/?https://github.com/indie-pocket/indie-pocket/blob/master/doc/Indie%20Pocket.html)
 
 ## Inspiration
 Proposal suggested by James Larus from (the PEPP-PT https://www.pepp-pt.org/): 
