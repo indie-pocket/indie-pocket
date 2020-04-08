@@ -1,6 +1,6 @@
 {
   "nativescript": {
-    "version": "0.5.0",
+    "version": "0.5.1",
     "id": "ch.epfl.indiepocket",
     "tns-android": {
       "version": "6.5.0"
