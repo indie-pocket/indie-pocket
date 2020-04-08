@@ -1,3 +1,8 @@
+.DEFAULT_GOAL := release
+
+clean:
+	rm -rf platforms node_modules hooks
+
 node_modules:
 	npm ci
 
