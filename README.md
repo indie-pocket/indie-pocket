@@ -3,6 +3,9 @@
 Here is a longer documentation with more details: 
 [IndiePocket-Documentation](https://htmlpreview.github.io/?https://github.com/indie-pocket/indie-pocket/blob/master/doc/Indie%20Pocket.html)
 
+And an updated video for the App:
+https://www.youtube.com/watch?v=01FACVunuV0&feature=youtu.be
+
 ## Inspiration
 Proposal suggested by James Larus from (the PEPP-PT https://www.pepp-pt.org/): 
 

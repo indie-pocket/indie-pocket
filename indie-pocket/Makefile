@@ -17,6 +17,11 @@ update-version:
 	perl -0pi -e "s:(<key>CFBundleVersion</key>.*?<string>).*?</:\$${1}$$REL</:s" App_Resources/iOS/Info.plist && \
 	perl -pi -e "s/Version =.*/Version = \"$$REL\";/" src/lib/global.ts
 
+android-run: update-version sqlite
+	[ -n "$$INDIE_POCKET_ANDROID_PASS" ]
+	@tns run android --key-store-path indie-pocket-dev.jks --key-store-password $$INDIE_POCKET_ANDROID_PASS \
+		--key-store-alias indiePocket --key-store-alias-password $$INDIE_POCKET_ANDROID_PASS --release
+
 android-compile: update-version sqlite
 	[ -n "$$INDIE_POCKET_ANDROID_PASS" ]
 	@tns build android --key-store-path indie-pocket-dev.jks --key-store-password $$INDIE_POCKET_ANDROID_PASS \
