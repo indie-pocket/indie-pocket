@@ -1,5 +1,8 @@
 # Indie-Pocket
 
+Here is a longer documentation with more details: 
+[IndiePocket-Documentation](https://htmlpreview.github.io/?https://htmlpreview.github.io/?https://github.com/indie-pocket/indie-pocket/blob/master/doc/Indie%20Pocket.html)
+
 ## Inspiration
 Proposal suggested by James Larus from (the PEPP-PT https://www.pepp-pt.org/): 
 
@@ -17,9 +20,6 @@ We started to gather the data using a mobile app that you can find in the `mobil
 Then we finalized a first training model in Matlab that you can find in the `matlab` subdirectory.
 Now we would like to get back and use the trained model in the mobile app to verify if it's correct.
 For more information, go to https://www.notion.so/Indie-Pocket-518e0803ecd345a3b1dccfd532551872
-
-For a more detailed view how it works, you can go here: 
-[IndiePocket-Documentation](https://htmlpreview.github.io/?https://htmlpreview.github.io/?https://github.com/indie-pocket/indie-pocket/blob/master/doc/Indie%20Pocket.html)
 
 ## Participate
 
