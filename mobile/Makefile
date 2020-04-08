@@ -1,8 +1,8 @@
-node_modules
-    npm ci
+node_modules:
+	npm ci
 
 sqlite: node_modules
-    touch node_modules/nativescript-sqlite/index.js
+	touch node_modules/nativescript-sqlite/index.js
 
 update-version:
 	@REL=$$( grep version package.json | head -n 1 | sed -e "s/.*: .\(.*\).,/\1/" ) && \
@@ -12,7 +12,7 @@ update-version:
 	perl -0pi -e "s:(<key>CFBundleVersion</key>.*?<string>).*?</:\$${1}$$REL</:s" App_Resources/iOS/Info.plist && \
 	perl -pi -e "s/Version =.*/Version = \"$$REL\";/" src/lib/global.ts
 
-android-compile: update-version
+android-compile: update-version sqlite
 	[ -n "$$INDIE_POCKET_ANDROID_PASS" ]
 	@tns build android --key-store-path indie-pocket-dev.jks --key-store-password $$INDIE_POCKET_ANDROID_PASS \
 		--key-store-alias indiePocket --key-store-alias-password $$INDIE_POCKET_ANDROID_PASS --release
@@ -29,28 +29,25 @@ release-key:
 	if [ -e indie-pocket-dev.jks ]; then echo "Please remove indie-pocket-dev.jks first"; exit 1; fi
 	keytool -genkey -v -storetype pkcs12 -keystore indie-pocket-dev.jks -keyalg RSA -keysize 4096 -validity 10000 -alias indiePocket
 
-android-prepare:
+android-prepare: sqlite
 	tns prepare android
 
-ios-prepare:
+ios-prepare: sqlite
 	tns prepare ios
-
-ios-dev: ios-prepare
 
 # To be able to use ios-release you need to first run a manual
 # build once, which will use Xcode to download the signing profile.
-ios-release: apply-patches
+ios-release: sqlite
 	tns prepare ios --release
 	rm -rf platforms/ios/build
 	xcodebuild -workspace platforms/ios/indiepocket.xcworkspace -scheme mobile -destination generic/platform=iOS archive -archivePath `pwd`/platforms/ios/build/indiepocket.xcarchive
 	xcodebuild -exportArchive -archivePath `pwd`/platforms/ios/build/indiepocket.xcarchive -exportOptionsPlist App_Resources/iOS/ExportOptions.plist -exportPath `pwd`/platforms/ios/build
 
-xcode-dev: ios-dev
+xcode-dev: ios-prepare
 	open platforms/ios/indiepocket.xcworkspace/
 
 app-sync:
 	nativescript-app-sync release indiepocketAndroid android --targetBinaryVersion ~0.4.0 --d Production
 	nativescript-app-sync release indiepocketIOS ios --targetBinaryVersion ~0.4.0 --d Production
 
-release: android-compile android-release-copy ios-prepare app-sync
-	open platforms/ios/indiepocket.xcworkspace/
+release: android-compile android-release-copy xcode-dev

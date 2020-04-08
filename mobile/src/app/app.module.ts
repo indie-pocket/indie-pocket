@@ -6,6 +6,7 @@ import { AppComponent } from "./app.component";
 import { MainComponent } from './main/main.component';
 import { MeasureComponent } from './measure/measure.component';
 import { DebugComponent } from './debug/debug.component';
+import {NativeScriptUIChartModule} from "nativescript-ui-chart/angular";
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -19,6 +20,7 @@ import { DebugComponent } from './debug/debug.component';
     ],
     imports: [
         NativeScriptModule,
+        NativeScriptUIChartModule,
         AppRoutingModule
     ],
     declarations: [

@@ -1,16 +1,27 @@
 <ActionBar title="Indie-Pocket">
 </ActionBar>
 
-<StackLayout>
-    <Button text="Measurement" class="btn -primary" (tap)="goMeasure()"></Button>
-    <GridLayout>
-        <ListView [items]="sensors">
-            <ng-template let-sensor="item">
-                <StackLayout orientation="horizontal">
-                    <Label [text]="sensor.name" class="h2"></Label>
-                    <Label [text]="sensor.values"></Label>
-                </StackLayout>
-            </ng-template>
-        </ListView>
-    </GridLayout>
-</StackLayout>
+<ScrollView>
+    <StackLayout>
+        <StackLayout orientation="horizontal">
+            <Button text="Measurement" class="btn -primary" (tap)="goMeasure()"></Button>
+            <Button text="All" class="btn" (tap)="startAll()"></Button>
+            <Button text="Sleep" class="btn" (tap)="checkSleep()"></Button>
+        </StackLayout>
+
+        <StackLayout [visibility]="sensors.length > 1 ? 'visible' : 'collapse' ">
+            <ListView [items]="sensors" height="800px">
+                <ng-template let-sensor="item">
+                    <StackLayout orientation="horizontal">
+                        <Label [text]="sensor.name" class="h2"></Label>
+                        <Label [text]="sensor.values"></Label>
+                    </StackLayout>
+                </ng-template>
+            </ListView>
+        </StackLayout>
+
+        <StackLayout width="90%">
+            <Label textWrap="true" [text]="count.join('\n')"></Label>
+        </StackLayout>
+    </StackLayout>
+</ScrollView>

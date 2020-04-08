@@ -1,3 +1,9 @@
+0.5.0
+    - Cleaned up code
+    - Fixed upload and added confirmation
+    - Debugging includes time series of when the system could record values
+    - Adding 'running', 'biking'
+
 0.4.9
     - Add version of the update to the view
 

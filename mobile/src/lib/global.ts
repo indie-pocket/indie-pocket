@@ -11,11 +11,13 @@ export let debugPoints = false;
 export let gameButtons = 60;
 export let appKey = isAndroid ? "d7yGtIEZhJaUutyDNauWgz1TVhyb4qfwV0PFE" :
     "GXDYYaX3hnGXCZkKQm921Rh7D3wc4qfwV0PFE";
+export let dropDB = false;
 
-export const debug = true;
+export const debug = false;
 if (debug) {
     Log.lvl = 2;
     serverURL = "ws://192.168.100.1:5678";
     gameButtons = 2;
+    // dropDB = true;
     // debugPoints = true;
 }

@@ -1,6 +1,6 @@
 {
   "nativescript": {
-    "version": "0.4.9",
+    "version": "0.5.0",
     "id": "ch.epfl.indiepocket",
     "tns-android": {
       "version": "6.5.0"
@@ -29,6 +29,7 @@
     "nativescript-randombytes": "^1.0.0",
     "nativescript-share-file": "^1.0.6",
     "nativescript-sqlite": "^2.6.0",
+    "nativescript-ui-chart": "^7.1.1",
     "nativescript-websockets": "^1.5.5",
     "protobufjs": "^6.8.9",
     "reflect-metadata": "~0.1.12",

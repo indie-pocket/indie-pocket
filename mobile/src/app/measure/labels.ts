@@ -11,7 +11,8 @@ export class Labels {
     ];
     public activityClasses: string[] = ["", "", "", "", "", "", "", "", "", ""];
     public activityLabels = ['undefined', 'walking', 'standing', 'sitting',
-        'going upstairs', 'going downstairs', 'transports'];
+        'going upstairs', 'going downstairs', 'transports',
+        'running', 'biking'];
     public placement: number;
     public activity: number;
     public active: boolean;
@@ -40,7 +41,7 @@ export class Labels {
         }
         this.placementClasses[this.placement] += " chosen";
 
-        for (let a = 1; a <= 6; a++) {
+        for (let a = 1; a <= 8; a++) {
             const t = this.data.getTime(a * 10);
             this.activityClasses[a] = this.color(t);
         }

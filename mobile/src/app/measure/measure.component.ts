@@ -164,13 +164,18 @@ export class MeasureComponent implements OnInit {
                 }, 250);
                 try {
                     await this.db.uploadDB();
-                    await confirm("Successfully uploaded data");
+                    clearInterval(progress);
                 } catch (e) {
+                    clearInterval(progress);
+                    this.uploading = -1;
                     await alert("Couldn't upload data: " + e.toString());
                 }
-                clearInterval(progress);
-                this.uploading = -1;
-                await this.data.incTime(0, this.collector.time);
+                if (this.uploading > 0){
+                    this.uploading = 100;
+                    await confirm("Successfully uploaded data");
+                    this.uploading = -1;
+                    await this.data.incTime(0, this.collector.time);
+                }
             }
             this.collector.time = 0;
             await this.db.clean();

@@ -21,19 +21,18 @@
 
             </GridLayout>
 
-            <GridLayout columns="*, *, *" rows="auto, auto, auto">
+            <GridLayout columns="*, *, *" rows="auto, auto, auto, auto">
                 <Label class="h2" text="Action" row="0" colSpan="2"></Label>
                 <Label class="h3 choose" text="Choose" visibility="{{labels.activity?'collapse':'visible'}}" row="0"
                        col="2"
                        verticalAlignment="center"></Label>
 
-                <Button *ngFor="let i of zeroToFive"
+                <Button *ngFor="let i of zeroToSeven"
                         [col]="i%3" [row]="(i - (i % 3)) / 3 + 1"
                         [text]="labels.activityLabels[i+1]"
                         (tap)="setActivity(i+1)"
                         [class]="labels.activityClasses[i+1]"
                 ></Button>
-
             </GridLayout>
 
             <Label class="h2" text="Control"></Label>
@@ -52,7 +51,7 @@
 
         <Progress [value]="uploading" maxValue="100" visibility="{{uploading>=0?'visible':'collapse'}}"></Progress>
 
-        <ActivityIndicator [busy]="uploading >= 0"></ActivityIndicator>
+        <ActivityIndicator [busy]="uploading >= 0 && uploading < 100"></ActivityIndicator>
 
         <Label textWrap="true" class="h3" [text]="times"></Label>
 

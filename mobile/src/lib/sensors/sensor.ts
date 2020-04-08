@@ -32,7 +32,7 @@ export class Sensor extends ReplaySubject<ISensor> {
     static delay: SensorDelay = "game";
     private latest = Date.now();
 
-    constructor(private sensor: string, newValues: ReplaySubject<ISensor>) {
+    constructor(public name: string, newValues: ReplaySubject<ISensor>) {
         super(1);
         newValues.subscribe({
             next: (values) => {
@@ -119,7 +119,7 @@ export class Sensor extends ReplaySubject<ISensor> {
     }
 
     stop() {
-        switch (this.sensor) {
+        switch (this.name) {
             case SENSOR_ACCELEROMETER:
                 stopAccelerometerUpdates();
                 break;

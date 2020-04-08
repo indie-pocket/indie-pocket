@@ -3,6 +3,8 @@ import {DataService} from "~/app/data.service";
 import {RouterExtensions} from "nativescript-angular/router";
 import {randomBytes} from "crypto-browserify";
 import {AppSyncService} from "~/app/app-sync.service";
+import {Log} from "~/lib/log";
+import {dropDB} from "~/lib/global";
 
 /**
  * MainComponent initializes the dataService and makes sure that the first scren is only showed
@@ -26,23 +28,25 @@ export class MainComponent implements OnInit {
 
     async ngOnInit() {
         try {
-            await this.data.connect(true);
+            await this.data.connect(dropDB);
         } catch (e) {
-            console.log("couldn't start db:", e);
+            Log.error("couldn't start db:", e);
         }
         this.version = this.appsync.getVersion();
-        console.log("kv is", this.data.getKV("again"));
+        Log.lvl1("kv is", this.data.getKV("again"));
         let iid = this.data.getKV("iid");
-        console.log("iid is:", iid);
+        Log.lvl1("iid is:", iid);
         if (iid === undefined || iid.length < 10) {
             iid = randomBytes(8).toString("hex");
             await this.data.setKV("iid", iid);
         }
         this.id = "Unique ID: " + iid;
+
         if (this.data.getKV("again") === "true") {
-            console.log("going measure");
+            Log.lvl1("going measure");
             return this.routerExtensions.navigateByUrl("/measure");
         } else {
+            Log.lvl1("setting again to true");
             await this.data.setKV("again", "true");
         }
     }
