@@ -81,6 +81,9 @@ app-sync:
 		nativescript-app-sync release indiepocketIOS ios --targetBinaryVersion ~0.4.0 --d Production; \
 	fi
 
+app-sync-staging: STAGING = true
+app-sync-staging: prepare-files ios-prepare app-sync
+
 test-staging:
 	if [ ${STAGING} = true ]; then \
 		echo Staging; \
