@@ -3,12 +3,14 @@ import {RouterExtensions} from "nativescript-angular/router";
 import {SensorDelay} from "~/lib/sensors/messages";
 import {action, alert, confirm} from "tns-core-modules/ui/dialogs";
 import {DataService} from "~/app/data.service";
-import {debugPoints} from "~/lib/global";
+import {debug, debugOpt} from "~/lib/global";
 import {AppSyncService} from "~/app/app-sync.service";
 import {Sensor} from "~/lib/sensors/sensor";
 import {Labels} from "~/app/measure/labels";
 import {DataBase} from "~/lib/database";
-
+import {isIOS} from "tns-core-modules/platform";
+import Timeout = NodeJS.Timeout;
+import {Log} from "~/lib/log";
 
 /**
  * MeasureComponent is the main component of the app. It allows the user to chose her
@@ -33,6 +35,7 @@ export class MeasureComponent implements OnInit {
     public recording = 0;
     private db: DataBase;
     private collector: Collector;
+    private progressUpdate: Timeout;
 
     constructor(
         private routerExtensions: RouterExtensions,
@@ -91,7 +94,7 @@ export class MeasureComponent implements OnInit {
         }, 1000);
         console.log("loaded");
         this.loaded = true;
-        if (debugPoints) {
+        if (debugOpt.debugPoints) {
             console.log("DEBUGGING POINTS");
             this.labels.setPlacement(1);
             this.labels.setActivity(1);
@@ -111,6 +114,10 @@ export class MeasureComponent implements OnInit {
     }
 
     async start() {
+        if (this.recording === 0 && isIOS){
+            await confirm("Please keep the app in the Foreground! iOS doesn't allow to gather data if the " +
+                "app is in the background or the phone is locked.")
+        }
         this.appsync.block = true;
         if (!this.labels.active || this.recording === 2) {
             return;
@@ -159,14 +166,18 @@ export class MeasureComponent implements OnInit {
             if (ok) {
                 console.log("stop and upload");
                 this.uploading = 10;
-                const progress = setInterval(() => {
+                this.progressUpdate = setInterval(() => {
                     this.uploading += (100 - this.uploading) / 10;
                 }, 250);
                 try {
                     await this.db.uploadDB();
-                    clearInterval(progress);
+                    if (this.uploading === -1){
+                        Log.warn("upload aborted");
+                        return;
+                    }
+                    clearInterval(this.progressUpdate);
                 } catch (e) {
-                    clearInterval(progress);
+                    clearInterval(this.progressUpdate);
                     this.uploading = -1;
                     await alert("Couldn't upload data: " + e.toString());
                 }
@@ -182,6 +193,12 @@ export class MeasureComponent implements OnInit {
         } catch (e) {
             console.log("no confirmation:", e);
         }
+    }
+
+    async abortUpload(){
+        clearInterval(this.progressUpdate);
+        await confirm("Upload cancelled");
+        this.uploading = -1;
     }
 
     async goMain() {

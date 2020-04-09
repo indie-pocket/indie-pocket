@@ -4,7 +4,7 @@ import {RouterExtensions} from "nativescript-angular/router";
 import {randomBytes} from "crypto-browserify";
 import {AppSyncService} from "~/app/app-sync.service";
 import {Log} from "~/lib/log";
-import {dropDB} from "~/lib/global";
+import {debugOpt} from "~/lib/global";
 
 /**
  * MainComponent initializes the dataService and makes sure that the first scren is only showed
@@ -28,7 +28,7 @@ export class MainComponent implements OnInit {
 
     async ngOnInit() {
         try {
-            await this.data.connect(dropDB);
+            await this.data.connect(debugOpt.dropDB);
         } catch (e) {
             Log.error("couldn't start db:", e);
         }

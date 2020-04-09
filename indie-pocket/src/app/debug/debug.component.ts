@@ -11,6 +11,8 @@ import {Sensor} from "~/lib/sensors/sensor";
 import {filter, tap} from "rxjs/internal/operators";
 import {Subscription} from "rxjs";
 import {Log} from "~/lib/log";
+import {isAndroid} from "tns-core-modules/platform";
+import {debugOpt} from "~/lib/global";
 
 /**
  * DebugComponent gives a live view of the different sensors.
@@ -32,6 +34,9 @@ export class DebugComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        if (debugOpt.startCheckSleep) {
+            this.checkSleep();
+        }
     }
 
     checkSleep() {
@@ -40,13 +45,14 @@ export class DebugComponent implements OnInit {
         if (acc) {
             this.sensors.push(new SensorView(acc));
             let last = 0;
+            const div = isAndroid ? 1e9 : 1;
             acc.pipe(
-                filter((s) => Math.floor(s.time / 1e9) > last),
-                tap(s => last = Math.floor(s.time / 1e9)),
-                tap(s => console.log(last))
+                filter((s) => Math.floor(s.time / div) > last),
+                tap(s => last = Math.floor(s.time / div)),
+                tap(s => Log.print(last))
             ).subscribe({
                 next: (value) => {
-                    const sec = Math.floor(value.time / 1e9);
+                    const sec = Math.floor(value.time / div);
                     this.count.unshift((sec % 3600).toString());
                     this.count.splice(50);
                 }
@@ -56,21 +62,21 @@ export class DebugComponent implements OnInit {
 
     startAll() {
         this.stop();
-        for (const sensor of [SENSOR_ACCELEROMETER, SENSOR_GYROSCOPE, SENSOR_LIGHT, SENSOR_STEP, SENSOR_PRESSURE]){
+        for (const sensor of [SENSOR_ACCELEROMETER, SENSOR_GYROSCOPE, SENSOR_LIGHT, SENSOR_STEP, SENSOR_PRESSURE]) {
             try {
                 Log.lvl2("getting sensor", sensor);
                 const s = Sensor.getSensor(sensor);
-                if (s){
+                if (s) {
                     Log.lvl2("got sensor", sensor);
                     this.sensors.push(new SensorView(s));
                 }
-            } catch(e){
+            } catch (e) {
                 Log.warn("couldn't get sensor", sensor)
             }
         }
     }
 
-    stop(){
+    stop() {
         for (const sensor of this.sensors) {
             sensor.stop();
         }
@@ -88,12 +94,12 @@ class SensorView extends Sensor {
     public values: string;
     private sub: Subscription;
 
-    constructor(s: Sensor){
+    constructor(s: Sensor) {
         super(s.name, s);
         this.sub = s.subscribe({next: is => this.values = [...is.values].toString()})
     }
 
-    stop(){
+    stop() {
         super.stop();
         this.sub.unsubscribe();
     }

@@ -1,3 +1,11 @@
+TODO
+    - create separate upload screen
+
+0.5.1
+    - ios-background: show message and add 30s to background running
+    - release-mgmt: actually use staging and production versions
+    - add 'cancel' button to upload
+
 0.5.0
     - Cleaned up code
     - Fixed upload and added confirmation

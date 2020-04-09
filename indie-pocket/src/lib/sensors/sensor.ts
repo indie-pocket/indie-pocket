@@ -7,7 +7,7 @@ import {
     SENSOR_STEP,
     SensorDelay
 } from "~/lib/sensors/messages";
-import {debugPoints} from "~/lib/global";
+import {debugOpt} from "~/lib/global";
 import {
     startAccelerometerUpdates,
     startGyroscopeUpdates,
@@ -36,7 +36,7 @@ export class Sensor extends ReplaySubject<ISensor> {
         super(1);
         newValues.subscribe({
             next: (values) => {
-                if (debugPoints && values.sensor === SENSOR_ACCELEROMETER) {
+                if (debugOpt.debugPoints && values.sensor === SENSOR_ACCELEROMETER) {
                     const now = Date.now();
                     console.log("measurem:", now - this.latest);
                     this.latest = now;

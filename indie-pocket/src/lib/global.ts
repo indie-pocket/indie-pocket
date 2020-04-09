@@ -1,5 +1,6 @@
 import {isAndroid} from "tns-core-modules/platform"
 import {Log} from "~/lib/log";
+import * as pkg from "../../package.json"
 
 // Everybody loves globals! It's mostly application-wide parameters that the user will
 // not change but we're not sure yet what these parameters should be.
@@ -7,17 +8,29 @@ import {Log} from "~/lib/log";
 
 // The Version comes from the package.json!
 export let serverURL = "wss://indie.c4dt.org";
-export let debugPoints = false;
 export let gameButtons = 60;
 export let appKey = isAndroid ? "d7yGtIEZhJaUutyDNauWgz1TVhyb4qfwV0PFE" :
     "GXDYYaX3hnGXCZkKQm921Rh7D3wc4qfwV0PFE";
-export let dropDB = false;
+interface IDebugOpt {
+    dropDB?: boolean;
+    debugPoints?: boolean;
+    startCheckSleep?: boolean;
+}
+export const debugOpt: IDebugOpt = {};
+export const staging = pkg.nativescript.staging;
+Log.print("staging is:", staging);
 
-export const debug = false;
+export const debug = pkg.nativescript.debug;
 if (debug) {
+    // debugOpt.dropDB = true;
+    // debugOpt.debugPoints = true;
+    debugOpt.startCheckSleep = true;
     Log.lvl = 2;
     serverURL = "ws://192.168.100.1:5678";
     gameButtons = 2;
-    // dropDB = true;
-    // debugPoints = true;
+}
+
+if (pkg.nativescript.staging){
+    appKey = isAndroid ? "v0g7wIBIdKU7uDJoW86EJP9yJP1y4qfwV0PFE" :
+        "v0g7wIBIdKU7uDJoW86EJP9yJP1y4qfwV0PFE";
 }

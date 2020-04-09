@@ -67,7 +67,7 @@ module.exports = env => {
     const hasRootLevelScopedAngular = nsWebpack.hasRootLevelScopedAngular({ projectDir: projectRoot });
     let coreModulesPackageName = "tns-core-modules";
     const alias = env.alias || {};
-    alias['randombytes'] = resolve(__dirname, 'node_modules/nativescript-randombytes/randombytes-native.android.js')
+    alias['randombytes'] = resolve(__dirname, 'node_modules/nativescript-randombytes/randombytes-native.js')
     alias['~'] = appFullPath;
 
     const compilerOptions = getCompilerOptionsFromTSConfig(tsConfigPath);

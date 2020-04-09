@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {appKey, debug} from "~/lib/global";
+import {appKey, debug, staging} from "~/lib/global";
 import * as application from "tns-core-modules/application";
 import {AppSync, InstallMode} from "nativescript-app-sync";
 import * as pkg from "../../package.json";
@@ -21,8 +21,10 @@ export class AppSyncService {
 
     getVersion(): string {
         const ver = pkg.nativescript.version;
-        const verStr = (!this.label || this.label.length === 0) ? ver : ver + `${-this.label}`;
-        return verStr + (debug ? " DEBUG" : "");
+        let verStr = (!this.label || this.label.length === 0) ? ver : ver + `${-this.label}`;
+        verStr += (staging ? "-s" : "");
+        verStr += (debug ? " DEBUG" : "");
+        return verStr;
     }
 
     public init() {
