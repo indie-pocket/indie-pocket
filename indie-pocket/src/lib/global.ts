@@ -11,6 +11,11 @@ export let serverURL = "wss://indie.c4dt.org";
 export let gameButtons = 60;
 export let appKey = isAndroid ? "d7yGtIEZhJaUutyDNauWgz1TVhyb4qfwV0PFE" :
     "GXDYYaX3hnGXCZkKQm921Rh7D3wc4qfwV0PFE";
+if (pkg.nativescript.staging){
+    appKey = isAndroid ? "h57DfAlbJFCAKpaJtOmo9lbPdvXB4qfwV0PFE" :
+        "v0g7wIBIdKU7uDJoW86EJP9yJP1y4qfwV0PFE";
+}
+
 interface IDebugOpt {
     dropDB?: boolean;
     debugPoints?: boolean;
@@ -28,9 +33,4 @@ if (debug) {
     Log.lvl = 2;
     serverURL = "ws://192.168.100.1:5678";
     gameButtons = 2;
-}
-
-if (pkg.nativescript.staging){
-    appKey = isAndroid ? "v0g7wIBIdKU7uDJoW86EJP9yJP1y4qfwV0PFE" :
-        "v0g7wIBIdKU7uDJoW86EJP9yJP1y4qfwV0PFE";
 }

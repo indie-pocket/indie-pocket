@@ -25,7 +25,7 @@ android-compile: prepare-files
 	[ -n "$$INDIE_POCKET_ANDROID_PASS" ]
 	@tns build android --key-store-path indie-pocket-dev.jks --key-store-password $$INDIE_POCKET_ANDROID_PASS \
 		--key-store-alias indiePocket --key-store-alias-password $$INDIE_POCKET_ANDROID_PASS --release
-	@echo "Build successful - apk is at platforms/android/app/build/outputs/apk/release/app-release.ap"
+	@echo "Build successful - apk is at platforms/android/app/build/outputs/apk/release/app-release.apk"
 
 android-release-copy:
 	@mkdir -p releases && \
