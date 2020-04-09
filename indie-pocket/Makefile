@@ -45,6 +45,9 @@ android-prepare: udpate-version
 ios-prepare: update-version
 	tns prepare ios
 
+ios-build: update-version
+	tns build ios
+
 # To be able to use ios-release you need to first run a manual
 # build once, which will use Xcode to download the signing profile.
 # This does currently not work...
@@ -97,6 +100,6 @@ run-android-staging: update-version
 		--key-store-alias indiePocket --key-store-alias-password $$INDIE_POCKET_ANDROID_PASS --release
 
 release-staging: STAGING = true
-release-staging: clean package-update android-compile android-release-copy ios-prepare app-sync xcode-open
+release-staging: clean package-update android-compile android-release-copy ios-build app-sync xcode-open
 
-release-production: package-update android-compile android-release-copy app-sync xcode-dev
+release-production: package-update android-compile android-release-copy ios-build app-sync xcode-open
