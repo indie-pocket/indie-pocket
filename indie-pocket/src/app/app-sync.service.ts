@@ -32,6 +32,7 @@ export class AppSyncService {
             if (!this.block) {
                 AppSync.sync({
                     deploymentKey: appKey,
+                    updateDialog: true,
                     installMode: InstallMode.ON_NEXT_RESUME,
                 }, (_, label) => {
                     this.label = label;
