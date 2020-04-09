@@ -1,0 +1,10 @@
+<GridLayout width="90%" style="margin-top: 5%;" height="70%" rows="*, auto">
+    <TextView style="margin-top: 15px" borderColor="#DEDEDE" borderWidth="1" height="100%"
+              hint="Enter your message here"
+              class="input input-border" (textChange)="text = $event" row="0"></TextView>
+    <StackLayout orientation="horizontal" row="1">
+        <Button text="Cancel" class="btn" (tap)="cancel()"></Button>
+        <Button text="Send Feedback" class="btn btn-primary" (tap)="send()"
+        [visibility]="text ? 'visible' : 'collapse'"></Button>
+    </StackLayout>
+</GridLayout>

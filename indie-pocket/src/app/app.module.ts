@@ -7,6 +7,7 @@ import { MainComponent } from './main/main.component';
 import { MeasureComponent } from './measure/measure.component';
 import { DebugComponent } from './debug/debug.component';
 import {NativeScriptUIChartModule} from "nativescript-ui-chart/angular";
+import { FeedbackComponent } from './feedback/feedback.component';
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -27,7 +28,8 @@ import {NativeScriptUIChartModule} from "nativescript-ui-chart/angular";
         AppComponent,
         MainComponent,
         MeasureComponent,
-        DebugComponent
+        DebugComponent,
+        FeedbackComponent
     ],
     providers: [],
     schemas: [

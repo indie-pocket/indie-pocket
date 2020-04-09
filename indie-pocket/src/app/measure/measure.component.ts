@@ -3,7 +3,7 @@ import {RouterExtensions} from "nativescript-angular/router";
 import {SensorDelay} from "~/lib/sensors/messages";
 import {action, alert, confirm} from "tns-core-modules/ui/dialogs";
 import {DataService} from "~/app/data.service";
-import {debug, debugOpt} from "~/lib/global";
+import {debugOpt} from "~/lib/global";
 import {AppSyncService} from "~/app/app-sync.service";
 import {Sensor} from "~/lib/sensors/sensor";
 import {Labels} from "~/app/measure/labels";
@@ -169,8 +169,9 @@ export class MeasureComponent implements OnInit {
                 this.progressUpdate = setInterval(() => {
                     this.uploading += (100 - this.uploading) / 10;
                 }, 250);
+                let total = -1;
                 try {
-                    await this.db.uploadDB();
+                    total = await this.db.uploadDB();
                     if (this.uploading === -1){
                         Log.warn("upload aborted");
                         return;
@@ -183,7 +184,8 @@ export class MeasureComponent implements OnInit {
                 }
                 if (this.uploading > 0){
                     this.uploading = 100;
-                    await confirm("Successfully uploaded data");
+                    const totStr = total > 0 ? ` Total available datasets on remote server: ${total}` : "";
+                    await confirm(`Successfully uploaded data.` + totStr);
                     this.uploading = -1;
                     await this.data.incTime(0, this.collector.time);
                 }

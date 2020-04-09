@@ -91,7 +91,7 @@ export class DataBase {
         this.flushTime = 0;
     }
 
-    public async uploadDB() {
+    public async uploadDB(): Promise<number> {
         await this.flush();
         Log.lvl2("counter is:", await this.count());
         let dbFile;
@@ -128,7 +128,10 @@ export class DataBase {
             ws.on("message", (_, msg) => {
                 Log.lvl2("returned", msg);
                 ws.close(1000);
-                resolve();
+                if (msg.toString().startsWith("entries:")){
+                    resolve(parseInt(msg.toString().slice(8)));
+                }
+                resolve(-1);
             });
             ws.on("error", (_, err) => {
                 Log.lvl2("error:", err);
