@@ -1,3 +1,8 @@
 # Matlab code
 
-Here comes the code that does the categorization of the data.
+TLDR: Matlab code for the machine learning.
+
+This folder will soon contain the first version of the Matlab pipeline to run the Machine Learning (ML) code that processs the Indie-Pocket app sensors measurement data and trains the classifiers.
+
+It is described in details here:
+https://htmlpreview.github.io/?https://github.com/indie-pocket/indie-pocket/blob/master/doc/Indie Pocket.html
