@@ -36,7 +36,7 @@ export class Sensor extends ReplaySubject<ISensor> {
         super(1);
         newValues.subscribe({
             next: (values) => {
-                if (debugOpt.debugPoints && values.sensor === SENSOR_ACCELEROMETER) {
+                if (debugOpt.showDT && values.sensor === SENSOR_ACCELEROMETER) {
                     const now = Date.now();
                     console.log("measurem:", now - this.latest);
                     this.latest = now;

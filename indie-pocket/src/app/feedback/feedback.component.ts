@@ -3,7 +3,7 @@ import {RouterExtensions} from "@nativescript/angular";
 import {Log} from "~/lib/log";
 import {EventData, TextView} from "@nativescript/core";
 import {serverURL} from "~/lib/global";
-import {confirm} from "tns-core-modules/ui/dialogs";
+import {alert} from "tns-core-modules/ui/dialogs";
 // tslint:disable-next-line
 const WS = require("nativescript-websockets");
 
@@ -25,7 +25,6 @@ export class FeedbackComponent implements OnInit {
 
     async send() {
         const tv = this.text.object as TextView;
-        Log.print(tv.text);
         const text = `User message   ${tv.text}`;
 
         // The happy path of this is:
@@ -43,7 +42,11 @@ export class FeedbackComponent implements OnInit {
         ws.on("message", async (_, msg) => {
             Log.lvl2("returned", msg);
             ws.close(1000);
-            await confirm("Successfully sent message");
+            await alert({
+                message: "Successfully sent message",
+                title: "Success",
+                okButtonText: "Nice"
+            });
             return this.routerExtensions.navigateByUrl("/main");
         });
         ws.on("error", (_, err) => {

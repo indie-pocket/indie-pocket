@@ -1,5 +1,15 @@
 TODO
-    - create separate upload screen
+    - create separate upload screen to be used for feedback and db-upload
+
+0.5.3
+    - smaller fonts for buttons on small screens
+    - change confirm -> alert
+    - fix missing alert on start screen
+    - add any-action
+    
+0.5.2
+    - added message for feedback
+    - get number of total uploads from all users
 
 0.5.1
     - ios-background: show message and add 30s to background running

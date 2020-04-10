@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import * as Sqlite from "nativescript-sqlite";
+import {Log} from "~/lib/log";
 
 /**
  * DataService holds two tables that allow to store information over multiple runs of the app.

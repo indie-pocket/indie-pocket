@@ -18,19 +18,20 @@ if (pkg.nativescript.staging){
 
 interface IDebugOpt {
     dropDB?: boolean;
-    debugPoints?: boolean;
+    showDT?: boolean;
     startCheckSleep?: boolean;
+    showRecordings?: boolean;
 }
 export const debugOpt: IDebugOpt = {};
 export const staging = pkg.nativescript.staging;
-Log.print("staging is:", staging);
 
 export const debug = pkg.nativescript.debug;
 if (debug) {
     // debugOpt.dropDB = true;
-    // debugOpt.debugPoints = true;
-    debugOpt.startCheckSleep = true;
+    // debugOpt.showDT = true;
+    // debugOpt.startCheckSleep = true;
+    debugOpt.showRecordings = true;
     Log.lvl = 2;
-    serverURL = "ws://192.168.100.1:5678";
+    // serverURL = "ws://192.168.100.1:5678";
     gameButtons = 2;
 }
