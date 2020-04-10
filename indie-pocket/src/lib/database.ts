@@ -1,6 +1,6 @@
 import {Labels} from "~/app/measure/labels";
 import {device} from "@nativescript/core/platform";
-import {serverURL} from "~/lib/global";
+import {debugOpt, serverURL} from "~/lib/global";
 import {ISensor} from "~/lib/sensors/sensor";
 import * as platform from "tns-core-modules/platform";
 import * as utils from "tns-core-modules/utils/utils";
@@ -60,7 +60,11 @@ export class DataBase {
 
     public async insert(sensor: ISensor, labels: Labels) {
         const values = `[${[...sensor.values.values()]}]`;
-        this.buffer.push(`(${labels.phase}, ${labels.getNumeric()}, '${sensor.sensor}', -1, '${values}', ${sensor.time})`);
+        const row = `(${labels.phase}, ${labels.getNumeric()}, '${sensor.sensor}', -1, '${values}', ${sensor.time})`;
+        this.buffer.push(row);
+        if (debugOpt.showRecordings){
+            Log.lvl1(row);
+        }
         if (this.buffer.length > DataBase.bufferSize) {
             await this.flush();
         }

@@ -49,7 +49,7 @@ export class DebugComponent implements OnInit {
             acc.pipe(
                 filter((s) => Math.floor(s.time / div) > last),
                 tap(s => last = Math.floor(s.time / div)),
-                tap(s => Log.print(last))
+                tap(s => Log.lvl1(last))
             ).subscribe({
                 next: (value) => {
                     const sec = Math.floor(value.time / div);

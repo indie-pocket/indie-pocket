@@ -17,7 +17,6 @@ if (isIOS) {
         private timer;
 
         public applicationDidEnterBackground(application: UIApplication) {
-            Log.print("Enter background");
             this.bgTask = application.beginBackgroundTaskWithNameExpirationHandler("MyTask", () => {
                 this.endBackgroundTask();
             });
@@ -25,14 +24,12 @@ if (isIOS) {
         }
 
         private endBackgroundTask(): void {
-            Log.print("endBackgroundTask");
             if (this.timer) {
                 this.timer.invalidate();
                 this.timer = null;
             }
             UIApplication.sharedApplication.endBackgroundTask(this.bgTask);
             this.bgTask = UIBackgroundTaskInvalid;
-            Log.print("End of background task.");
         }
     }
 

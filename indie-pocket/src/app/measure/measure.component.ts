@@ -9,8 +9,8 @@ import {Sensor} from "~/lib/sensors/sensor";
 import {Labels} from "~/app/measure/labels";
 import {DataBase} from "~/lib/database";
 import {isIOS} from "tns-core-modules/platform";
-import Timeout = NodeJS.Timeout;
 import {Log} from "~/lib/log";
+import Timeout = NodeJS.Timeout;
 
 /**
  * MeasureComponent is the main component of the app. It allows the user to chose her
@@ -26,6 +26,7 @@ export class MeasureComponent implements OnInit {
     public labels: Labels;
     public zeroToFive = [...Array(6).keys()];
     public zeroToSeven = [...Array(8).keys()];
+    public zeroToEight = [...Array(9).keys()];
     public uploading = -1;
     public times: string;
     public rows: string;
@@ -94,7 +95,7 @@ export class MeasureComponent implements OnInit {
         }, 1000);
         console.log("loaded");
         this.loaded = true;
-        if (debugOpt.debugPoints) {
+        if (debugOpt.showDT) {
             console.log("DEBUGGING POINTS");
             this.labels.setPlacement(1);
             this.labels.setActivity(1);
@@ -114,9 +115,9 @@ export class MeasureComponent implements OnInit {
     }
 
     async start() {
-        if (this.recording === 0 && isIOS){
-            await confirm("Please keep the app in the Foreground! iOS doesn't allow to gather data if the " +
-                "app is in the background or the phone is locked.")
+        if (this.recording === 0 && isIOS) {
+            await alert("Please keep the app in the Foreground! iOS doesn't allow to gather data if the " +
+                "app is in the background or the phone is locked.");
         }
         this.appsync.block = true;
         if (!this.labels.active || this.recording === 2) {
@@ -172,7 +173,7 @@ export class MeasureComponent implements OnInit {
                 let total = -1;
                 try {
                     total = await this.db.uploadDB();
-                    if (this.uploading === -1){
+                    if (this.uploading === -1) {
                         Log.warn("upload aborted");
                         return;
                     }
@@ -182,10 +183,14 @@ export class MeasureComponent implements OnInit {
                     this.uploading = -1;
                     await alert("Couldn't upload data: " + e.toString());
                 }
-                if (this.uploading > 0){
+                if (this.uploading > 0) {
                     this.uploading = 100;
                     const totStr = total > 0 ? ` Total available datasets on remote server: ${total}` : "";
-                    await confirm(`Successfully uploaded data.` + totStr);
+                    await alert({
+                        message: `Successfully uploaded data.` + totStr,
+                        title: "Success",
+                        okButtonText: "Go on rockin'"
+                    });
                     this.uploading = -1;
                     await this.data.incTime(0, this.collector.time);
                 }
@@ -197,9 +202,9 @@ export class MeasureComponent implements OnInit {
         }
     }
 
-    async abortUpload(){
+    async abortUpload() {
         clearInterval(this.progressUpdate);
-        await confirm("Upload cancelled");
+        await alert("Upload cancelled");
         this.uploading = -1;
     }
 
@@ -240,7 +245,7 @@ class Collector {
         this.gamification = setInterval(() => {
             this.time++;
             if (this.labels.active) {
-                if (this.labels.placement === 0 || this.labels.activity === 0) {
+                if (this.labels.placement === 0) {
                     console.log("something is wrong");
                 }
                 this.data.incTime(this.labels.placement);

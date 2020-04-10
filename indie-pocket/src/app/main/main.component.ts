@@ -4,8 +4,8 @@ import {RouterExtensions} from "nativescript-angular/router";
 import {randomBytes} from "crypto-browserify";
 import {AppSyncService} from "~/app/app-sync.service";
 import {Log} from "~/lib/log";
-import {debug, debugOpt} from "~/lib/global";
-import {confirm} from "tns-core-modules/ui/dialogs";
+import {debugOpt} from "~/lib/global";
+import {alert} from "tns-core-modules/ui/dialogs";
 
 /**
  * MainComponent initializes the dataService and makes sure that the first scren is only showed
@@ -43,9 +43,16 @@ export class MainComponent implements OnInit {
         }
         this.id = "Unique ID: " + iid;
 
-        if (this.data.getKV("showFeedback") === undefined){
-            await confirm("You can now give feedback - come back to this entry page and click on 'Give Feedback'");
-            this.data.setKV("showFeedback", "done");
+        if (this.data.getKV("showFeedback") === undefined ||
+            this.data.getKV("showFeedback") !== "done") {
+            setTimeout(() => {
+                alert({
+                    message: "You can now give feedback - come back to this entry page and click on 'Give Feedback'",
+                    title: "Info",
+                    okButtonText: "Cool"
+                });
+            }, 100);
+            await this.data.setKV("showFeedback", "done");
         }
 
         if (this.data.getKV("again") === "true") {

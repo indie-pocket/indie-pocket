@@ -1,9 +1,9 @@
 {
   "nativescript": {
-    "version": "0.5.2",
-    "staging": true,
+    "version": "0.5.3",
+    "staging": false,
     "debug": false,
-    "id": "ch.epfl.indiepocket.staging",
+    "id": "ch.epfl.indiepocket",
     "tns-android": {
       "version": "6.5.0"
     },
