@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/media">
+        <file alias="beep_880hz.wav">res/beep_880hz.wav</file>
+        <file alias="beep_440hz.wav">res/beep_440hz.wav</file>
+    </qresource>
+</RCC>
