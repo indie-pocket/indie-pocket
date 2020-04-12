@@ -244,7 +244,7 @@ fprintf('Bins stats: Nominal: %d; Collected: %d; Dropped : %d\n',...
         n_nominal_bins, length(bin), n_skipped_bins);
 
 %% Plot bins for visual inspection
-figure(100); hold on
+figure(100);
 s4 = subplot(514); hold on
 
 % Construct data for display
@@ -264,24 +264,27 @@ plot(bounds', zeros(size(bounds))', 'linewidth', 7);
 linkaxes([s1 s2 s3 s4], 'x');
 
 %% Plot labels histograms (Consider using hist3 for 3D histogram))
-% Label texts
-location_str = {'On table' 'In Hand' 'Ag. Head' 'Front Pkt.'...
-                'Back Pkt.' 'Frt. Jack. Pkt.' 'Handbag' 'Backpack'};
-activity_str = {'Any' 'Walking' 'Standing' 'Sitting'...
-                'Upstairs' 'Downstairs' 'Transports' 'Running',...
-                'Biking'};
+if(~isempty(bin))
 
-            
-figure(601)
-hist_bins = 1:8;
-hist(double(mod([bin.label], 10)), hist_bins)
-set(gca,'xtick',[1:8],'xticklabel',location_str)
-% set(gca,'XTickLabelRotation', 0)
-set(gca,'view',[90 -90])
+    % Label texts
+    location_str = {'On table' 'In Hand' 'Ag. Head' 'Front Pkt.'...
+                    'Back Pkt.' 'Frt. Jack. Pkt.' 'Handbag' 'Backpack'};
+    activity_str = {'Any' 'Walking' 'Standing' 'Sitting'...
+                    'Upstairs' 'Downstairs' 'Transports' 'Running',...
+                    'Biking'};
 
-figure(602)
-hist_bins = 0:8;
-hist(floor(double([bin.label])/10), hist_bins)
-set(gca,'xtick',[0:8],'xticklabel',activity_str)
-% set(gca,'XTickLabelRotation', 0)
-set(gca,'view',[90 -90])
+
+    figure(601)
+    hist_bins = 1:8;
+    hist(double(mod([bin.label], 10)), hist_bins)
+    set(gca,'xtick',[1:8],'xticklabel',location_str)
+    % set(gca,'XTickLabelRotation', 0)
+    set(gca,'view',[90 -90])
+
+    figure(602)
+    hist_bins = 0:8;
+    hist(floor(double([bin.label])/10), hist_bins)
+    set(gca,'xtick',[0:8],'xticklabel',activity_str)
+    % set(gca,'XTickLabelRotation', 0)
+    set(gca,'view',[90 -90])
+end

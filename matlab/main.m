@@ -90,7 +90,7 @@ dbfile = fullfile('G:\My Drive\Indie-Pocket\Recordings\IndiePocketApp\sensors-15
 bin = extract_bin_from_db(dbfile, 1, snsr_ref);
 
 %% 4.C Analyze from file number
-i = 32;
+i = 36;
 
 dbfile = fullfile([dblist(i).folder '\' dblist(i).name]);
 
