@@ -60,7 +60,7 @@ for i = 1:length(dblist)
         continue
     end
     
-    % Run FFT
+    % Run FFT and reshape
     for b = 1:length(bin)
         for s = 1:length(bin(b).U)
             bin(b).fU{s}.dat = fft(bin(b).U{s}.dat);
@@ -90,7 +90,7 @@ dbfile = fullfile('G:\My Drive\Indie-Pocket\Recordings\IndiePocketApp\sensors-15
 bin = extract_bin_from_db(dbfile, 1, snsr_ref);
 
 %% 4.C Analyze from file number
-i = 24;
+i = 32;
 
 dbfile = fullfile([dblist(i).folder '\' dblist(i).name]);
 
@@ -129,10 +129,11 @@ for i = 1:length(all_bin)
         Z(:,i) = all_bin(i).V{1};
     end
 end
+Z = Z'; %Doing this in the loop makes it much slower...
 
 % aZ = abs(Z);
 % aZ = find(isnan(aZ));
-PCs = pca(abs(Z));
+[coeff,PCs,latent]= pca(abs(Z));
 
 
 %% 8. Create model
@@ -186,8 +187,10 @@ ylabel('PC2')
 figure(301); clf; hold on
 for i = 1:length(all_bin)
     scatter3(PCs(i,1),PCs(i,2),PCs(i,3), 'MarkerFaceColor', colors{all_bin(i).label},...
-                                        'MarkerEdgeColor', colors{mod(all_bin(i).IID, 120)},...
+                                        'MarkerEdgeColor', colors{all_bin(i).label},...
                                         'LineWidth', 0.05);
+                                    
+%                                         'MarkerEdgeColor', colors{mod(all_bin(i).IID, 120)},...
     
 end
 xlabel('PC1')
@@ -208,8 +211,8 @@ ylabel('PC2')
 zlabel('PC3')
 
 % Legend of colors
-location_str = {'On table' 'In Hand' 'Against Head' 'Front Pocket'...
-                'Back Pocket' 'Front Jacket Pocket' 'Handbag' 'Backpack'};
+location_str = {'On table' 'In Hand' 'Ag. Head' 'Front Pkt.'...
+                'Back Pkt.' 'Frt. Jack. Pkt.' 'Handbag' 'Backpack'};
             
 u_lab = unique(mod([all_bin.label], 10));
 figure(303); clf; hold on
@@ -224,3 +227,26 @@ xlim([-0.2 3])
 ylim([-9 0])
 axis off
 
+
+%% 10. Show bins stats
+activity_str = {'Any' 'Walking' 'Standing' 'Sitting'...
+                'Upstairs' 'Downstairs' 'Transports' 'Running',...
+                'Biking'};
+
+% figure(600)
+% hist_bins = 1:98;
+% hist(double([all_bin.label]), hist_bins)
+
+figure(601)
+hist_bins = 1:8;
+hist(double(mod([all_bin.label], 10)), hist_bins)
+set(gca,'xtick',[1:8],'xticklabel',location_str)
+% set(gca,'XTickLabelRotation', 0)
+set(gca,'view',[90 -90])
+
+figure(602)
+hist_bins = 0:8;
+hist(double(floor([all_bin.label]/10)), hist_bins)
+set(gca,'xtick',[0:8],'xticklabel',activity_str)
+% set(gca,'XTickLabelRotation', 0)
+set(gca,'view',[90 -90])

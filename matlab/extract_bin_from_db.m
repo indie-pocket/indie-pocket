@@ -81,7 +81,7 @@ end
 figure(100); clf; hold on
 
 % Accelerometer data
-s1 = subplot(311);
+s1 = subplot(511);
 plot(S{1}.timestamp, S{1}.dat);
 hold on
 
@@ -107,23 +107,23 @@ ylabel('IMU')
 % ylabel('Steps')
 
 % Phase number
-s2 = subplot(312);
+s2 = subplot(512);
 plot(S{1}.timestamp, S{1}.phase);
 ylabel('Phase')
 
 % Data label (activities and pocket location
-s3 = subplot(313);
+s3 = subplot(513);
 plot(S{1}.timestamp, S{1}.label_num);
 ylabel('Label')
 
 
-linkaxes([s1 s2 s3], 'x');
-
 % Time difference between samples (dT)
-figure(101);
-a2 = plot(diff(T(T.sensor == snsr_list(1),:).timestamp));
+% figure(101);
+s5 = subplot(515);
+plot(T(T.sensor == snsr_list(1),:).timestamp(1:end-1),...
+     diff(T(T.sensor == snsr_list(1),:).timestamp));
 
-% linkaxes([s1 s2 s3 a2], 'x');
+linkaxes([s1 s2 s3 s5], 'x');
 
 %% Split into bins
 % Sampling frequencies and constants
@@ -151,6 +151,9 @@ for i = 1:length(S)
 end
 
 bin = [];
+n_skipped_bins = 0; % Invalid bins counter
+n_nominal_bins = 0;
+
 for ph = phase_list'
     
 %     disp(ph)
@@ -160,6 +163,9 @@ for ph = phase_list'
     %Trust accelerometer data to look for available measurements
     acc_T = phase_T(phase_T.sensor == snsr_list(1),:);
     
+    if isempty(acc_T)
+        continue; end
+    
     %Determine start and end timestamps
     phase_start_time = min(acc_T.timestamp);
     phase_end_time = max(acc_T.timestamp);
@@ -168,12 +174,13 @@ for ph = phase_list'
     N_bins = floor(double((phase_end_time - phase_start_time))/STAMPS_PER_BIN);
     if N_bins <1
         continue; end
-    
+    n_nominal_bins = n_nominal_bins + N_bins;
     
     tmp_bin = [];
     
     % Flag for invalid bins
     skip_bin = 0;
+    
     
     for i_bin = (1+Nbin_trim):(N_bins-Nbin_trim) %Remove N first and last
         
@@ -203,7 +210,7 @@ for ph = phase_list'
             catch
                 % Maybe data is inexistant -> drop bin (should be replaced
                 % by sanity checks before instead of this try/catch)
-                fprintf('Dropped bin %d\n', i_bin);
+%                 fprintf('Dropped bin %d\n', i_bin);
                 skip_bin = 1;
                 continue
             end
@@ -211,7 +218,7 @@ for ph = phase_list'
             % If there are NANs in the interpolated data -> drop bin.
             % Usually due to incomplete sensor data
             if sum(sum(isnan(bin_S_int)))
-                fprintf('Dropped bin, has NANs %d\n', i_bin);
+%                 fprintf('Dropped bin, has NANs %d\n', i_bin);
                 skip_bin = 1;
                 continue
             end
@@ -223,6 +230,7 @@ for ph = phase_list'
         end
         if skip_bin == 1
             skip_bin = 0;
+            n_skipped_bins = n_skipped_bins + 1;
         else
             % If bin not dropped, it can be accumulated with all other bins
             bin = [bin tmp_bin];
@@ -232,8 +240,12 @@ for ph = phase_list'
     end
 end
 
+fprintf('Bins stats: Nominal: %d; Collected: %d; Dropped : %d\n',...
+        n_nominal_bins, length(bin), n_skipped_bins);
+
 %% Plot bins for visual inspection
-figure(200); clf; hold on
+figure(100); hold on
+s4 = subplot(514); hold on
 
 % Construct data for display
 imu = [];
@@ -247,9 +259,29 @@ for i = 1:length(bin)
     bounds(i,2) = bin(i).U{1}.timestamp(end);
 end
 
-hold on
-
 plot(bounds', zeros(size(bounds))', 'linewidth', 7);
 
+linkaxes([s1 s2 s3 s4], 'x');
 
+%% Plot labels histograms (Consider using hist3 for 3D histogram))
+% Label texts
+location_str = {'On table' 'In Hand' 'Ag. Head' 'Front Pkt.'...
+                'Back Pkt.' 'Frt. Jack. Pkt.' 'Handbag' 'Backpack'};
+activity_str = {'Any' 'Walking' 'Standing' 'Sitting'...
+                'Upstairs' 'Downstairs' 'Transports' 'Running',...
+                'Biking'};
 
+            
+figure(601)
+hist_bins = 1:8;
+hist(double(mod([bin.label], 10)), hist_bins)
+set(gca,'xtick',[1:8],'xticklabel',location_str)
+% set(gca,'XTickLabelRotation', 0)
+set(gca,'view',[90 -90])
+
+figure(602)
+hist_bins = 0:8;
+hist(floor(double([bin.label])/10), hist_bins)
+set(gca,'xtick',[0:8],'xticklabel',activity_str)
+% set(gca,'XTickLabelRotation', 0)
+set(gca,'view',[90 -90])
