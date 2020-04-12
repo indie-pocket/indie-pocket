@@ -1,0 +1,637 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Anthropological and cultural considerations</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="05bf7b63-6047-417b-9d13-d0cee7a6a60f" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">👨‍👩‍👦</span></div><h1 class="page-title">Anthropological and cultural considerations</h1></header><div class="page-body"><p id="94732ebc-2305-4660-9971-e40b6afc8986" class="">
+</p><p id="8849c193-e320-4cfd-ae50-bf256100ddbd" class="">Physical aspects as dexterity and motricity or cultural as gender and beliefs influence our smartphone using habits. These aspect can be anticipated from <strong>personnal </strong>but<strong> &quot;privacy preserving</strong>&quot; factors as sex/gender, age range, country.
+
+Caution, the app must not discriminate a person (deduct she&#x27;s more or less exposed to the virus) due to gender, age, etc. Preliminary tests must make sure it&#x27;s not the case.</p><h3 id="015f9a0d-cfd4-4ca7-81f7-5c8a5bb10c44" class="">Social factors</h3><p id="049600de-fd35-4ce9-b43d-db89f0e1f544" class=""><strong>Gender </strong>specifically influences our clothing
+We can&#x27;t directly deduce cultural habits from gender (not either gender from biological sex) but we could consider different probabilty. Probability of wearing slim pants (with small front pockets), wearing a skirt (without pocket) - specially during summer, using a purse differ depending gender.</p><figure id="5a220ef4-5108-44c9-8e45-acdb3983761c" class="image"><a href="Anthropological%20and%20cultural%20considerations/genre_boutiqueimpact_com.jpg"><img style="width:336px" src="Anthropological%20and%20cultural%20considerations/genre_boutiqueimpact_com.jpg"/></a></figure><p id="8f9b11c3-b7cf-422e-8400-1ed7d60b71b4" class="">*source: boutiqueimpact.com</p><p id="eed19d55-5a1d-49d7-baa7-b0e8bfa7edea" class=""><strong>Age range/generations
+</strong>Some kids and teenagers have a smartphone but with specific usage rules due to family, school.
+The habits and the way we interact could change according to your generation. (features used as texting, vocal messages, video call)</p><p id="f3432349-142a-46cf-b4d9-37a80220f8e7" class="">(Due to advanced age, some people wont use their smarthone a lot (lack of dexterity and hearing). They are often the same who need close and physical help.)</p><p id="7889b7a0-db4c-47bf-b42b-6d93af064a8f" class="">
+</p><p id="655f9a81-29fc-40c3-8b20-4b947a43be81" class="">&quot;<strong>Turning off</strong>&quot; your phone is an information to consider.
+Some &quot;risky activities&quot; as team-sports require to leave your phone (on or off) on the locker, car or home.
+One of the &quot;hot spot&quot; in the begining of COVID-19 epidemic in europe was a religious gatering in Mulhouse. We should consider in a specific context people could leave/turn off/put in airplan/silent mode for different reasons (respect the others, not be distract, personnal or familial rules). So &quot;<strong>phone mode</strong>&quot; could be consider (according to the battery level)</p><p id="e6702ccb-f43c-4213-84b0-a31a4fe1ecc0" class="">
+</p><p id="b178025a-6e04-49bb-9c74-bb2cd32050db" class=""><strong>Using earphones</strong>/headphones change our gesture.
+Could &quot;screen/earphones&quot; sharing be detected? A very close and &quot;long&quot; (mor than 15min) human-to-human interaction is watching a video or listening to music with earphones together. It can&#x27;t be detect as &quot;very close interaction&quot; by BT if one phone is in the pocket and used as &quot;movie screen&quot;.</p><figure id="ca080f07-05d1-403a-9350-b6129a135443" class="image"><a href="Anthropological%20and%20cultural%20considerations/Untitled_(6).png"><img style="width:288px" src="Anthropological%20and%20cultural%20considerations/Untitled_(6).png"/></a></figure><p id="b016a661-ab09-4e31-971d-9ddcc6def15e" class="">*source: <a href="http://fitnessvsweightloss.com/">fitnessvsweightloss.com</a></p><h3 id="74ac6070-6981-42eb-b329-4a4aebd5aca8" class="">Device factors</h3><p id="e17dc4af-3d44-4a2c-94f4-91ed0ab2dd1a" class=""><strong>Size</strong></p><p id="beb36bd9-747f-4ad3-9fbb-12ba37858a90" class="">Your smartphone size specially influence the pocket you use. This factor could be linked to &quot;clothing extrapolated&quot;</p><p id="439c3879-185f-4966-a19b-9364a3c1599d" class=""><strong>Price and &quot;style&quot;</strong></p><p id="ccec7f8e-44d4-4805-9ffc-4663429a6e2b" class="">Does-it modify the way you leave it on a restaurant table by exemple? Or can it suggest your &quot;social level&quot; and habits?</p><p id="dc5d7f7b-0182-4186-a18d-3208635ca6b9" class=""><strong>Specific devices</strong></p><p id="c9fa4042-3da4-4193-904a-8d76c5bad589" class="">Some devices are specially design for specific environments (caterpillar smartphone for example). And some phones are dedicated for the office for example.</p><p id="093888d0-11ee-4961-bd26-2f48fbbaf79b" class=""><strong>Use of big covers</strong></p><p id="c8cf6919-d122-42df-9d37-16451cec8ec9" class="">Cant be &quot;detected&quot; but could help a lot.</p><figure id="169767d2-19d8-4afd-9723-d934a3941687" class="image"><a href="Anthropological%20and%20cultural%20considerations/Untitled_(7).png"><img style="width:240px" src="Anthropological%20and%20cultural%20considerations/Untitled_(7).png"/></a></figure><h3 id="27d29d84-b576-4f36-9d83-02fb4b686f5f" class="">External factors</h3><p id="f9f808e2-e38b-4260-8bc6-ed6c3caa48da" class="">Some factors are the sames for everyone in a specified area. PEPP-PT app is developped for europe but can we consider more defined area respecting the privacy. (And what about overseas departments)</p><p id="6487cb6d-7639-4676-8834-fda13c52241e" class=""><strong>seasons (environement factor)</strong></p><p id="f8ec6e18-57f0-4e71-a5fb-a51b6d489a1b" class="">We won&#x27;t to use GPS data, so we dont the specific weather of one day, but we can approximate temperature, nightfall time or probability of rain according to the timestamp of datas. Season is an external factor but it influence our clothing and activities.</p><figure id="b3304d72-efa3-471a-ab80-563c4d66d89a" class="image"><a href="Anthropological%20and%20cultural%20considerations/winter.jpg"><img style="width:240px" src="Anthropological%20and%20cultural%20considerations/winter.jpg"/></a></figure><p id="cd05ee1d-9448-44ae-a43f-39ab959efef8" class="">*source: <a href="https://www.mobilephonesdirect.co.uk/">mobilephonesdirect.co.uk</a></p><p id="f9c1e669-673f-40c1-9de4-5e21bf0d8c25" class=""><strong>time of the day</strong></p><p id="7d42e3e2-4a2a-4651-9137-266d1816633e" class="">Rush hour increse the probability to be in public transport or personnal car. In the same way, meals hour increase the probability you&#x27;re eation with other peoples. Its in the same time difficult and important to detect this activity because of two reasons: -a lot of people leave there phone for this moment, -it&#x27;s a &quot;risky&quot; activity in therm of contamination. So the time is a good clue.</p><p id="4ba7454d-86c2-4877-92c3-d625d0e0e1e8" class=""><strong>light
+</strong>Natural light could be detected by lux sensor or extrapolated from timestamp. It could influence habit as taking phone in hand to feel secure in the dark.</p><h1 id="846a1900-c1d5-4bac-a189-d33f7af37e05" class="">Habits extrapolations</h1><p id="1b60a8d5-a7d4-46eb-9889-fcc51945a804" class="">We could consider by exemple:
+
+<strong>If</strong> a person is never sitted with the smatphone in the pants pocket <strong>but </strong>the smartphone is often on a table and the person usually walk with it in pants pocket, <strong>then </strong>the phone is probably in the back pocket</p><p id="de73c06a-03ff-4a28-8b68-635466309c52" class=""><strong>If </strong>using/touching a lot your smartphone increase the risk of contamination via this object contact, <strong>then </strong>a person who have it most of the time (outside home) in hand is more exposed to the virus.</p><p id="24782428-69bb-48bc-9acc-c5ab3fb64017" class="">
+</p></div></article></body></html>
