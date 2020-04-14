@@ -1,7 +1,7 @@
 # Indie-Pocket
 
 Here is a longer documentation with more details: 
-[IndiePocket-Documentation](https://htmlpreview.github.io/?https://github.com/indie-pocket/indie-pocket/blob/master/doc/Indie%20Pocket.html)
+[IndiePocket-Documentation](https://go.epfl.ch/indiepocket-description)
 
 And an updated video for the App:
 https://www.youtube.com/watch?v=01FACVunuV0&feature=youtu.be
@@ -28,23 +28,9 @@ For more information, go to https://www.notion.so/Indie-Pocket-518e0803ecd345a3b
 
 If you want to participate in the collection of data, you can download the app and start using it:
 
+https://go.epfl.ch/indiepocket-description
+
 https://ineiti.applivery.io/indie-pocket
 
 The app works for both Android and iOS.
 
-## Results so far
-
-This is the main screen of our mobile app to gather data:
-
-![Indie-Pocket Mobile App](images/mobile-record.png)
-
-Here some captured data and it's Fast Fourier Transform (FFT):
-
-![IMU and FFT](images/IMU-FFT.png)
-
-And the simplest classification which shows a lot of promise to distinguish the data:
-
-![PC Classifier](images/PC-Classifier.png)
-
-## Literature
-https://www.researchgate.net/publication/287126682_Physical_Human_Activity_Recognition_Using_Wearable_Sensors
