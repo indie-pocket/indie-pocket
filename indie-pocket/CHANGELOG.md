@@ -1,5 +1,17 @@
 TODO
     - create separate upload screen to be used for feedback and db-upload
+    
+0.6.2
+    - fixed UI when uploading
+    - update shows real dialog
+    - hide record buttons if not used
+    
+0.6.1
+    - re-arranged screens, made nicer tracking
+    
+0.6.0
+    - added insomnia while recording (no sleep)
+    - moved 'Collector' to its own component
 
 0.5.3
     - smaller fonts for buttons on small screens

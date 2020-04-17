@@ -1,8 +1,9 @@
 <StackLayout width="90%" marginTop="5%">
     <Label text="Recording mode" class="h1"></Label>
-    <Label text="Please don't put the phone to sleep" class="h2"></Label>
-    <Label text="To unlock, click 5 times on the button that is blue" class="h3"></Label>
-    <Label text="Got {{counter}} out of 5 correct." class="h3"></Label>
+    <Label text="Please don't put the phone to sleep" textWrap="true" class="h2"></Label>
+    <Label text="To unlock, click 5 times on the button that is blue" textWrap="true" class="h3"></Label>
+    <Label text="Got {{counter}} out of 5 correct." class="h3" style="text-align: center;" width="100%"></Label>
+    <Progress [value]="counter" maxValue="5" class="progress" width="100%"></Progress>
 
     <GridLayout columns="*, *" rows="auto">
         <Button text="Don't click" class="" (tap)="reset()"
@@ -12,8 +13,8 @@
     </GridLayout>
 
     <StackLayout>
-        <Label textWrap="true" class="h3" [text]="collector.times"></Label>
-        <Label class="h3 debug" [text]="collector.rows"></Label>
+        <Label textWrap="true" class="h3" [text]="collector.timeString"></Label>
+        <Label class="h3 debug" [text]="collector.rowString"></Label>
     </StackLayout>
 
 </StackLayout>

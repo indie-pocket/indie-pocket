@@ -32,7 +32,14 @@ export class AppSyncService {
             if (!this.block) {
                 AppSync.sync({
                     deploymentKey: appKey,
-                    updateDialog: true,
+                    updateDialog: {
+                        optionalUpdateMessage: "An updated version of the app is available",
+                        updateTitle: "Automatic update",
+                        optionalInstallButtonLabel: "Install",
+                        optionalIgnoreButtonLabel: "Not Now",
+                        mandatoryContinueButtonLabel: "Continue",
+                        appendReleaseDescription: true,
+                    },
                     installMode: InstallMode.IMMEDIATE,
                 }, (_, label) => {
                     this.label = label;

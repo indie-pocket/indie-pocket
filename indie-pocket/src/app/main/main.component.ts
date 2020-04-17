@@ -38,16 +38,18 @@ export class MainComponent implements OnInit {
         }
         this.id = "Unique ID: " + iid;
 
-        if (this.data.getKV("showFeedback") === undefined ||
-            this.data.getKV("showFeedback") !== "done") {
-            setTimeout(() => {
-                alert({
-                    message: "You can now give feedback - come back to this entry page and click on 'Give Feedback'",
-                    title: "Info",
-                    okButtonText: "Cool"
-                });
-            }, 100);
-            await this.data.setKV("showFeedback", "done");
+        if (this.version.startsWith("0.4")) {
+            if (this.data.getKV("showFeedback") === undefined ||
+                this.data.getKV("showFeedback") !== "done") {
+                setTimeout(() => {
+                    alert({
+                        message: "You can now give feedback - come back to this entry page and click on 'Give Feedback'",
+                        title: "Info",
+                        okButtonText: "Cool"
+                    });
+                }, 100);
+                await this.data.setKV("showFeedback", "done");
+            }
         }
 
         if (this.data.getKV("again") === "true") {

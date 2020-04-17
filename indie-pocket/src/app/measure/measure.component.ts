@@ -139,7 +139,7 @@ export class MeasureComponent implements OnInit {
             }
             this.labels.clear();
             await this.collector.stop();
-            this.collector.rows = "";
+            this.collector.rowString = "";
             if (ok) {
                 console.log("stop and upload");
                 this.uploading = 10;
@@ -182,6 +182,8 @@ export class MeasureComponent implements OnInit {
         clearInterval(this.progressUpdate);
         await alert("Upload cancelled");
         this.uploading = -1;
+        this.collector.time = 0;
+        await this.db.clean();
     }
 
     async goMain() {

@@ -15,8 +15,8 @@ export class CollectorService {
     public labels: Labels;
     public db: DataBase;
     private data: DataService;
-    public times: string;
-    public rows: string;
+    public timeString: string;
+    public rowString: string;
 
     constructor() {
     }
@@ -34,14 +34,14 @@ export class CollectorService {
         setInterval(async () => {
             const tt = this.data.getTime(0);
             const rows = await this.db.count();
-            this.times = `Uploaded time: ${Math.floor(tt / 60)}' ${tt % 60}''`;
+            this.timeString = `Uploaded time: ${Math.floor(tt / 60)}' ${tt % 60}''`;
             const rec = this.time;
             if (rec > 0 || this.recording > 0) {
-                this.times += ` -- Recording time: ${Math.floor(rec / 60)}' ${rec % 60}''`;
+                this.timeString += ` -- Recording time: ${Math.floor(rec / 60)}' ${rec % 60}''`;
             }
-            this.rows = rows === 0 ? "" : `Recording rows: ${rows}`;
+            this.rowString = rows === 0 ? "" : `Recording rows: ${rows}`;
             if (this.db.flushTime > 0) {
-                this.rows += ` -- flush: ${this.db.flushTime}ms`
+                this.rowString += ` -- flush: ${this.db.flushTime}ms`
             }
             this.labels.update();
         }, 1000);
@@ -74,7 +74,9 @@ export class CollectorService {
                     Log.error("something is wrong");
                 }
                 this.data.incTime(this.labels.placement);
-                this.data.incTime(this.labels.activity * 10);
+                if (this.labels.activity > 0) {
+                    this.data.incTime(this.labels.activity * 10);
+                }
             }
         }, 1000)
     }

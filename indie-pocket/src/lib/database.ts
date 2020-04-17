@@ -121,6 +121,7 @@ export class DataBase {
         // - on("message" - closes the connection
         // if something goes wrong, on("error" is called.
         return new Promise((resolve, reject) => {
+            Log.lvl2("Connecting to", serverURL);
             const ws = new WS(serverURL, {timeout: 1000});
             // to prevent the browser to use blob
             ws.binaryType = "arraybuffer";
