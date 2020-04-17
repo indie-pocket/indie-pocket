@@ -1,9 +1,9 @@
 {
   "nativescript": {
-    "version": "0.6.2",
-    "staging": true,
+    "version": "0.6.3",
+    "staging": false,
     "debug": false,
-    "id": "ch.epfl.indiepocket.staging",
+    "id": "ch.epfl.indiepocket",
     "tns-android": {
       "version": "6.5.0"
     },
@@ -28,6 +28,7 @@
     "nativescript-accelerometer": "^3.0.0",
     "nativescript-angular": "~8.21.0",
     "nativescript-app-sync": "^2.0.0",
+    "nativescript-audio": "^5.0.5",
     "nativescript-insomnia": "^1.2.3",
     "nativescript-local-notifications": "^4.2.1",
     "nativescript-randombytes": "^1.0.0",

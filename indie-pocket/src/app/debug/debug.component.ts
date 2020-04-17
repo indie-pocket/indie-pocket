@@ -14,6 +14,8 @@ import {Log} from "~/lib/log";
 import {isAndroid} from "tns-core-modules/platform";
 import {debugOpt} from "~/lib/global";
 import {allowSleepAgain, keepAwake} from "nativescript-insomnia";
+import { TNSPlayer } from 'nativescript-audio';
+
 
 /**
  * DebugComponent gives a live view of the different sensors.
@@ -40,7 +42,7 @@ export class DebugComponent implements OnInit {
     }
 
     async checkSleep() {
-        this.stop();
+        await this.stop();
         await keepAwake();
 
         const acc = Sensor.getSensor(SENSOR_ACCELEROMETER);
@@ -62,8 +64,8 @@ export class DebugComponent implements OnInit {
         }
     }
 
-    startAll() {
-        this.stop();
+    async startAll() {
+        await this.stop();
         for (const sensor of [SENSOR_ACCELEROMETER, SENSOR_GYROSCOPE, SENSOR_LIGHT, SENSOR_STEP, SENSOR_PRESSURE]) {
             try {
                 Log.lvl2("getting sensor", sensor);
@@ -78,7 +80,20 @@ export class DebugComponent implements OnInit {
         }
     }
 
-    stop() {
+    async stop() {
+        // This is only to make sure the library is in the 0.6.x version, so that
+        // the issue #6 can be done in an update without re-installation.
+        const player = new TNSPlayer();
+        try {
+            await player.initFromFile({
+                audioFile: "~/samples/End-of-recording.mp3",
+                loop: false,
+            });
+            await player.play();
+        } catch(e){
+            Log.error("couldn't start file:", e);
+        }
+        Log.lvl2("started file");
         for (const sensor of this.sensors) {
             sensor.stop();
         }
