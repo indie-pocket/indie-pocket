@@ -13,6 +13,7 @@ import {Subscription} from "rxjs";
 import {Log} from "~/lib/log";
 import {isAndroid} from "tns-core-modules/platform";
 import {debugOpt} from "~/lib/global";
+import {allowSleepAgain, keepAwake} from "nativescript-insomnia";
 
 /**
  * DebugComponent gives a live view of the different sensors.
@@ -39,8 +40,10 @@ export class DebugComponent implements OnInit {
         }
     }
 
-    checkSleep() {
+    async checkSleep() {
         this.stop();
+        await keepAwake();
+
         const acc = Sensor.getSensor(SENSOR_ACCELEROMETER);
         if (acc) {
             this.sensors.push(new SensorView(acc));
@@ -84,7 +87,8 @@ export class DebugComponent implements OnInit {
         this.count = [];
     }
 
-    goMeasure() {
+    async goMeasure() {
+        await allowSleepAgain();
         this.stop();
         this.routerExtensions.navigateByUrl("/");
     }

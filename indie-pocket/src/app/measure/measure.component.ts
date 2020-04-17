@@ -10,6 +10,7 @@ import {Labels} from "~/app/measure/labels";
 import {DataBase} from "~/lib/database";
 import {isIOS} from "tns-core-modules/platform";
 import {Log} from "~/lib/log";
+import {CollectorService} from "~/app/collector.service";
 import Timeout = NodeJS.Timeout;
 
 /**
@@ -23,26 +24,27 @@ import Timeout = NodeJS.Timeout;
 })
 export class MeasureComponent implements OnInit {
     public static speeds = ["Slow", "Medium", "Fast", "Crazy"];
-    public labels: Labels;
     public zeroToFive = [...Array(6).keys()];
     public zeroToSeven = [...Array(8).keys()];
     public zeroToEight = [...Array(9).keys()];
     public uploading = -1;
-    public times: string;
-    public rows: string;
     public currentSpeed: string;
     public version: string;
     public loaded = false;
-    public recording = 0;
     private db: DataBase;
-    private collector: Collector;
     private progressUpdate: Timeout;
 
     constructor(
         private routerExtensions: RouterExtensions,
         private appsync: AppSyncService,
-        private data: DataService) {
+        private data: DataService,
+        private collector: CollectorService,
+    ) {
         this.version = appsync.getVersion();
+    }
+
+    get recording(): number {
+        return this.collector.recording;
     }
 
     get speed(): string {
@@ -57,11 +59,17 @@ export class MeasureComponent implements OnInit {
         console.log("speed is:", this.speed);
     }
 
+    get labels(): Labels {
+        return this.collector.labels;
+    }
+
     setPlacement(p: number) {
         this.labels.setPlacement(p);
         if (this.recording === 0 && this.labels.active) {
             this.start();
         }
+        Log.print("navigating to insomnia");
+        return this.routerExtensions.navigateByUrl("/insomnia");
     }
 
     setActivity(a: number) {
@@ -73,26 +81,9 @@ export class MeasureComponent implements OnInit {
 
     async ngOnInit() {
         this.appsync.block = false;
-        this.labels = new Labels(this.data);
-        this.db = await DataBase.createDB(this.labels, await this.data.getKV("iid"), this.appsync.getVersion());
-        this.collector = new Collector(this.db, this.labels, this.data);
         if (this.speed === undefined || this.appsync.getVersion().startsWith("0.4.2")) {
             this.speed = MeasureComponent.speeds[3];
         }
-        setInterval(async () => {
-            const tt = this.data.getTime(0);
-            const rows = await this.db.count();
-            this.times = `Uploaded time: ${Math.floor(tt / 60)}' ${tt % 60}''`;
-            const rec = this.collector.time;
-            if (rec > 0 || this.recording > 0) {
-                this.times += ` -- Recording time: ${Math.floor(rec / 60)}' ${rec % 60}''`;
-            }
-            this.rows = rows === 0 ? "" : `Recording rows: ${rows}`;
-            if (this.db.flushTime > 0) {
-                this.rows += ` -- flush: ${this.db.flushTime}ms`
-            }
-            this.labels.update();
-        }, 1000);
         console.log("loaded");
         this.loaded = true;
         if (debugOpt.showDT) {
@@ -115,29 +106,16 @@ export class MeasureComponent implements OnInit {
     }
 
     async start() {
-        if (this.recording === 0 && isIOS) {
-            await alert("Please keep the app in the Foreground! iOS doesn't allow to gather data if the " +
-                "app is in the background or the phone is locked.");
-        }
         this.appsync.block = true;
         if (!this.labels.active || this.recording === 2) {
             return;
         }
-        this.recording = 2;
         await this.collector.start();
+        return this.routerExtensions.navigateByUrl("/insomnia");
     }
 
     async pause() {
-        switch (this.recording) {
-            case 0:
-                return;
-            case 1:
-                return this.start();
-            default:
-                this.labels.phase++;
-                this.recording = 1;
-                return this.collector.stop();
-        }
+        return this.collector.pause();
     }
 
     async stop() {
@@ -162,8 +140,7 @@ export class MeasureComponent implements OnInit {
             }
             this.labels.clear();
             await this.collector.stop();
-            this.recording = 0;
-            this.rows = "";
+            this.collector.rows = "";
             if (ok) {
                 console.log("stop and upload");
                 this.uploading = 10;
@@ -209,57 +186,14 @@ export class MeasureComponent implements OnInit {
     }
 
     async goMain() {
-        await this.data.setKV("again", "false");
-        this.routerExtensions.navigateByUrl("/");
+        if (this.recording > 0) {
+            return alert({
+                title: "Still Recording",
+                message: "Please stop recording before going to the main page"
+            })
+        } else {
+            await this.data.setKV("again", "false");
+            return this.routerExtensions.navigateByUrl("/");
+        }
     }
 }
-
-/**
- * Collector starts all sensors and keeps a reference to them, so that they can be stopped afterwards.
- * In addition, it handles the gamification by increasing the time of the different buttons.
- */
-class Collector {
-    sensors: Sensor[] = [];
-    gamification: any;
-    time: number = 0;
-
-    constructor(private db: DataBase, private labels: Labels, private data: DataService) {
-    }
-
-    async start() {
-        await this.stop();
-        for (const c of Sensor.all) {
-            const s = Sensor.getSensor(c);
-            s.subscribe({
-                next: (value) => {
-                    this.db.insert(value, this.labels).catch((e) => {
-                        console.log("error while inserting data:", e);
-                    });
-                }
-            });
-            this.sensors.push(s);
-        }
-        if (this.gamification) {
-            clearInterval(this.gamification);
-        }
-        this.gamification = setInterval(() => {
-            this.time++;
-            if (this.labels.active) {
-                if (this.labels.placement === 0) {
-                    console.log("something is wrong");
-                }
-                this.data.incTime(this.labels.placement);
-                this.data.incTime(this.labels.activity * 10);
-            }
-        }, 1000)
-    }
-
-    async stop() {
-        for (const s of this.sensors) {
-            await s.stop();
-        }
-        this.sensors.splice(0);
-        clearInterval(this.gamification);
-    }
-}
-

@@ -28,11 +28,6 @@ export class MainComponent implements OnInit {
     }
 
     async ngOnInit() {
-        try {
-            await this.data.connect(debugOpt.dropDB);
-        } catch (e) {
-            Log.error("couldn't start db:", e);
-        }
         this.version = this.appsync.getVersion();
         Log.lvl1("kv is", this.data.getKV("again"));
         let iid = this.data.getKV("iid");

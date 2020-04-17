@@ -35,17 +35,22 @@
             </GridLayout>
 
             <Label class="h2" text="Control"></Label>
-            <StackLayout orientation="horizontal">
+            <GridLayout columns="*, *, *" rows="auto">
                 <Button text="Record" (tap)="start()" horizontalAlignment="left"
+                        class="-outline"
+                        col="0"
                         [class.inactive]="!labels.active"
                         [class.recording]="recording === 2"></Button>
                 <Button text="Pause" (tap)="pause()" horizontalAlignment="center"
+                        class="-outline"
+                        col="1"
                         [class.inactive]="recording === 0"
-                        [class.recording]="recording === 1"
-                ></Button>
+                        [class.recording]="recording === 1"></Button>
                 <Button text="Stop" (tap)="stop()" horizontalAlignment="right"
+                        class="-outline"
+                        col="2"
                         [class.inactive]="recording === 0"></Button>
-            </StackLayout>
+            </GridLayout>
         </StackLayout>
 
         <StackLayout visibility="{{uploading>=0?'visible':'collapse'}}">
@@ -53,14 +58,14 @@
 
             <ActivityIndicator [busy]="uploading < 100"></ActivityIndicator>
 
-            <Button text="Abort Upload" class="btn" (tap)="abortUpload()"></Button>
+            <Button text="Abort Upload" class="-outline" (tap)="abortUpload()"></Button>
         </StackLayout>
 
-        <Label textWrap="true" class="h3" [text]="times"></Label>
+        <Label textWrap="true" class="h3" [text]="collector.times"></Label>
 
         <StackLayout orientation="horizontal" width="100%">
             <Label class="h3 debug" [text]="currentSpeed" (tap)="setSpeed()"></Label>
-            <Label class="h3 debug" style="text-align:right;" width="100%" [text]="rows"></Label>
+            <Label class="h3 debug" style="text-align:right;" width="100%" [text]="collector.rows"></Label>
         </StackLayout>
     </StackLayout>
 </ScrollView>
