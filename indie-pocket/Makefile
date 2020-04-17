@@ -76,12 +76,12 @@ package-update:
 app-sync:
 	@if [ ${STAGING} = true ]; then \
 		echo "Pushing updates to Staging"; \
-		nativescript-app-sync release indiepocketAndroid android --targetBinaryVersion ~0.5.0 --d Staging; \
-		nativescript-app-sync release indiepocketIOS ios --targetBinaryVersion ~0.5.0 --d Staging; \
+		nativescript-app-sync release indiepocketAndroid android --targetBinaryVersion ~0.6.0 --d Staging; \
+		nativescript-app-sync release indiepocketIOS ios --targetBinaryVersion ~0.6.0 --d Staging; \
 	else \
 		echo "Pushing updates to Production"; \
-		nativescript-app-sync release indiepocketAndroid android --targetBinaryVersion ~0.5.0 --d Production; \
-		nativescript-app-sync release indiepocketIOS ios --targetBinaryVersion ~0.5.0 --d Production; \
+		nativescript-app-sync release indiepocketAndroid android --targetBinaryVersion ~0.6.0 --d Production; \
+		nativescript-app-sync release indiepocketIOS ios --targetBinaryVersion ~0.6.0 --d Production; \
 	fi
 
 app-sync-staging: STAGING = true

@@ -3,7 +3,7 @@
     "version": "0.6.0",
     "staging": true,
     "debug": false,
-    "id": "ch.epfl.indiepocket",
+    "id": "ch.epfl.indiepocket.staging",
     "tns-android": {
       "version": "6.5.0"
     },
