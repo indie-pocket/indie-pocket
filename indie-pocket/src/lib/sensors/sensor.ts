@@ -20,6 +20,7 @@ import {
     stopPressureUpdates,
     stopStepUpdates
 } from "~/lib/sensors/index";
+import {Log} from "~/lib/log";
 
 export interface ISensor {
     sensor: string;
@@ -38,7 +39,7 @@ export class Sensor extends ReplaySubject<ISensor> {
             next: (values) => {
                 if (debugOpt.showDT && values.sensor === SENSOR_ACCELEROMETER) {
                     const now = Date.now();
-                    console.log("measurem:", now - this.latest);
+                    Log.print("measurem:", now - this.latest);
                     this.latest = now;
                 }
                 this.next(values)
@@ -112,7 +113,7 @@ export class Sensor extends ReplaySubject<ISensor> {
                     return undefined;
             }
         } catch (e) {
-            console.log("couldn't get sensor", sensor, e);
+            Log.warn("couldn't get sensor", sensor, e);
             // rs.next(new Map([["not available", e]]));
         }
         return new Sensor(sensor, rs)

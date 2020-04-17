@@ -25,19 +25,19 @@ export class DataService {
                 await this.db.execSQL("DROP TABLE time;");
                 await this.db.execSQL("DROP TABLE keyvalue;");
             } catch (e) {
-                console.log("couldn't init tables:", e)
+                Log.error("couldn't init tables:", e)
             }
         }
         await this.db.execSQL("CREATE TABLE IF NOT EXISTS time (statusId INTEGER UNIQUE, timeSpent INTEGER UNIQUE);");
         await this.db.execSQL("CREATE TABLE IF NOT EXISTS keyvalue (key TEXT UNIQUE, value TEXT);");
         const times = await this.db.all("SELECT * FROM time;");
         times.forEach(t => {
-            console.log("got time:", t);
+            Log.lvl2("got time:", t);
             this.time.set(t[0], t[1]);
         });
         const kvs = await this.db.all("SELECT * FROM keyvalue;");
         kvs.forEach(kv => {
-            console.log("got kv:", kv);
+            Log.lvl2("got kv:", kv);
             this.kv.set(kv[0], kv[1]);
         });
     }

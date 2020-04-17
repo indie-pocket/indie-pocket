@@ -3,6 +3,7 @@ import {Sensor} from "~/lib/sensors/sensor";
 import {DataBase} from "~/lib/database";
 import {Labels} from "~/app/measure/labels";
 import {DataService} from "~/app/data.service";
+import {Log} from "~/lib/log";
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +13,7 @@ export class CollectorService {
     gamification: any;
     time: number = 0;
     public labels: Labels;
-    private db: DataBase;
+    public db: DataBase;
     private data: DataService;
     public times: string;
     public rows: string;
@@ -57,7 +58,7 @@ export class CollectorService {
             s.subscribe({
                 next: (value) => {
                     this.db.insert(value, this.labels).catch((e) => {
-                        console.log("error while inserting data:", e);
+                        Log.error("error while inserting data:", e);
                     });
                 }
             });
@@ -70,7 +71,7 @@ export class CollectorService {
             this.time++;
             if (this.labels.active) {
                 if (this.labels.placement === 0) {
-                    console.log("something is wrong");
+                    Log.error("something is wrong");
                 }
                 this.data.incTime(this.labels.placement);
                 this.data.incTime(this.labels.activity * 10);

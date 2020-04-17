@@ -8,7 +8,6 @@ import {AppSyncService} from "~/app/app-sync.service";
 import {Sensor} from "~/lib/sensors/sensor";
 import {Labels} from "~/app/measure/labels";
 import {DataBase} from "~/lib/database";
-import {isIOS} from "tns-core-modules/platform";
 import {Log} from "~/lib/log";
 import {CollectorService} from "~/app/collector.service";
 import Timeout = NodeJS.Timeout;
@@ -31,7 +30,6 @@ export class MeasureComponent implements OnInit {
     public currentSpeed: string;
     public version: string;
     public loaded = false;
-    private db: DataBase;
     private progressUpdate: Timeout;
 
     constructor(
@@ -56,11 +54,15 @@ export class MeasureComponent implements OnInit {
     set speed(sp: string) {
         this.data.setKV("speed", sp);
         Sensor.delay = ["normal", "ui", "game", "fastest"][MeasureComponent.speeds.findIndex(s => s === sp)] as SensorDelay;
-        console.log("speed is:", this.speed);
+        Log.lvl2("speed is:", this.speed);
     }
 
     get labels(): Labels {
         return this.collector.labels;
+    }
+
+    get db(): DataBase {
+        return this.collector.db;
     }
 
     setPlacement(p: number) {
@@ -75,7 +77,7 @@ export class MeasureComponent implements OnInit {
     setActivity(a: number) {
         this.labels.setActivity(a);
         if (this.recording === 0 && this.labels.active) {
-            this.start();
+            return this.start();
         }
     }
 
@@ -84,10 +86,8 @@ export class MeasureComponent implements OnInit {
         if (this.speed === undefined || this.appsync.getVersion().startsWith("0.4.2")) {
             this.speed = MeasureComponent.speeds[3];
         }
-        console.log("loaded");
         this.loaded = true;
         if (debugOpt.showDT) {
-            console.log("DEBUGGING POINTS");
             this.labels.setPlacement(1);
             this.labels.setActivity(1);
             await this.collector.start();
@@ -135,7 +135,6 @@ export class MeasureComponent implements OnInit {
             const ok = await confirm(options);
             console.log("confirm is", ok);
             if (ok === undefined) {
-                console.log("nothing");
                 return;
             }
             this.labels.clear();
@@ -175,7 +174,7 @@ export class MeasureComponent implements OnInit {
             this.collector.time = 0;
             await this.db.clean();
         } catch (e) {
-            console.log("no confirmation:", e);
+            Log.lvl2("no confirmation:", e);
         }
     }
 

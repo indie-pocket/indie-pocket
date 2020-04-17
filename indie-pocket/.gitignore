@@ -32,3 +32,4 @@ typings/
 !.vscode/launch.json
 !.vscode/extensions.json
 releases/
+App_Resources/**/*.png

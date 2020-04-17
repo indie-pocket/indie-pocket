@@ -68,8 +68,10 @@ package-update:
 	perl -pi -e 's/"debug".*/"debug": false,/' package.json
 	perl -pi -e 's/"staging".*/"staging": ${STAGING},/' package.json
 	if [ ${STAGING} = true ]; then \
+	    tns resources generate icons icon_staging.png; \
 		perl -pi -e 's/"id":.*/"id": "ch.epfl.indiepocket.staging",/' package.json; \
 	else \
+	    tns resources generate icons icon_prod.png; \
 		perl -pi -e 's/"id":.*/"id": "ch.epfl.indiepocket",/' package.json; \
 	fi
 

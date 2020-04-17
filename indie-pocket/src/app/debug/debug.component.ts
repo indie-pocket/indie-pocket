@@ -31,7 +31,6 @@ export class DebugComponent implements OnInit {
     constructor(
         private routerExtensions: RouterExtensions,
     ) {
-        console.log("new component");
     }
 
     ngOnInit(): void {

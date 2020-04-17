@@ -30,8 +30,8 @@ if (debug) {
     // debugOpt.dropDB = true;
     // debugOpt.showDT = true;
     // debugOpt.startCheckSleep = true;
-    debugOpt.showRecordings = true;
+    // debugOpt.showRecordings = true;
     Log.lvl = 2;
-    // serverURL = "ws://192.168.100.1:5678";
+    serverURL = "ws://192.168.100.1:5678";
     gameButtons = 2;
 }
