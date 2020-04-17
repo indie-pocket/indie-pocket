@@ -1,6 +1,6 @@
 {
   "nativescript": {
-    "version": "0.5.3",
+    "version": "0.5.4",
     "staging": false,
     "debug": false,
     "id": "ch.epfl.indiepocket",
