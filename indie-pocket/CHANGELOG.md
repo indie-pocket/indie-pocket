@@ -1,5 +1,8 @@
 TODO
     - create separate upload screen to be used for feedback and db-upload
+
+0.6.3
+    - added sound library for easier update afterwards
     
 0.6.2
     - fixed UI when uploading
