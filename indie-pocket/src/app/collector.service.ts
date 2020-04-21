@@ -14,17 +14,12 @@ export class CollectorService {
     time: number = 0;
     public labels: Labels;
     public db: DataBase;
-    private data: DataService;
     public timeString: string;
     public rowString: string;
+    public recording = 0;
+    private data: DataService;
 
     constructor() {
-    }
-
-    private _recording = 0;
-
-    get recording(): number {
-        return this._recording;
     }
 
     async init(data: DataService, version: string) {
@@ -48,11 +43,11 @@ export class CollectorService {
     }
 
     async start() {
-        if (this._recording === 2) {
+        if (this.recording === 2) {
             return;
         }
         await this.stop();
-        this._recording = 2;
+        this.recording = 2;
         for (const c of Sensor.all) {
             const s = Sensor.getSensor(c);
             s.subscribe({
@@ -81,7 +76,7 @@ export class CollectorService {
         }, 1000)
     }
 
-    async pause(){
+    async pause() {
         switch (this.recording) {
             case 0:
                 return;
@@ -90,15 +85,15 @@ export class CollectorService {
             default:
                 this.labels.phase++;
                 await this.stop();
-                this._recording = 1;
+                this.recording = 1;
         }
     }
 
     async stop() {
-        if (this._recording === 0) {
+        if (this.recording === 0) {
             return;
         }
-        this._recording = 0;
+        this.recording = 0;
         for (const s of this.sensors) {
             await s.stop();
         }

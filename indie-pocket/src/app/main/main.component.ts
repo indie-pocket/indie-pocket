@@ -6,6 +6,7 @@ import {AppSyncService} from "~/app/app-sync.service";
 import {Log} from "~/lib/log";
 import {debugOpt} from "~/lib/global";
 import {alert} from "tns-core-modules/ui/dialogs";
+import {isAndroid, Page} from "@nativescript/core";
 
 /**
  * MainComponent initializes the dataService and makes sure that the first scren is only showed
@@ -23,8 +24,12 @@ export class MainComponent implements OnInit {
     constructor(
         private data: DataService,
         private routerExtensions: RouterExtensions,
-        private appsync: AppSyncService
+        private appsync: AppSyncService,
+        private page: Page,
     ) {
+        if (isAndroid) {
+            this.page.actionBarHidden = true;
+        }
     }
 
     async ngOnInit() {

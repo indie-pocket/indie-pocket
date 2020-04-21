@@ -31,7 +31,7 @@ import { InsomniaComponent } from './insomnia/insomnia.component';
         MeasureComponent,
         DebugComponent,
         FeedbackComponent,
-        InsomniaComponent
+        InsomniaComponent,
     ],
     providers: [],
     schemas: [

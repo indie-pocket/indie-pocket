@@ -1,71 +1,90 @@
-<ActionBar title="{{'Indie-Pocket ' + version}}">
-    <NavigationButton android.systemIcon="ic_dialog_info" android.position="right"
-                      ios.position="right" ios.systemIcon="UIBarButtonSystemItemEdit"
-                      (tap)="goMain()"></NavigationButton>
-</ActionBar>
-
 <ScrollView visibility="{{loaded?'visible':'collapse'}}">
-    <StackLayout width="90%" marginTop="5%">
-        <StackLayout visibility="{{uploading >= 0 ? 'collapse' : 'visible'}}">
-            <GridLayout columns="*, *, *" rows="auto, auto, auto, auto">
-                <Label class="h2" textWrap="true" text="Placement" row="0" colSpan="2"></Label>
-                <Label class="h3 choose" text="Choose" visibility="{{labels.placement?'collapse':'visible'}}"
-                       row="0" col="2" verticalAlignment="center"></Label>
-
-                <Button *ngFor="let i of zeroToSeven"
-                        [col]="i%3" [row]="((i - (i % 3)) / 3 + 2) % 3 + 1"
-                        [text]="labels.placementLabels[i+1]"
-                        (tap)="setPlacement(i+1)"
-                        [class]="labels.placementClasses[i+1]"
-                        textWrap="true"
-                ></Button>
-
-            </GridLayout>
-
-            <GridLayout columns="*, *, *" rows="auto, auto, auto, auto">
-                <Label class="h2" text="Action - Optional" row="0" colSpan="2"></Label>
-
-                <Button *ngFor="let i of zeroToEight"
-                        [col]="i%3" [row]="(i - (i % 3)) / 3 + 1"
-                        [text]="labels.activityLabels[i]"
-                        (tap)="setActivity(i)"
-                        [class]="labels.activityClasses[i]"
-                        textWrap="true"
-                ></Button>
-            </GridLayout>
-
-            <GridLayout columns="*, *, *" rows="auto, auto" visibility="{{ labels.active ? 'visible' : 'collapse' }}">
-                <Label class="h2" text="Control" row="0" colSpan="3"></Label>
-                <Button text="Record" (tap)="start()" horizontalAlignment="left"
-                        class="-outline"
-                        col="0" row="1"
-                        [class.inactive]="!labels.active"
-                        [class.recording]="recording === 2"></Button>
-                <Button text="Pause" (tap)="pause()" horizontalAlignment="center"
-                        class="-outline"
-                        col="1" row="1"
-                        [class.inactive]="recording === 0"
-                        [class.recording]="recording === 1"></Button>
-                <Button text="Stop" (tap)="stop()" horizontalAlignment="right"
-                        class="-outline"
-                        col="2" row="1"
-                        [class.inactive]="recording === 0"></Button>
-            </GridLayout>
+    <StackLayout height="100%">
+        <StackLayout orientation="horizontal" class="header-color" style="padding: 25em 5% 0 5%;">
+            <StackLayout orientation="horizontal" style="margin-left: 5%;">
+                <Image src="~/samples/icon.png" width="10%" style="margin-right: 30px;"></Image>
+                <StackLayout>
+                    <Label text="Indie-Pocket" class="h2"></Label>
+                    <Label [text]="version" class="h3"></Label>
+                </StackLayout>
+            </StackLayout>
+            <StackLayout style="text-align: right;" width="100%">
+                <Label horizontalAlignment="right" style="margin-right: 5%;" [text]="currentSpeed"></Label>
+                <Label horizontalAlignment="right" style="margin-right: 5%;" [text]="collector.rowString"></Label>
+            </StackLayout>
         </StackLayout>
 
-        <StackLayout visibility="{{uploading>=0?'visible':'collapse'}}">
-            <Progress [value]="uploading" maxValue="100"></Progress>
+        <GridLayout columns="auto, *, *, *, auto" rows="auto, auto, auto, *, *, *, auto, auto">
+            <!-- Recording - Placement-Tab - Action-Tab -->
+            <StackLayout row="0" colSpan="5" class="header-color"></StackLayout>
+            <StackLayout row="0" colSpan="2"
+                         style="margin-left: 5%;">
+                <Label textWrap="true" [text]="collector.timeString"></Label>
+                <Label text="NOT RECORDING"></Label>
+            </StackLayout>
 
-            <ActivityIndicator [busy]="uploading < 100"></ActivityIndicator>
+            <StackLayout row="0" col="2" (tap)="labelTab = 0"
+                         [class]="labelTab === 0 ? 'choice-active' : 'choice-inactive'">
+                <Label text="PLACEMENT" class="center"></Label>
+                <Label [text]="labels.placementLabels[labels.placement] | uppercase"
+                       class="tabHeader" textWrap="true"></Label>
+            </StackLayout>
+            <StackLayout row="0" col="3" horizontalAlignment="left" (tap)="labelTab = 1"
+                         [class]="labelTab === 1 ? 'choice-active' : 'choice-inactive'">
+                <Label text="ACTION" class="center"></Label>
+                <Label [text]="labels.activityLabels[labels.activity] | uppercase"
+                       class="tabHeader" textWrap="true"></Label>
+            </StackLayout>
 
-            <Button text="Abort Upload" class="-outline" (tap)="abortUpload()"></Button>
-        </StackLayout>
+            <!-- Dashed line - eventual overlap from tab -->
+            <Image row="1" colSpan="5" src="~/samples/dotted.png"></Image>
+            <Label row="1" colSpan="5"
+                   class="passage-inactive" style="width: 100%;"></Label>
+            <Label row="1" col="2"
+                   class="{{ labelTab === 0 ? 'passage-active' : '' }}">
+            </Label>
+            <Label row="1" col="3" horizontalAlignment="left"
+                   class="{{ labelTab === 1 ? 'passage-active' : '' }}">
+            </Label>
 
-        <Label textWrap="true" class="h3" [text]="collector.timeString"></Label>
+            <!-- Dashed line above buttons -->
+            <StackLayout row="2" colSpan="5" class="pocket-top">
+                <Image src="~/samples/dotted.png"></Image>
+            </StackLayout>
 
-        <StackLayout orientation="horizontal" width="100%">
-            <Label class="h3 debug" [text]="currentSpeed" (tap)="setSpeed()"></Label>
-            <Label class="h3 debug" style="text-align:right;" width="100%" [text]="collector.rowString"></Label>
-        </StackLayout>
+            <Label col="0" row="3" rowSpan="3" class="pocket-left"></Label>
+            <Label col="4" row="3" rowSpan="3" class="pocket-right"></Label>
+
+            <!-- Placement buttons -->
+            <Button [visibility]="labelTab === 0 ? 'visible' : 'collapse'"
+                    *ngFor="let i of zeroToSeven"
+                    [col]="i%3+1" [row]="((i - (i % 3)) / 3 + 2) % 3 + 3"
+                    [text]="labels.placementLabels[i+1] | titlecase"
+                    (tap)="setPlacement(i+1)"
+                    [class]="labels.placementClasses[i+1]"
+                    textWrap="true"
+            ></Button>
+
+            <!-- Action buttons -->
+            <Button [visibility]="labelTab === 1 ? 'visible' : 'collapse'"
+                    *ngFor="let i of zeroToEight"
+                    [col]="i%3+1" [row]="(i - (i % 3)) / 3 + 3"
+                    [text]="labels.activityLabels[i] | titlecase"
+                    (tap)="setActivity(i)"
+                    [class]="labels.activityClasses[i]"
+                    textWrap="true"
+            ></Button>
+
+            <!-- Bottom of pocket -->
+            <StackLayout row="6" colSpan="5" class="pocket-bottom">
+                <Image src="~/samples/bottom_pocket.png"></Image>
+            </StackLayout>
+
+            <Label row="7" col="2" horizontalAlignment="center" class="recordWhite"></Label>
+            <Label row="7" col="2" horizontalAlignment="center"
+                   (tap)="start()"
+                   [visibility]="labels.active ? 'visible' : 'collapse'"
+                   class="recordRed"></Label>
+        </GridLayout>
     </StackLayout>
 </ScrollView>

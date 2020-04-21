@@ -5,7 +5,7 @@ import {screen} from "@nativescript/core/platform";
 export class Labels {
     public phase: number;
     public placementClasses: string[] = ["", "", "", "", "", "", "", "", "", ""];
-    public placementLabels = ['undefined',
+    public placementLabels = ['choose',
         'on table', 'in hand', 'against head',
         'front pocket', 'back pocket', 'front jacket pkt',
         'handbag', 'backpack'
