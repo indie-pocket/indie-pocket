@@ -23,3 +23,103 @@ The following CSS rule changes the font size of all Buttons that have the
 Button.-primary {
     font-size: 18;
 }
+
+
+.header-color {
+    background-color: rgba(86, 204, 242, 0.25);
+}
+
+.tabHeader {
+    text-align: center;
+    background-color: gray;
+    margin: 5em;
+    border-width: 2px;
+    border-radius: 10px;
+    font-size: +15px;
+}
+
+.center {
+    text-align: center;
+}
+
+.choice-active {
+    border-width: 12px 12px 0 12px;
+    border-color: black;
+    border-radius: 20px 20px 0 0;
+    background-color: white;
+    width: 25%;
+}
+
+.choice-inactive {
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-width: 12px;
+    border-color: black;
+    border-radius: 20px;
+    background-color: white;
+    width: 25%;
+}
+
+.passage-active {
+    border-width: 0 12px 0 12px;
+    border-color: black;
+    height: 20em;
+    background-color: white;
+    width: 25%;
+}
+
+.passage-inactive {
+    margin-left: 10px;
+    margin-right: 10px;
+    border-width: 12px 0 0 0;
+    border-color: black;
+    height: 20em;
+    width: 25%;
+}
+
+.pocket-top {
+    border-width: 12px 12px 0 12px;
+    border-color: black;
+    border-radius: 20px 20px 0 0;
+    background-color: white;
+    height: 20em;
+    margin-left: 20em;
+    margin-right: 20em;
+}
+
+.pocket-left {
+    border-width: 0 0 0 12px;
+    border-color: black;
+    margin-left: 20em;
+}
+
+.pocket-middle {
+}
+
+.pocket-right {
+    border-width: 0 12px 0 0;
+    border-color: black;
+    margin-right: 20em;
+}
+
+.pocket-bottom {
+    /*height: 40em;*/
+    margin-left: 20em;
+    margin-right: 20em;
+}
+
+.recordWhite {
+    margin: 10px 0 10px;
+    width: 50em;
+    height: 50em;
+    border-radius: 50em;
+    background-color: gray;
+}
+
+.recordRed {
+    width: 40em;
+    height: 40em;
+    border-radius: 20em;
+    background-color: red;
+}

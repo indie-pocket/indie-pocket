@@ -11,6 +11,7 @@ import {DataBase} from "~/lib/database";
 import {Log} from "~/lib/log";
 import {CollectorService} from "~/app/collector.service";
 import Timeout = NodeJS.Timeout;
+import {isAndroid, Page} from "@nativescript/core";
 
 /**
  * MeasureComponent is the main component of the app. It allows the user to chose her
@@ -30,6 +31,7 @@ export class MeasureComponent implements OnInit {
     public currentSpeed: string;
     public version: string;
     public loaded = false;
+    public labelTab = 0;
     private progressUpdate: Timeout;
 
     constructor(
@@ -37,8 +39,12 @@ export class MeasureComponent implements OnInit {
         private appsync: AppSyncService,
         private data: DataService,
         private collector: CollectorService,
+        private page: Page,
     ) {
         this.version = appsync.getVersion();
+        if (isAndroid) {
+            this.page.actionBarHidden = true;
+        }
     }
 
     get recording(): number {
@@ -67,18 +73,10 @@ export class MeasureComponent implements OnInit {
 
     setPlacement(p: number) {
         this.labels.setPlacement(p);
-        if (this.recording === 0 && this.labels.active) {
-            this.start();
-        }
-        Log.print("navigating to insomnia");
-        return this.routerExtensions.navigateByUrl("/insomnia");
     }
 
     setActivity(a: number) {
         this.labels.setActivity(a);
-        if (this.recording === 0 && this.labels.active) {
-            return this.start();
-        }
     }
 
     async ngOnInit() {
@@ -106,76 +104,7 @@ export class MeasureComponent implements OnInit {
     }
 
     async start() {
-        this.appsync.block = true;
-        if (!this.labels.active || this.recording === 2) {
-            return;
-        }
-        await this.collector.start();
         return this.routerExtensions.navigateByUrl("/insomnia");
-    }
-
-    async pause() {
-        return this.collector.pause();
-    }
-
-    async stop() {
-        if (this.recording === 0) {
-            return;
-        }
-        this.appsync.block = false;
-        let options = {
-            title: "Finish Recording",
-            message: "Stop recording and upload data to server?",
-            okButtonText: "Stop and upload",
-            cancelButtonText: "Stop and discard",
-            neutralButtonText: "Continue Recording"
-        };
-
-        try {
-            const ok = await confirm(options);
-            console.log("confirm is", ok);
-            if (ok === undefined) {
-                return;
-            }
-            this.labels.clear();
-            await this.collector.stop();
-            this.collector.rowString = "";
-            if (ok) {
-                console.log("stop and upload");
-                this.uploading = 10;
-                this.progressUpdate = setInterval(() => {
-                    this.uploading += (100 - this.uploading) / 10;
-                }, 250);
-                let total = -1;
-                try {
-                    total = await this.db.uploadDB();
-                    if (this.uploading === -1) {
-                        Log.warn("upload aborted");
-                        return;
-                    }
-                    clearInterval(this.progressUpdate);
-                } catch (e) {
-                    clearInterval(this.progressUpdate);
-                    this.uploading = -1;
-                    await alert("Couldn't upload data: " + e.toString());
-                }
-                if (this.uploading > 0) {
-                    this.uploading = 100;
-                    const totStr = total > 0 ? ` Total available datasets on remote server: ${total}` : "";
-                    await alert({
-                        message: `Successfully uploaded data.` + totStr,
-                        title: "Success",
-                        okButtonText: "Go on rockin'"
-                    });
-                    this.uploading = -1;
-                    await this.data.incTime(0, this.collector.time);
-                }
-            }
-            this.collector.time = 0;
-            await this.db.clean();
-        } catch (e) {
-            Log.lvl2("no confirmation:", e);
-        }
     }
 
     async abortUpload() {

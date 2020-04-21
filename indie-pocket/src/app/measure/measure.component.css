@@ -2,14 +2,17 @@
 .button-never {
     background-color:#ffeeee;
     color: black;
+    height: 80%;
 }
 .button-medium {
     background-color:#ffffee;
     color: black;
+    height: 80%;
 }
 .button-ok {
     background-color:#eeffee;
     color: black;
+    height: 80%;
 }
 
 Button.small-screen{
