@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Sensor} from "~/lib/sensors/sensor";
 import {DataBase} from "~/lib/database";
-import {Labels} from "~/app/measure/labels";
 import {DataService} from "~/app/data.service";
 import {Log} from "~/lib/log";
+import {Labels} from "~/lib/labels";
 
 @Injectable({
     providedIn: 'root'
@@ -15,8 +15,11 @@ export class CollectorService {
     public labels: Labels;
     public db: DataBase;
     public timeString: string;
+    public recordedString: string;
     public rowString: string;
     public recording = 0;
+    public flash: boolean;
+    public lessClicks = false;
     private data: DataService;
 
     constructor() {
@@ -29,16 +32,20 @@ export class CollectorService {
         setInterval(async () => {
             const tt = this.data.getTime(0);
             const rows = await this.db.count();
-            this.timeString = `Uploaded time: ${Math.floor(tt / 60)}' ${tt % 60}''`;
+            this.timeString = `Uploaded: ${Math.floor(tt / 60)}' ${tt % 60}''`;
             const rec = this.time;
+            this.recordedString = "";
             if (rec > 0 || this.recording > 0) {
-                this.timeString += ` -- Recording time: ${Math.floor(rec / 60)}' ${rec % 60}''`;
+                this.recordedString += `Recording: ${Math.floor(rec / 60)}' ${rec % 60}''`;
             }
             this.rowString = rows === 0 ? "" : `Recording rows: ${rows}`;
             if (this.db.flushTime > 0) {
-                this.rowString += ` -- flush: ${this.db.flushTime}ms`
+                this.rowString += `\nflush: ${this.db.flushTime}ms`
             }
             this.labels.update();
+            if (this.recording === 2){
+                this.flash = !this.flash;
+            }
         }, 1000);
     }
 
@@ -81,15 +88,18 @@ export class CollectorService {
             case 0:
                 return;
             case 1:
+                this.flash = true;
                 return this.start();
             default:
                 this.labels.phase++;
                 await this.stop();
                 this.recording = 1;
+                this.flash = true;
         }
     }
 
     async stop() {
+        this.flash = false;
         if (this.recording === 0) {
             return;
         }

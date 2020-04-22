@@ -110,16 +110,25 @@ Button.-primary {
 }
 
 .recordWhite {
-    margin: 10px 0 10px;
-    width: 50em;
-    height: 50em;
+    width: 75em;
+    height: 75em;
     border-radius: 50em;
     background-color: gray;
 }
 
 .recordRed {
-    width: 40em;
-    height: 40em;
-    border-radius: 20em;
+    width: 60em;
+    height: 60em;
+    border-radius: 30em;
     background-color: red;
+}
+
+.button-bottom-center {
+    width: 75em;
+    height: 75em;
+}
+
+.button-bottom {
+    width: 50em;
+    height: 50em;
 }

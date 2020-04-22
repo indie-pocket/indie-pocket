@@ -20,7 +20,7 @@ export class InsomniaComponent implements OnInit, OnDestroy {
     public counter = 0;
     public version: string;
     public currentSpeed: string;
-    public countdown = debug ? 1 : 5;
+    public countdown = 0;
     public uploading = 0;
 
     private countdownInterval;
@@ -50,14 +50,16 @@ export class InsomniaComponent implements OnInit, OnDestroy {
     async ngOnInit() {
         this.currentSpeed = "Recording speed is: " + this.data.getKV("speed");
         await keepAwake();
-        this.countdownInterval = setInterval(() => {
-            this.countdown--;
-            if (this.countdown === 0) {
-                clearInterval(this.countdownInterval);
-                this.start();
-            }
-        }, 1000);
-        this.collector.labels.setPlacement(1);
+        if (this.collector.recording !== 2) {
+            this.countdown = debug ? 2 : 5;
+            this.countdownInterval = setInterval(() => {
+                this.countdown--;
+                if (this.countdown === 0) {
+                    clearInterval(this.countdownInterval);
+                    this.start();
+                }
+            }, 1000);
+        }
         this.zipperImage = <Image>this.page.getViewById('zipper');
         this.zipperSliderImage = <Image>this.page.getViewById('zipper-slider');
     }
@@ -112,8 +114,11 @@ export class InsomniaComponent implements OnInit, OnDestroy {
                     return;
                 }
                 if (args.deltaX > width) {
-                    args.deltaX = 0;
-                    await this.pause();
+                    if (this.collector.lessClicks){
+                        return this.routerExtensions.navigateByUrl("/measure/upload");
+                    } else {
+                        return this.routerExtensions.navigateByUrl("/measure/choose");
+                    }
                 }
                 this.zipperSliderImage.translateX = args.deltaX;
                 break;
@@ -136,52 +141,12 @@ export class InsomniaComponent implements OnInit, OnDestroy {
         return this.collector.pause();
     }
 
-    async stop(upload: boolean) {
+    async stop() {
         if (this.collector.recording === 0) {
             return;
         }
 
-        try {
-            this.collector.labels.clear();
-            await this.collector.stop();
-            this.collector.rowString = "";
-            if (upload) {
-                console.log("stop and upload");
-                this.uploading = 10;
-                this.progressUpdate = setInterval(() => {
-                    this.uploading += (100 - this.uploading) / 10;
-                }, 250);
-                let total = -1;
-                try {
-                    total = await this.collector.db.uploadDB();
-                    if (this.uploading === -1) {
-                        Log.warn("upload aborted");
-                        return;
-                    }
-                    clearInterval(this.progressUpdate);
-                } catch (e) {
-                    clearInterval(this.progressUpdate);
-                    this.uploading = -1;
-                    await alert("Couldn't upload data: " + e.toString());
-                }
-                if (this.uploading > 0) {
-                    this.uploading = 100;
-                    const totStr = total > 0 ? ` Total available datasets on remote server: ${total}` : "";
-                    await alert({
-                        message: `Successfully uploaded data.` + totStr,
-                        title: "Success",
-                        okButtonText: "Go on rockin'"
-                    });
-                    this.uploading = -1;
-                    await this.data.incTime(0, this.collector.time);
-                }
-            }
-            this.collector.time = 0;
-            await this.collector.db.clean();
-        } catch (e) {
-            Log.lvl2("no confirmation:", e);
-        }
-        return this.routerExtensions.navigateByUrl("/measure");
+        return this.routerExtensions.navigateByUrl("/measure/choose");
     }
 
     async abortUpload() {

@@ -1,12 +1,12 @@
-import {Labels} from "~/app/measure/labels";
 import {device} from "@nativescript/core/platform";
-import {debugOpt, serverURL} from "~/lib/global";
+import {debug, debugOpt, serverURL} from "~/lib/global";
 import {ISensor} from "~/lib/sensors/sensor";
 import * as platform from "tns-core-modules/platform";
 import * as utils from "tns-core-modules/utils/utils";
 import {File, Folder, knownFolders} from "@nativescript/core";
 import * as Sqlite from "nativescript-sqlite";
 import {Log} from "~/lib/log";
+import {Labels} from "~/lib/labels";
 // tslint:disable-next-line
 const WS = require("nativescript-websockets");
 
@@ -62,7 +62,7 @@ export class DataBase {
         const values = `[${[...sensor.values.values()]}]`;
         const row = `(${labels.phase}, ${labels.getNumeric()}, '${sensor.sensor}', -1, '${values}', ${sensor.time})`;
         this.buffer.push(row);
-        if (debugOpt.showRecordings){
+        if (debugOpt.showRecordings) {
             Log.lvl1(row);
         }
         if (this.buffer.length > DataBase.bufferSize) {
@@ -133,10 +133,12 @@ export class DataBase {
             ws.on("message", (_, msg) => {
                 Log.lvl2("returned", msg);
                 ws.close(1000);
-                if (msg.toString().startsWith("entries:")){
-                    resolve(parseInt(msg.toString().slice(8)));
+                if (msg.toString().startsWith("entries:")) {
+                    setTimeout(() => resolve(parseInt(msg.toString().slice(8))),
+                        debug ? 2000 : 0);
+                } else {
+                    resolve(-1);
                 }
-                resolve(-1);
             });
             ws.on("error", (_, err) => {
                 Log.lvl2("error:", err);
