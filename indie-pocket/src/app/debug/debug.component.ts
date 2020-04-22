@@ -19,7 +19,7 @@ import { TNSPlayer } from 'nativescript-audio';
 
 /**
  * DebugComponent gives a live view of the different sensors.
- * @TODO: use the same sensor-library as MeasureComponent
+ * @TODO: use the same sensor-library as PocketComponent
  */
 @Component({
     selector: 'ns-debug',

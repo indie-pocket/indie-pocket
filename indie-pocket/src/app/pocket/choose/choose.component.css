@@ -1,18 +1,20 @@
-/* Add mobile styles for the component here.  */
 .button-never {
     background-color:#ffeeee;
     color: black;
-    height: 80%;
+    height: 100dp;
+    width: 100dp;
 }
 .button-medium {
     background-color:#ffffee;
     color: black;
-    height: 80%;
+    height: 100dp;
+    width: 100dp;
 }
 .button-ok {
     background-color:#eeffee;
     color: black;
-    height: 80%;
+    height: 100dp;
+    width: 100dp;
 }
 
 Button.small-screen{
@@ -48,6 +50,3 @@ Button.chosen.button-ok {
     text-align: center;
 }
 
-.debug {
-    color: #bbbbbb;
-}

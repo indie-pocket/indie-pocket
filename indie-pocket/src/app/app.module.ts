@@ -4,11 +4,13 @@ import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { MainComponent } from './main/main.component';
-import { MeasureComponent } from './measure/measure.component';
 import { DebugComponent } from './debug/debug.component';
 import {NativeScriptUIChartModule} from "nativescript-ui-chart/angular";
 import { FeedbackComponent } from './feedback/feedback.component';
-import { InsomniaComponent } from './insomnia/insomnia.component';
+import {PocketComponent} from "~/app/pocket/pocket.component";
+import {InsomniaComponent} from "~/app/pocket/insomnia/insomnia.component";
+import {ChooseComponent} from "~/app/pocket/choose/choose.component";
+import {UploadComponent} from "~/app/pocket/upload/upload.component";
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -28,10 +30,12 @@ import { InsomniaComponent } from './insomnia/insomnia.component';
     declarations: [
         AppComponent,
         MainComponent,
-        MeasureComponent,
+        PocketComponent,
         DebugComponent,
         FeedbackComponent,
         InsomniaComponent,
+        ChooseComponent,
+        UploadComponent,
     ],
     providers: [],
     schemas: [

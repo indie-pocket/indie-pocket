@@ -59,7 +59,7 @@ export class MainComponent implements OnInit {
 
         if (this.data.getKV("again") === "true") {
             Log.lvl1("going measure");
-            return this.routerExtensions.navigateByUrl("/measure");
+            return this.routerExtensions.navigateByUrl("/measure/choose");
         } else {
             Log.lvl1("setting again to true");
             await this.data.setKV("again", "true");
