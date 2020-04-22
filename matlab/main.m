@@ -23,17 +23,18 @@ for i = 1:length(dblist)
     conn = sqlite(dbfile, 'readonly');
     try
         C_iid = fetch(conn, 'SELECT * FROM iid');
+        IID = sscanf(string(C_iid{1}), '%x'); % NOT CORRECT
         
     catch
         disp('No ID data available')
         close(conn);
         continue
     end
-    fprintf('File# %d %s has ID %d and ver %s on %s\n', i, dblist(i).name,...
-            str2num(string(C_iid{1})), string(C_iid{2}),...
+    fprintf('File# %d %s has ID %14d and ver %s on %s\n', i, dblist(i).name,...
+            IID, string(C_iid{2}),...
             string(C_iid{3}));
 
-    IDs = [IDs str2num(string(C_iid{1}))];
+    IDs = [IDs IID];
     
     close(conn);
         
@@ -90,7 +91,7 @@ dbfile = fullfile('G:\My Drive\Indie-Pocket\Recordings\IndiePocketApp\sensors-15
 bin = extract_bin_from_db(dbfile, 1, snsr_ref);
 
 %% 4.C Analyze from file number
-i = 36;
+i = 39;
 
 dbfile = fullfile([dblist(i).folder '\' dblist(i).name]);
 
@@ -115,7 +116,7 @@ all_bin = [all_bin bin];
 
 %% 6.B combine files
 tmp = all_bin;
-load('2020-04-06 sandy.mat')
+load('2020-04-14 Robert.mat')
 all_bin = [all_bin tmp];
 
 %% Clean NANs
@@ -136,7 +137,7 @@ Z = Z'; %Doing this in the loop makes it much slower...
 [coeff,PCs,latent]= pca(abs(Z));
 
 
-%% 8. Create model
+%% 8.1 Structure training data
 all_binT = table(PCs(:,1), PCs(:,2), PCs(:,3));
 resp = [all_bin.label];
 
@@ -157,6 +158,13 @@ X4.resp = resp';
 X5 = array2table(PCs);
 X5.resp = mod(resp, 10)';
 
+X6 = array2table(PCs(:,1:7));
+X6.resp = mod(resp, 10)';
+
+
+
+%% 8.2 Create model
+
 Mdl = fitcknn(all_binT, [all_bin.label]);
 
 % Optional: modifiy number of neighbors
@@ -172,16 +180,16 @@ if ~exist('colors', 'var')
     run('generate_random_colors.m');
 end
 
-% First two PCs
-figure(300); clf; hold on
-for i = 1:length(all_bin)
-    scatter(PCs(i,1),PCs(i,2), 'MarkerFaceColor', colors{all_bin(i).label},...
-                               'MarkerEdgeColor', colors{mod(all_bin(i).IID, 120)},...
-                               'LineWidth', 0.05);
-    
-end
-xlabel('PC1')
-ylabel('PC2')
+% % First two PCs
+% figure(300); clf; hold on
+% for i = 1:length(all_bin)
+%     scatter(PCs(i,1),PCs(i,2), 'MarkerFaceColor', colors{all_bin(i).label},...
+%                                'MarkerEdgeColor', colors{mod(all_bin(i).IID, 120)},...
+%                                'LineWidth', 0.05);
+%     
+% end
+% xlabel('PC1')
+% ylabel('PC2')
 
 % 3D scatter of first 3 PCs
 figure(301); clf; hold on
