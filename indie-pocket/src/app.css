@@ -78,33 +78,16 @@ Button.-primary {
     width: 25%;
 }
 
-.pocket-top {
-    border-width: 12px 12px 0 12px;
+.pocket {
+    border-width: 5em 5em 0 5em;
     border-color: black;
     border-radius: 20px 20px 0 0;
     background-color: white;
-    height: 20em;
     margin-left: 20em;
-    margin-right: 20em;
-}
-
-.pocket-left {
-    border-width: 0 0 0 12px;
-    border-color: black;
-    margin-left: 20em;
-}
-
-.pocket-middle {
-}
-
-.pocket-right {
-    border-width: 0 12px 0 0;
-    border-color: black;
     margin-right: 20em;
 }
 
 .pocket-bottom {
-    /*height: 40em;*/
     margin-left: 20em;
     margin-right: 20em;
 }

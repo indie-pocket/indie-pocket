@@ -65,6 +65,7 @@ export class InsomniaComponent implements OnInit, OnDestroy {
     }
 
     async ngOnDestroy() {
+        await allowSleepAgain();
         clearInterval(this.zipperInterval);
     }
 
@@ -155,14 +156,5 @@ export class InsomniaComponent implements OnInit, OnDestroy {
         this.uploading = -1;
         this.collector.time = 0;
         await this.collector.db.clean();
-    }
-
-    async goOn() {
-        this.counter++;
-        if (this.counter >= InsomniaComponent.secret.length ||
-            debug && this.counter >= 2) {
-            await allowSleepAgain();
-            this.routerExtensions.back();
-        }
     }
 }

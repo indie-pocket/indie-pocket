@@ -1,39 +1,35 @@
-<StackLayout>
-    <GridLayout columns="auto, *, auto" rows="auto, auto, auto">
-        <!-- Dashed line above buttons -->
-        <StackLayout row="0" colSpan="3" class="pocket-top">
+<GridLayout rows="*, auto">
+    <StackLayout row="0">
+        <StackLayout class="pocket" verticalAlignment="top">
             <Image src="~/samples/dotted.png"></Image>
+
+            <GridLayout rows="auto, auto" columns="*">
+                <Image row="0" col="0" src="~/samples/zipper.png"
+                       style="width: 100%;"
+                       id="zipper"></Image>
+                <Image row="0" col="0" src="~/samples/zipper-slider.png" id="zipper-slider"
+                       style="width: 20%; margin-right: 80%;"
+                       (pan)="unzip($event)"
+                ></Image>
+
+                <StackLayout col="0" row="1" style="margin: 0 5% 0 5%;">
+                    <StackLayout [visibility]="countdown > 0 ? 'visible' : 'collapse'">
+                        <Label [text]="'Countdown: ' + countdown" class="h1 center"></Label>
+                    </StackLayout>
+                    <StackLayout [visibility]="countdown === 0 ? 'visible' : 'collapse'">
+                        <Label text="Recording mode" class="h1"></Label>
+                        <Label text="Please don't put the phone to sleep" textWrap="true" class="h2"></Label>
+                        <Label text="Unzip the zipper to unlock" textWrap="true" class="h2"></Label>
+                    </StackLayout>
+                </StackLayout>
+            </GridLayout>
+
         </StackLayout>
 
-        <Label row="1" col="0" class="pocket-left"></Label>
-        <Label row="1" col="2" class="pocket-right"></Label>
+        <Image src="~/samples/bottom_pocket.png" class="pocket-bottom"></Image>
 
-        <!-- Bottom of pocket -->
-        <StackLayout row="2" colSpan="5" class="pocket-bottom">
-            <Image src="~/samples/bottom_pocket.png"></Image>
-        </StackLayout>
+    </StackLayout>
 
-        <GridLayout row="1" col="1" rows="auto, auto" columns="*">
-            <Image row="0" col="0" src="~/samples/zipper.png"
-                   style="width: 100%;"
-                   id="zipper"></Image>
-            <Image row="0" col="0" src="~/samples/zipper-slider.png" id="zipper-slider"
-                   style="width: 20%; margin-right: 80%;"
-                   (pan)="unzip($event)"
-            ></Image>
+    <Image row="1" src="~/samples/icon-lock.png" horizontalAlignment="center" style="width: 30%;"></Image>
 
-            <StackLayout col="0" row="1" style="margin: 0 5% 0 5%;">
-                <StackLayout [visibility]="countdown > 0 ? 'visible' : 'collapse'">
-                    <Label [text]="'Countdown: ' + countdown" class="h1 center"></Label>
-                </StackLayout>
-                <StackLayout [visibility]="countdown === 0 ? 'visible' : 'collapse'">
-                    <Label text="Recording mode" class="h1"></Label>
-                    <Label text="Please don't put the phone to sleep" textWrap="true" class="h2"></Label>
-                    <Label text="Unzip the zipper to unlock" textWrap="true" class="h2"></Label>
-                </StackLayout>
-            </StackLayout>
-        </GridLayout>
-    </GridLayout>
-
-    <Image src="~/samples/icon-lock.png" horizontalAlignment="center" style="width: 30%;"></Image>
-</StackLayout>
+</GridLayout>

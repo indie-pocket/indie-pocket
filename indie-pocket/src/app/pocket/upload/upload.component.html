@@ -1,20 +1,9 @@
-<StackLayout>
-    <GridLayout columns="auto, *, auto" rows="auto, auto, auto">
-        <!-- Dashed line above buttons -->
-        <StackLayout row="0" colSpan="3" class="pocket-top">
+<GridLayout rows="*, auto">
+    <StackLayout row="0">
+        <StackLayout class="pocket" verticalAlignment="top">
             <Image src="~/samples/dotted.png"></Image>
-        </StackLayout>
 
-        <Label row="1" col="0" class="pocket-left"></Label>
-        <Label row="1" col="2" class="pocket-right"></Label>
-
-        <!-- Bottom of pocket -->
-        <StackLayout row="2" colSpan="5" class="pocket-bottom">
-            <Image src="~/samples/bottom_pocket.png"></Image>
-        </StackLayout>
-
-        <!-- Buttons for upload choice -->
-        <StackLayout row="1" col="1">
+            <!-- Choosing what to do with the data -->
             <StackLayout [visibility]="uploading === 0 ? 'visible' : 'collapse'">
                 <Label text="RECORDING STOPPED" class="h2 center"></Label>
                 <StackLayout width="60%">
@@ -23,6 +12,8 @@
                     <Button text="Continue Recording" (tap)="continue()" class="btn"></Button>
                 </StackLayout>
             </StackLayout>
+
+            <!-- Uploading the data -->
             <StackLayout [visibility]="uploading !== 0 ? 'visible' : 'collapse'">
                 <Label text="UPLOADING" class="h1 center"></Label>
                 <Progress [value]="uploading" maxValue="100"></Progress>
@@ -31,7 +22,9 @@
             </StackLayout>
         </StackLayout>
 
-    </GridLayout>
+        <Image src="~/samples/bottom_pocket.png" class="pocket-bottom"></Image>
 
-    <Image src="~/samples/icon-stop.png" horizontalAlignment="center" style="width: 30%;"></Image>
-</StackLayout>
+    </StackLayout>
+
+    <Image row="1" src="~/samples/icon-stop.png" horizontalAlignment="center" style="width: 30%;"></Image>
+</GridLayout>
