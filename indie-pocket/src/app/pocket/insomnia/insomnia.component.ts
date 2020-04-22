@@ -4,10 +4,9 @@ import {allowSleepAgain, keepAwake} from "nativescript-insomnia";
 import {RouterExtensions} from "@nativescript/angular";
 import {CollectorService} from "~/app/collector.service";
 import {debug} from "~/lib/global";
-import {Image, isAndroid, Page, PanGestureEventData} from "@nativescript/core";
+import {Image, Page, PanGestureEventData} from "@nativescript/core";
 import {AppSyncService} from "~/app/app-sync.service";
 import {DataService} from "~/app/data.service";
-import {Log} from "~/lib/log";
 import {screen} from "@nativescript/core/platform";
 
 @Component({
@@ -15,7 +14,7 @@ import {screen} from "@nativescript/core/platform";
     templateUrl: './insomnia.component.html',
     styleUrls: ['./insomnia.component.css']
 })
-export class InsomniaComponent implements OnInit, OnDestroy {
+export class InsomniaComponent implements OnInit {
     public static secret = [true, false, false, true, false];
     public counter = 0;
     public version: string;
@@ -38,9 +37,8 @@ export class InsomniaComponent implements OnInit, OnDestroy {
         private data: DataService,
     ) {
         this.version = appsync.getVersion();
-        if (isAndroid) {
-            this.page.actionBarHidden = true;
-        }
+        this.page.actionBarHidden = true;
+        this.collector.labels.tab = -1;
     }
 
     get zero(): boolean {
@@ -62,11 +60,6 @@ export class InsomniaComponent implements OnInit, OnDestroy {
         }
         this.zipperImage = <Image>this.page.getViewById('zipper');
         this.zipperSliderImage = <Image>this.page.getViewById('zipper-slider');
-    }
-
-    async ngOnDestroy() {
-        await allowSleepAgain();
-        clearInterval(this.zipperInterval);
     }
 
     reset() {
@@ -115,10 +108,10 @@ export class InsomniaComponent implements OnInit, OnDestroy {
                     return;
                 }
                 if (args.deltaX > width) {
-                    if (this.collector.lessClicks){
-                        return this.routerExtensions.navigateByUrl("/measure/upload");
+                    if (this.collector.lessClicks) {
+                        return this.leave("upload");
                     } else {
-                        return this.routerExtensions.navigateByUrl("/measure/choose");
+                        return this.leave("choose");
                     }
                 }
                 this.zipperSliderImage.translateX = args.deltaX;
@@ -147,7 +140,13 @@ export class InsomniaComponent implements OnInit, OnDestroy {
             return;
         }
 
-        return this.routerExtensions.navigateByUrl("/measure/choose");
+        return this.leave("choose");
+    }
+
+    async leave(path: string){
+        await allowSleepAgain();
+        clearInterval(this.zipperInterval);
+        return this.routerExtensions.navigateByUrl("/measure/" + path);
     }
 
     async abortUpload() {

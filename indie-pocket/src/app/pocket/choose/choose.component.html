@@ -1,9 +1,9 @@
 <GridLayout rows="*, auto">
-    <StackLayout row="0">
-        <StackLayout class="pocket" verticalAlignment="top">
-            <Image src="~/samples/dotted.png"></Image>
+    <GridLayout row="0" rows="*, auto">
+        <GridLayout row="0" rows="auto, *" class="pocket">
+            <Image row="0" src="~/samples/dotted.png"></Image>
 
-            <GridLayout columns="*, *, *" rows="auto, auto, auto">
+            <GridLayout row="1" columns="*, *, *" rows="*, *, *">
                 <!-- Placement buttons -->
                 <Button [visibility]="collector.labels.tab === 0 ? 'visible' : 'collapse'"
                         *ngFor="let i of zeroToSeven"
@@ -25,11 +25,11 @@
                 ></Button>
             </GridLayout>
 
-        </StackLayout>
+        </GridLayout>
 
-        <Image src="~/samples/bottom_pocket.png" class="pocket-bottom"></Image>
+        <Image row="1" src="~/samples/bottom_pocket.png" class="pocket-bottom"></Image>
 
-    </StackLayout>
+    </GridLayout>
 
 
     <!-- Lock / Record / Stop -->

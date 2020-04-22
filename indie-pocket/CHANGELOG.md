@@ -1,5 +1,7 @@
-TODO
-    - create separate upload screen to be used for feedback and db-upload
+0.6.4
+    - UI according to Julien
+    - split in different screens
+    - big cleanup of StackLayout / GridLayouts
 
 0.6.3
     - added sound library for easier update afterwards

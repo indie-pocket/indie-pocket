@@ -1,5 +1,5 @@
-<StackLayout>
-    <StackLayout orientation="horizontal" class="header-color" style="padding: 25em 5% 0 5%;">
+<GridLayout rows="auto, auto, *">
+    <StackLayout row="0" orientation="horizontal" class="header-color" style="padding: 25em 5% 0 5%;">
         <StackLayout orientation="horizontal" style="margin-left: 5%;">
             <Image src="~/samples/icon.png" width="10%" style="margin-right: 30px;"></Image>
             <StackLayout>
@@ -20,7 +20,7 @@
         </StackLayout>
     </StackLayout>
 
-    <GridLayout columns="*, *, *" rows="auto, auto">
+    <GridLayout row="1" columns="*, *, *" rows="auto, auto">
         <!-- Recording - Placement-Tab - Action-Tab -->
         <StackLayout row="0" colSpan="3" class="header-color"></StackLayout>
         <StackLayout row="0" col="0"
@@ -58,6 +58,8 @@
         </Label>
     </GridLayout>
 
-    <page-router-outlet></page-router-outlet>
+    <StackLayout row="2">
+        <page-router-outlet></page-router-outlet>
+    </StackLayout>
 
-</StackLayout>
+</GridLayout>
