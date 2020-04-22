@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CollectorService} from "~/app/collector.service";
 import {Log} from "~/lib/log";
 import {Page} from "@nativescript/core";
@@ -23,7 +23,6 @@ export class ChooseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        Log.print("choose");
         this.collector.labels.tab = 0;
     }
 

@@ -1,20 +1,23 @@
 .button-never {
     background-color:#ffeeee;
     color: black;
-    height: 100dp;
-    width: 100dp;
+    height: 30%;
+    width: 30%;
+    border-radius: 10dp;
 }
 .button-medium {
     background-color:#ffffee;
     color: black;
-    height: 100dp;
-    width: 100dp;
+    height: 30%;
+    width: 30%;
+    border-radius: 10dp;
 }
 .button-ok {
     background-color:#eeffee;
     color: black;
-    height: 100dp;
-    width: 100dp;
+    height: 30%;
+    width: 30%;
+    border-radius: 10dp;
 }
 
 Button.small-screen{

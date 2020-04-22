@@ -79,7 +79,7 @@ Button.-primary {
 }
 
 .pocket {
-    border-width: 5em 5em 0 5em;
+    border-width: 5dp 5dp 0 5dp;
     border-color: black;
     border-radius: 20px 20px 0 0;
     background-color: white;

@@ -22,7 +22,7 @@ export class AppSyncService {
     getVersion(): string {
         const ver = pkg.nativescript.version;
         let verStr = (this.label === undefined || this.label.length === 0) ? ver : ver + `-${this.label}`;
-        verStr += (staging ? "-s3" : "");
+        verStr += (staging ? "-s4" : "");
         verStr += (debug ? " DEBUG" : "");
         return verStr;
     }
