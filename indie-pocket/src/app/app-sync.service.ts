@@ -3,6 +3,7 @@ import {appKey, debug, staging} from "~/lib/global";
 import * as application from "tns-core-modules/application";
 import {AppSync, InstallMode} from "nativescript-app-sync";
 import * as pkg from "../../package.json";
+import {Log} from "~/lib/log";
 
 /**
  * AppsyncService connects to the nativescript-appsync service and adds a 'block' variable
@@ -22,7 +23,7 @@ export class AppSyncService {
     getVersion(): string {
         const ver = pkg.nativescript.version;
         let verStr = (this.label === undefined || this.label.length === 0) ? ver : ver + `-${this.label}`;
-        verStr += (staging ? "-s4" : "");
+        verStr += (staging ? "-s5" : "");
         verStr += (debug ? " DEBUG" : "");
         return verStr;
     }

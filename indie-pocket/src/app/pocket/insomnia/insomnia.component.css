@@ -1,17 +1,6 @@
 /* Add mobile styles for the component here.  */
 
-.zipper4{
-    opacity: 1;
+.locked {
+    opacity: 0.2;
 }
-.zipper3{
-    opacity: 0.75;
-}
-.zipper2{
-    opacity: 0.5;
-}
-.zipper1{
-    opacity: 0.25;
-}
-.zipper0{
-    opacity: 0;
-}
+

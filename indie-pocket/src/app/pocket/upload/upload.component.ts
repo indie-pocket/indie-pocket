@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import Timeout = NodeJS.Timeout;
 import {CollectorService} from "~/app/collector.service";
 import {Page} from "@nativescript/core";
 import {Log} from "~/lib/log";
 import {DataService} from "~/app/data.service";
 import {RouterExtensions} from "@nativescript/angular";
+import Timeout = NodeJS.Timeout;
 
 @Component({
     selector: 'ns-upload',
@@ -12,8 +12,8 @@ import {RouterExtensions} from "@nativescript/angular";
     styleUrls: ['./upload.component.css']
 })
 export class UploadComponent implements OnInit {
-    private progressUpdate: Timeout;
     public uploading = 0;
+    private progressUpdate: Timeout;
 
     constructor(
         private collector: CollectorService,
@@ -26,15 +26,16 @@ export class UploadComponent implements OnInit {
     }
 
     async ngOnInit() {
-        switch(this.collector.recording){
+        switch (this.collector.recording) {
             case 0:
-                return this.router.navigateByUrl("/measure/choose");
+                return this.router.navigateByUrl("/measure/choose",
+                    {clearHistory: true});
             case 2:
-                this.collector.pause();
+                return this.collector.pause();
         }
     }
 
-    async stop(upload: boolean){
+    async stop(upload: boolean) {
         try {
             this.collector.labels.clear();
             await this.collector.stop();
@@ -75,20 +76,17 @@ export class UploadComponent implements OnInit {
         } catch (e) {
             Log.lvl2("no confirmation:", e);
         }
-        return this.router.navigateByUrl("/measure/choose");
+        return this.router.navigateByUrl("/measure/choose",
+            {clearHistory: true});
     }
 
-    async upload(){
+    async upload() {
 
     }
 
-    async continue(){
-        await this.collector.start();
-        if (this.collector.lessClicks) {
-            return this.router.navigateByUrl("/measure/insomnia");
-        } else {
-            return this.router.navigateByUrl("/measure/choose");
-        }
+    async continue() {
+        return this.router.navigateByUrl("/measure/choose",
+            {clearHistory: true});
     }
 
     async abortUpload() {
@@ -97,6 +95,7 @@ export class UploadComponent implements OnInit {
         await alert("Upload cancelled");
         this.collector.time = 0;
         await this.collector.db.clean();
-        return this.router.navigateByUrl("/measure/choose");
+        return this.router.navigateByUrl("/measure/choose",
+            {clearHistory: true});
     }
 }

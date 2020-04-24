@@ -104,7 +104,8 @@ export class DebugComponent implements OnInit {
     async goMeasure() {
         await allowSleepAgain();
         this.stop();
-        this.routerExtensions.navigateByUrl("/");
+        this.routerExtensions.navigateByUrl("/",
+            {clearHistory: true});
     }
 }
 

@@ -1,7 +1,8 @@
 <GridLayout rows="auto, auto, *">
     <StackLayout row="0" orientation="horizontal" class="header-color" style="padding: 25em 5% 0 5%;">
         <StackLayout orientation="horizontal" style="margin-left: 5%;">
-            <Image src="~/samples/icon.png" width="10%" style="margin-right: 30px;"></Image>
+            <Image src="~/samples/icon.png" width="10%" style="margin-right: 30px;"
+            (tap)="goMain()"></Image>
             <StackLayout>
                 <Label text="Indie-Pocket" class="h2"></Label>
                 <Label [text]="version" class="h3"></Label>
@@ -14,7 +15,7 @@
             <StackLayout orientation="horizontal" horizontalAlignment="right">
                 <Label text="Less clicks:" verticalAlignment="middle"></Label>
                 <Switch [checked]="collector.lessClicks"
-                        (checkedChange)="collector.lessClicks = $event.object.checked"
+                        (checkedChange)="collector.setLessClicks($event)"
                         verticalAlignment="middle"></Switch>
             </StackLayout>
         </StackLayout>
@@ -26,8 +27,11 @@
         <StackLayout row="0" col="0"
                      style="margin-left: 5%;">
             <Label textWrap="true" [text]="collector.timeString"></Label>
+            <Label [visibility]="collector.recordedString.length > 0 ? 'visible' : 'collapse'"
+                   textWrap="true" [text]="collector.recordedString"></Label>
             <GridLayout columns="*, auto">
-                <Label col="0" [text]="collector.recording > 0 ? 'RECORDING' : 'NOT RECORDING'"></Label>
+                <Label col="0"
+                       [text]="['NOT RECORDING', 'PAUSE', 'RECORDING'][collector.recording]"></Label>
                 <Label col="1" [class]="collector.flash ? 'recordSmallRed' : 'recordSmallWhite'"></Label>
             </GridLayout>
         </StackLayout>

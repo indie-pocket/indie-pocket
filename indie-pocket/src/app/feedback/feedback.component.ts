@@ -47,7 +47,8 @@ export class FeedbackComponent implements OnInit {
                 title: "Success",
                 okButtonText: "Nice"
             });
-            return this.routerExtensions.navigateByUrl("/main");
+            return this.routerExtensions.navigateByUrl("/main",
+                {clearHistory: true});
         });
         ws.on("error", (_, err) => {
             Log.lvl2("error:", err);
@@ -56,6 +57,7 @@ export class FeedbackComponent implements OnInit {
     }
 
     cancel() {
-        return this.routerExtensions.navigateByUrl("/main");
+        return this.routerExtensions.navigateByUrl("/main",
+            {clearHistory: true});
     }
 }

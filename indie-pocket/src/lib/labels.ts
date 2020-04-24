@@ -1,13 +1,14 @@
 import {DataService} from "~/app/data.service";
 import {gameButtons} from "~/lib/global";
 import {screen} from "@nativescript/core/platform";
+import {Log} from "~/lib/log";
 
 export class Labels {
     public phase: number;
     public placementClasses: string[] = ["", "", "", "", "", "", "", "", "", ""];
     public placementLabels = ['choose',
         'on table', 'in hand', 'against head',
-        'front pocket', 'back pocket', 'front jacket pkt',
+        'pants front pocket', 'pants back pocket', 'jacket front pocket',
         'handbag', 'backpack'
     ];
     public activityClasses: string[] = ["", "", "", "", "", "", "", "", "", "", ""];

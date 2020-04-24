@@ -8,7 +8,7 @@ const lvlStr = ["E ", "W ", "I ", "!4", "!3", "!2", "!1", "P ", " 1", " 2", " 3"
 export class Logger {
 
     lvl: number;
-    stackFrameOffset: number = 0;
+    stackFrameOffset: number = 2;
 
     constructor(lvl: number | undefined) {
         this.lvl = lvl === undefined ? defaultLvl : lvl;
@@ -16,7 +16,7 @@ export class Logger {
 
     out = (...str: string[]) => {
         // tslint:disable-next-line
-        console.log(str.join(" "));
+        console.log(new Date(), str.join(" "));
     }
 
     joinArgs(args: any) {
