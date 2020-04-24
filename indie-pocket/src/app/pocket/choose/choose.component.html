@@ -5,7 +5,7 @@
 
             <GridLayout row="1" columns="*, *, *" rows="*, *, *">
                 <!-- Placement buttons -->
-                <Button [visibility]="collector.labels.tab === 0 ? 'visible' : 'collapse'"
+                <Button [visibility]="tab === 0 ? 'visible' : 'collapse'"
                         *ngFor="let i of zeroToSeven"
                         [col]="i%3" [row]="((i - (i % 3)) / 3 + 2) % 3"
                         [text]="collector.labels.placementLabels[i+1] | titlecase"
@@ -15,7 +15,7 @@
                 ></Button>
 
                 <!-- Action buttons -->
-                <Button [visibility]="collector.labels.tab === 1 ? 'visible' : 'collapse'"
+                <Button [visibility]="tab === 1 ? 'visible' : 'collapse'"
                         *ngFor="let i of zeroToEight"
                         [col]="i%3" [row]="(i - (i % 3)) / 3"
                         [text]="collector.labels.activityLabels[i] | titlecase"

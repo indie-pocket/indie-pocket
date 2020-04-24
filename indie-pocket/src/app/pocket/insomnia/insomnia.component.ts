@@ -3,7 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {allowSleepAgain, keepAwake} from "nativescript-insomnia";
 import {RouterExtensions} from "@nativescript/angular";
 import {CollectorService} from "~/app/collector.service";
-import {debug} from "~/lib/global";
+import {debug, debugOpt} from "~/lib/global";
 import {Image, Page, PanGestureEventData} from "@nativescript/core";
 import {AppSyncService} from "~/app/app-sync.service";
 import {DataService} from "~/app/data.service";
@@ -45,6 +45,7 @@ export class InsomniaComponent implements OnInit {
     }
 
     async ngOnInit() {
+        this.collector.labels.tab = -1;
         this.currentSpeed = "Recording speed is: " + this.data.getKV("speed");
         this.zipperImage = <Image>this.page.getViewById('zipper');
         this.zipperSliderImage = <Image>this.page.getViewById('zipper-slider');
@@ -53,6 +54,10 @@ export class InsomniaComponent implements OnInit {
             this.countdownInterval = setInterval(async () => {
                 this.countdown--;
                 if (this.countdown === 0) {
+                    if (debugOpt.testTab === 2){
+                        this.zipperClear();
+                        return this.leave("choose");
+                    }
                     clearInterval(this.countdownInterval);
                     await this.lock();
                     await this.start();
@@ -113,7 +118,7 @@ export class InsomniaComponent implements OnInit {
                 this.zipperClear();
                 break;
             case 2:
-                if (this.collector.lock) {
+                if (this.collector.lock || this.countdown > 0) {
                     if (args.deltaX < 0) {
                         return;
                     }
@@ -125,7 +130,7 @@ export class InsomniaComponent implements OnInit {
                 }
                 break;
             case 3:
-                if (!this.collector.lock) {
+                if (this.zipperSliderImage.translateX === width) {
                     if (this.collector.lessClicks && this.collector.recording === 2) {
                         return this.leave("upload");
                     } else {
@@ -152,18 +157,9 @@ export class InsomniaComponent implements OnInit {
 
     async leave(path: string) {
         await this.unlock();
-        await allowSleepAgain();
-        clearInterval(this.zipperInterval);
+        this.zipperClear();
         clearInterval(this.countdownInterval);
         return this.routerExtensions.navigateByUrl("/measure/" + path,
             {clearHistory: true});
-    }
-
-    async abortUpload() {
-        clearInterval(this.progressUpdate);
-        await alert("Upload cancelled");
-        this.uploading = -1;
-        this.collector.time = 0;
-        await this.collector.db.clean();
     }
 }

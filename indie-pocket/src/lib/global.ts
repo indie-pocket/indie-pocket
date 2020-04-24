@@ -21,6 +21,7 @@ interface IDebugOpt {
     showDT?: boolean;
     startCheckSleep?: boolean;
     showRecordings?: boolean;
+    testTab?: number;
 }
 export const debugOpt: IDebugOpt = {};
 export const staging = pkg.nativescript.staging;
@@ -31,6 +32,7 @@ if (debug) {
     // debugOpt.showDT = true;
     // debugOpt.startCheckSleep = true;
     // debugOpt.showRecordings = true;
+    debugOpt.testTab = 2;
     Log.lvl = 2;
     serverURL = "ws://192.168.100.1:5678";
     gameButtons = 2;

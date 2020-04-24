@@ -36,15 +36,16 @@
             </GridLayout>
         </StackLayout>
 
-        <StackLayout row="0" col="1" (tap)="collector.labels.tab = 0"
-                     [class]="collector.labels.tab === 0 ? 'choice-active' : 'choice-inactive'">
+        <StackLayout row="0" col="1"
+                     (tap)="setTab(0)"
+                     [class]="tab === 0 ? 'choice-active' : 'choice-inactive'">
             <Label text="PLACEMENT" class="center"></Label>
             <Label [text]="collector.labels.placementLabels[collector.labels.placement] | uppercase"
                    class="tabHeader" textWrap="true"></Label>
         </StackLayout>
         <StackLayout row="0" col="2" horizontalAlignment="left"
-                     (tap)="collector.labels.tab = 1"
-                     [class]="collector.labels.tab === 1 ? 'choice-active' : 'choice-inactive'">
+                     (tap)="setTab(1)"
+                     [class]="tab === 1 ? 'choice-active' : 'choice-inactive'">
             <Label text="ACTION" class="center"></Label>
             <Label [text]="collector.labels.activityLabels[collector.labels.activity] | uppercase"
                    class="tabHeader" textWrap="true"></Label>
@@ -55,15 +56,15 @@
         <Label row="1" colSpan="3"
                class="passage-inactive" style="width: 100%;"></Label>
         <Label row="1" col="1"
-               class="{{ collector.labels.tab === 0 ? 'passage-active' : '' }}">
+               [class]="tab === 0 ? 'passage-active' : ''">
         </Label>
         <Label row="1" col="2" horizontalAlignment="left"
-               class="{{ collector.labels.tab === 1 ? 'passage-active' : '' }}">
+               [class]="tab === 1 ? 'passage-active' : ''">
         </Label>
     </GridLayout>
 
     <StackLayout row="2">
-        <page-router-outlet></page-router-outlet>
+        <router-outlet></router-outlet>
     </StackLayout>
 
 </GridLayout>

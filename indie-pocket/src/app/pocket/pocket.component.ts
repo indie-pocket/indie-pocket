@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {RouterExtensions} from "nativescript-angular/router";
 import {DataService} from "~/app/data.service";
-import {debugOpt} from "~/lib/global";
+import {debug, debugOpt} from "~/lib/global";
 import {AppSyncService} from "~/app/app-sync.service";
 import {CollectorService} from "~/app/collector.service";
 import {EventData, Page} from "@nativescript/core";
@@ -19,6 +19,7 @@ import {Log} from "~/lib/log";
 export class PocketComponent implements OnInit {
     public version: string;
     public loaded = false;
+    public tab = -1;
 
     constructor(
         private routerExtensions: RouterExtensions,
@@ -33,6 +34,10 @@ export class PocketComponent implements OnInit {
 
     async ngOnInit() {
         this.appsync.block = false;
+        setInterval(()=>{
+            this.tab = this.collector.labels.tab;
+        }, 500);
+
         if (debugOpt.showDT) {
             this.collector.labels.setPlacement(1);
             this.collector.labels.setActivity(1);
@@ -42,6 +47,21 @@ export class PocketComponent implements OnInit {
                 this.collector.db.clean();
             }, 1000);
         }
+        if (debugOpt.testTab === 1){
+            let counter = 0;
+            setInterval(()=>{
+                if (counter++ % 2 === 0){
+                    this.setTab(0);
+                } else {
+                    this.setTab(1);
+                }
+            }, 750);
+        }
+    }
+
+    setTab(t: number){
+        this.collector.labels.tab = t;
+        this.tab = t;
     }
 
     async goMain() {
