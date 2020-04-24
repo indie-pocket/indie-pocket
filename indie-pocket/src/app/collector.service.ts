@@ -4,6 +4,7 @@ import {DataBase} from "~/lib/database";
 import {DataService} from "~/app/data.service";
 import {Log} from "~/lib/log";
 import {Labels} from "~/lib/labels";
+import {EventData, Switch} from "@nativescript/core";
 
 @Injectable({
     providedIn: 'root'
@@ -15,11 +16,12 @@ export class CollectorService {
     public labels: Labels;
     public db: DataBase;
     public timeString: string;
-    public recordedString: string;
+    public recordedString = "";
     public rowString: string;
     public recording = 0;
     public flash: boolean;
     public lessClicks = false;
+    public lock = false;
     private data: DataService;
 
     constructor() {
@@ -29,6 +31,8 @@ export class CollectorService {
         this.data = data;
         this.labels = new Labels(data);
         this.db = await DataBase.createDB(this.labels, await this.data.getKV("iid"), version);
+        this.lessClicks = this.data.getKV("lessClicks") === "true";
+
         setInterval(async () => {
             const tt = this.data.getTime(0);
             const rows = await this.db.count();
@@ -47,6 +51,17 @@ export class CollectorService {
                 this.flash = !this.flash;
             }
         }, 1000);
+    }
+
+    async setLessClicks(e: EventData){
+        const sw = <Switch>e.object;
+        const lc = sw.checked;
+        if (this.recording === 0) {
+            this.lessClicks = lc;
+            return this.data.setKV("lessClicks", lc ? "true" : "false");
+        } else {
+            sw.checked = this.lessClicks;
+        }
     }
 
     async start() {

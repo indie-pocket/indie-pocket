@@ -4,9 +4,9 @@ import {RouterExtensions} from "nativescript-angular/router";
 import {randomBytes} from "crypto-browserify";
 import {AppSyncService} from "~/app/app-sync.service";
 import {Log} from "~/lib/log";
-import {debugOpt} from "~/lib/global";
 import {alert} from "tns-core-modules/ui/dialogs";
 import {isAndroid, Page} from "@nativescript/core";
+import {CollectorService} from "~/app/collector.service";
 
 /**
  * MainComponent initializes the dataService and makes sure that the first scren is only showed
@@ -26,6 +26,7 @@ export class MainComponent implements OnInit {
         private routerExtensions: RouterExtensions,
         private appsync: AppSyncService,
         private page: Page,
+        private collector: CollectorService,
     ) {
         if (isAndroid) {
             this.page.actionBarHidden = true;
@@ -59,7 +60,8 @@ export class MainComponent implements OnInit {
 
         if (this.data.getKV("again") === "true") {
             Log.lvl1("going measure");
-            return this.routerExtensions.navigateByUrl("/measure/choose");
+            return this.routerExtensions.navigateByUrl("/measure/choose",
+                {clearHistory: true});
         } else {
             Log.lvl1("setting again to true");
             await this.data.setKV("again", "true");
@@ -67,6 +69,7 @@ export class MainComponent implements OnInit {
     }
 
     goDebug() {
-        this.routerExtensions.navigateByUrl("/debug");
+        this.routerExtensions.navigateByUrl("/debug",
+            {clearHistory: true});
     }
 }

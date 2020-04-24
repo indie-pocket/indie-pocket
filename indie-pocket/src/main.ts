@@ -1,10 +1,19 @@
 // this import should be first in order to load some required settings (like globals and reflect-metadata)
 import {platformNativeScriptDynamic} from "nativescript-angular/platform";
-import {ios} from "tns-core-modules/application";
+import {on, discardedErrorEvent, ios} from "tns-core-modules/application";
 import {isIOS} from "tns-core-modules/platform";
 
 import {AppModule} from "./app/app.module";
 import {Log} from "~/lib/log";
+
+on(discardedErrorEvent, function (args) {
+    console.log("error");
+    console.log(args);
+    console.log(args.message);
+    console.log(args.stackTrace);
+    console.log(args.nativeException);
+    //report the exception in your analytics solution here
+});
 
 if (isIOS) {
     class CustomAppDelegate extends UIResponder implements UIApplicationDelegate {

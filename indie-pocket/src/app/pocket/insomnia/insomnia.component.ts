@@ -1,5 +1,5 @@
 import {alert} from "tns-core-modules/ui/dialogs";
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {allowSleepAgain, keepAwake} from "nativescript-insomnia";
 import {RouterExtensions} from "@nativescript/angular";
 import {CollectorService} from "~/app/collector.service";
@@ -8,6 +8,7 @@ import {Image, Page, PanGestureEventData} from "@nativescript/core";
 import {AppSyncService} from "~/app/app-sync.service";
 import {DataService} from "~/app/data.service";
 import {screen} from "@nativescript/core/platform";
+import {capitalizationType} from "@nativescript/core/ui/dialogs";
 
 @Component({
     selector: 'ns-insomnia',
@@ -38,7 +39,6 @@ export class InsomniaComponent implements OnInit {
     ) {
         this.version = appsync.getVersion();
         this.page.actionBarHidden = true;
-        this.collector.labels.tab = -1;
     }
 
     get zero(): boolean {
@@ -46,20 +46,35 @@ export class InsomniaComponent implements OnInit {
     }
 
     async ngOnInit() {
+        // this.collector.labels.tab = -1;
         this.currentSpeed = "Recording speed is: " + this.data.getKV("speed");
-        await keepAwake();
+        this.zipperImage = <Image>this.page.getViewById('zipper');
+        this.zipperSliderImage = <Image>this.page.getViewById('zipper-slider');
         if (this.collector.recording !== 2) {
-            this.countdown = debug ? 2 : 5;
-            this.countdownInterval = setInterval(() => {
+            this.countdown = debug ? 1 : 5;
+            this.countdownInterval = setInterval(async () => {
                 this.countdown--;
                 if (this.countdown === 0) {
                     clearInterval(this.countdownInterval);
-                    this.start();
+                    await this.lock();
+                    await this.start();
                 }
             }, 1000);
+        } else {
+            await this.lock();
         }
-        this.zipperImage = <Image>this.page.getViewById('zipper');
-        this.zipperSliderImage = <Image>this.page.getViewById('zipper-slider');
+    }
+
+    async lock() {
+        this.collector.lock = true;
+        this.appsync.block = true;
+        await keepAwake();
+    }
+
+    async unlock() {
+        this.collector.lock = false;
+        this.appsync.block = false;
+        await allowSleepAgain();
     }
 
     reset() {
@@ -67,12 +82,11 @@ export class InsomniaComponent implements OnInit {
     }
 
     async start() {
-        this.appsync.block = true;
         if (!this.collector.labels.active || this.collector.recording === 2) {
             return;
         }
         await this.collector.start();
-        this.zipperBlink()
+        this.zipperBlink();
     }
 
     zipperBlink() {
@@ -94,9 +108,6 @@ export class InsomniaComponent implements OnInit {
     }
 
     async unzip(args: PanGestureEventData) {
-        if (this.collector.recording !== 2) {
-            return;
-        }
         const width = (this.zipperImage.getMeasuredWidth() - this.zipperSliderImage.getMeasuredWidth()) /
             screen.mainScreen.scale;
         switch (args.state) {
@@ -108,7 +119,7 @@ export class InsomniaComponent implements OnInit {
                     return;
                 }
                 if (args.deltaX > width) {
-                    if (this.collector.lessClicks) {
+                    if (this.collector.lessClicks && this.collector.recording === 2) {
                         return this.leave("upload");
                     } else {
                         return this.leave("choose");
@@ -135,18 +146,13 @@ export class InsomniaComponent implements OnInit {
         return this.collector.pause();
     }
 
-    async stop() {
-        if (this.collector.recording === 0) {
-            return;
-        }
-
-        return this.leave("choose");
-    }
-
-    async leave(path: string){
+    async leave(path: string) {
+        await this.unlock();
         await allowSleepAgain();
         clearInterval(this.zipperInterval);
-        return this.routerExtensions.navigateByUrl("/measure/" + path);
+        clearInterval(this.countdownInterval);
+        return this.routerExtensions.navigateByUrl("/measure/" + path,
+            {clearHistory: true});
     }
 
     async abortUpload() {

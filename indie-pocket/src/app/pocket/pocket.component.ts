@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {RouterExtensions} from "nativescript-angular/router";
-import {action, alert} from "tns-core-modules/ui/dialogs";
 import {DataService} from "~/app/data.service";
 import {debugOpt} from "~/lib/global";
 import {AppSyncService} from "~/app/app-sync.service";
@@ -46,14 +45,10 @@ export class PocketComponent implements OnInit {
     }
 
     async goMain() {
-        if (this.collector.recording > 0) {
-            return alert({
-                title: "Still Recording",
-                message: "Please stop recording before going to the main page"
-            })
-        } else {
+        if (this.collector.recording === 0) {
             await this.data.setKV("again", "false");
-            return this.routerExtensions.navigateByUrl("/");
+            return this.routerExtensions.navigateByUrl("/",
+                {clearHistory: true});
         }
     }
 }

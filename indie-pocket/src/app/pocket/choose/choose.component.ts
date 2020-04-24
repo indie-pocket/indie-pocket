@@ -35,7 +35,8 @@ export class ChooseComponent implements OnInit {
 
     async start() {
         if (this.collector.lessClicks){
-            return this.routerExtensions.navigateByUrl("/measure/insomnia");
+            return this.routerExtensions.navigateByUrl("/measure/insomnia",
+                {clearHistory: true});
         } else {
             this.collector.start();
         }
@@ -47,13 +48,15 @@ export class ChooseComponent implements OnInit {
 
     async goLock(){
         if (this.collector.recording === 2) {
-            return this.routerExtensions.navigateByUrl("/measure/insomnia");
+            return this.routerExtensions.navigateByUrl("/measure/insomnia",
+                {clearHistory: true});
         }
     }
 
     async stop(){
         if (this.collector.recording > 0) {
-            return this.routerExtensions.navigateByUrl("/measure/upload");
+            return this.routerExtensions.navigateByUrl("/measure/upload",
+                {clearHistory: true});
         }
     }
 }
