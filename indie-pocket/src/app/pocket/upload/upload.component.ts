@@ -22,7 +22,6 @@ export class UploadComponent implements OnInit {
         private router: RouterExtensions,
     ) {
         this.page.actionBarHidden = true;
-        this.collector.labels.tab = -1;
     }
 
     async ngOnInit() {

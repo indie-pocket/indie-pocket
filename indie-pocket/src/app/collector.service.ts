@@ -31,7 +31,7 @@ export class CollectorService {
         this.data = data;
         this.labels = new Labels(data);
         this.db = await DataBase.createDB(this.labels, await this.data.getKV("iid"), version);
-        this.lessClicks = this.data.getKV("lessClicks") === "true";
+        this.lessClicks = this.data.getKV("lessClicks") !== "false";
 
         setInterval(async () => {
             const tt = this.data.getTime(0);

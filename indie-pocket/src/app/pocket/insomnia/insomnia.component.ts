@@ -8,7 +8,6 @@ import {Image, Page, PanGestureEventData} from "@nativescript/core";
 import {AppSyncService} from "~/app/app-sync.service";
 import {DataService} from "~/app/data.service";
 import {screen} from "@nativescript/core/platform";
-import {capitalizationType} from "@nativescript/core/ui/dialogs";
 
 @Component({
     selector: 'ns-insomnia',
@@ -46,7 +45,6 @@ export class InsomniaComponent implements OnInit {
     }
 
     async ngOnInit() {
-        // this.collector.labels.tab = -1;
         this.currentSpeed = "Recording speed is: " + this.data.getKV("speed");
         this.zipperImage = <Image>this.page.getViewById('zipper');
         this.zipperSliderImage = <Image>this.page.getViewById('zipper-slider');
@@ -115,19 +113,25 @@ export class InsomniaComponent implements OnInit {
                 this.zipperClear();
                 break;
             case 2:
-                if (args.deltaX < 0) {
-                    return;
+                if (this.collector.lock) {
+                    if (args.deltaX < 0) {
+                        return;
+                    }
+                    if (args.deltaX > width) {
+                        await this.unlock();
+                        args.deltaX = width;
+                    }
+                    this.zipperSliderImage.translateX = args.deltaX;
                 }
-                if (args.deltaX > width) {
+                break;
+            case 3:
+                if (!this.collector.lock) {
                     if (this.collector.lessClicks && this.collector.recording === 2) {
                         return this.leave("upload");
                     } else {
                         return this.leave("choose");
                     }
                 }
-                this.zipperSliderImage.translateX = args.deltaX;
-                break;
-            case 3:
                 this.zipperSliderImage.translateX = 0;
                 this.zipperBlink();
                 break;
