@@ -33,3 +33,4 @@ typings/
 !.vscode/extensions.json
 releases/
 *.asv
+.MATLABDriveTag
