@@ -131,15 +131,19 @@ for i = 1:length(all_bin)
     end
 end
 Z = Z'; %Doing this in the loop makes it much slower...
+B = mean(Z);
+
 
 % aZ = abs(Z);
 % aZ = find(isnan(aZ));
-[coeff,PCs,latent]= pca(abs(Z), 'Centered', false);
+[coeff,PCs,~,~,~,muZ]= pca(abs(Z), 'Centered', true);
 
 %% 7.1 check projection
 PCs_red = PCs(:,1:7);
 coeff_red = coeff(:,1:7);
-PCs_red2 = abs(Z)*coeff_red;
+PCs_red2 = (abs(Z)-muZ)*coeff_red;
+
+mean2(PCs_red-PCs_red2) % Must be very small if both projections are identical
 
 %% 7.2 Example for new datapoint
 
@@ -149,7 +153,7 @@ newfU = fft(newU); % The FFT happens along the columns
 
 newV = newfU(:); % Resize matrix in one single line vector V
 
-newPCs = newV * coeff_red; % Project on PC space
+newPCs = (abs(newV')-muZ) * coeff_red; % Project on PC space
 
 %% 8.1 Structure training data
 all_binT = table(PCs(:,1), PCs(:,2), PCs(:,3));
@@ -175,7 +179,7 @@ CVMdl = crossval(Mdl);
 kloss = kfoldLoss(CVMdl)
 
 %% Export model data
-save("Bethy Barnes", "X", "coeff_red");
+save("Bethy Barnes", "X", "coeff_red", "muZ");
 
 
 %% 9. Plot PCA
