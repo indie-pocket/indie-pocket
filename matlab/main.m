@@ -134,8 +134,22 @@ Z = Z'; %Doing this in the loop makes it much slower...
 
 % aZ = abs(Z);
 % aZ = find(isnan(aZ));
-[coeff,PCs,latent]= pca(abs(Z));
+[coeff,PCs,latent]= pca(abs(Z), 'Centered', false);
 
+%% 7.1 check projection
+PCs_red = PCs(:,1:7);
+coeff_red = coeff(:,1:7);
+PCs_red2 = abs(Z)*coeff_red;
+
+%% 7.2 Example for new datapoint
+
+newU = rand(2501,3); % x, y, and z components are in columns
+
+newfU = fft(newU); % The FFT happens along the columns
+
+newV = newfU(:); % Resize matrix in one single line vector V
+
+newPCs = newV * coeff_red; % Project on PC space
 
 %% 8.1 Structure training data
 all_binT = table(PCs(:,1), PCs(:,2), PCs(:,3));
