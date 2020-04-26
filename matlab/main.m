@@ -157,29 +157,15 @@ resp = [all_bin.label];
 
 % Construct dataset with different types of features for use by the
 % "Classification learner" toolbox.
-X = all_binT;
-X.resp = resp';
 
-X2 = all_binT;
-X2.resp = mod(resp, 10)';
-
-% X3 = array2table(abs(Z)');
-% X3.resp = resp';
-
-X4 = array2table(PCs);
-X4.resp = resp';
-
-X5 = array2table(PCs);
-X5.resp = mod(resp, 10)';
-
-X6 = array2table(PCs(:,1:7));
-X6.resp = mod(resp, 10)';
+X = array2table(PCs(:,1:7));
+X.resp = mod(resp, 10)';
 
 
 
 %% 8.2 Create model
 
-Mdl = fitcknn(all_binT, [all_bin.label]);
+Mdl = fitcknn(all_binT, resp);
 
 % Optional: modifiy number of neighbors
 % Mdl.NumNeighbors = 2;
@@ -188,22 +174,14 @@ Mdl = fitcknn(all_binT, [all_bin.label]);
 CVMdl = crossval(Mdl);
 kloss = kfoldLoss(CVMdl)
 
+%% Export model data
+save("Bethy Barnes", "X", "coeff_red");
+
 
 %% 9. Plot PCA
 if ~exist('colors', 'var')
     run('generate_random_colors.m');
 end
-
-% % First two PCs
-% figure(300); clf; hold on
-% for i = 1:length(all_bin)
-%     scatter(PCs(i,1),PCs(i,2), 'MarkerFaceColor', colors{all_bin(i).label},...
-%                                'MarkerEdgeColor', colors{mod(all_bin(i).IID, 120)},...
-%                                'LineWidth', 0.05);
-%     
-% end
-% xlabel('PC1')
-% ylabel('PC2')
 
 % 3D scatter of first 3 PCs
 figure(301); clf; hold on
@@ -248,6 +226,7 @@ end
 xlim([-0.2 3])
 ylim([-9 0])
 axis off
+
 
 
 %% 10. Show bins stats
