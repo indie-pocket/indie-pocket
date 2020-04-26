@@ -1,3 +1,10 @@
+1.0.0
+    - current stable release
+
+0.6.5
+    - Removed 'nice' angular modular UI, because it was crashing randomly :(
+    - added 'lessClick' slider for easier use
+
 0.6.4
     - UI according to Julien
     - split in different screens
