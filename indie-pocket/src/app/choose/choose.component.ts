@@ -89,7 +89,9 @@ export class ChooseComponent implements OnInit {
     }
 
     async goMain() {
-        await this.data.setKV("again", "false");
-        return this.leave("/");
+        if (this.collector.recording === 0) {
+            await this.data.setKV("again", "false");
+            return this.leave("/");
+        }
     }
 }
