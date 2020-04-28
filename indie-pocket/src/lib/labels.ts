@@ -18,7 +18,6 @@ export class Labels {
     public placement: number;
     public activity: number;
     public active: boolean;
-    public tab: number;
 
     constructor(private data: DataService) {
         this.clear();

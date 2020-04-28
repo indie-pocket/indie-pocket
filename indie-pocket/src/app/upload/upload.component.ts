@@ -5,6 +5,7 @@ import {Log} from "~/lib/log";
 import {DataService} from "~/app/data.service";
 import {RouterExtensions} from "@nativescript/angular";
 import Timeout = NodeJS.Timeout;
+import {AppSyncService} from "~/app/app-sync.service";
 
 @Component({
     selector: 'ns-upload',
@@ -14,20 +15,23 @@ import Timeout = NodeJS.Timeout;
 export class UploadComponent implements OnInit {
     public uploading = 0;
     private progressUpdate: Timeout;
+    public version: string;
 
     constructor(
         private collector: CollectorService,
         private page: Page,
         private data: DataService,
         private router: RouterExtensions,
+        private appSync: AppSyncService,
     ) {
         this.page.actionBarHidden = true;
+        this.version = appSync.getVersion();
     }
 
     async ngOnInit() {
         switch (this.collector.recording) {
             case 0:
-                return this.router.navigateByUrl("/measure/choose",
+                return this.router.navigateByUrl("/choose",
                     {clearHistory: true});
             case 2:
                 return this.collector.pause();
@@ -75,7 +79,7 @@ export class UploadComponent implements OnInit {
         } catch (e) {
             Log.lvl2("no confirmation:", e);
         }
-        return this.router.navigateByUrl("/measure/choose",
+        return this.router.navigateByUrl("/choose",
             {clearHistory: true});
     }
 
@@ -84,7 +88,7 @@ export class UploadComponent implements OnInit {
     }
 
     async continue() {
-        return this.router.navigateByUrl("/measure/choose",
+        return this.router.navigateByUrl("/choose",
             {clearHistory: true});
     }
 
@@ -94,7 +98,7 @@ export class UploadComponent implements OnInit {
         await alert("Upload cancelled");
         this.collector.time = 0;
         await this.collector.db.clean();
-        return this.router.navigateByUrl("/measure/choose",
+        return this.router.navigateByUrl("/choose",
             {clearHistory: true});
     }
 }

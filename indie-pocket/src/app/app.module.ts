@@ -7,10 +7,9 @@ import { MainComponent } from './main/main.component';
 import { DebugComponent } from './debug/debug.component';
 import {NativeScriptUIChartModule} from "nativescript-ui-chart/angular";
 import { FeedbackComponent } from './feedback/feedback.component';
-import {PocketComponent} from "~/app/pocket/pocket.component";
-import {InsomniaComponent} from "~/app/pocket/insomnia/insomnia.component";
-import {ChooseComponent} from "~/app/pocket/choose/choose.component";
-import {UploadComponent} from "~/app/pocket/upload/upload.component";
+import {InsomniaComponent} from "~/app/insomnia/insomnia.component";
+import {ChooseComponent} from "~/app/choose/choose.component";
+import {UploadComponent} from "~/app/upload/upload.component";
 
 // Uncomment and add to NgModule imports if you need to use two-way binding
 // import { NativeScriptFormsModule } from "nativescript-angular/forms";
@@ -30,7 +29,6 @@ import {UploadComponent} from "~/app/pocket/upload/upload.component";
     declarations: [
         AppComponent,
         MainComponent,
-        PocketComponent,
         DebugComponent,
         FeedbackComponent,
         InsomniaComponent,

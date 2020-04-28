@@ -1,0 +1,127 @@
+<GridLayout rows="auto, auto, *">
+    <StackLayout row="0" orientation="horizontal" class="header-color" style="padding: 25em 5% 0 5%;">
+        <StackLayout orientation="horizontal" style="margin-left: 5%;">
+            <Image src="~/samples/icon.png" width="10%" style="margin-right: 30px;"
+                   (tap)="goMain()"></Image>
+            <StackLayout>
+                <Label text="Indie-Pocket" class="h2"></Label>
+                <Label [text]="version" class="h3"></Label>
+            </StackLayout>
+        </StackLayout>
+        <StackLayout style="text-align: right;" width="100%">
+            <Label horizontalAlignment="right" style="margin-right: 5%;"
+                   class="debug"
+                   [text]="collector.rowString"></Label>
+            <StackLayout orientation="horizontal" horizontalAlignment="right">
+                <Label text="Less clicks:" verticalAlignment="middle"></Label>
+                <Switch [checked]="collector.lessClicks"
+                        (checkedChange)="collector.setLessClicks($event)"
+                        verticalAlignment="middle"></Switch>
+            </StackLayout>
+        </StackLayout>
+    </StackLayout>
+
+    <GridLayout row="1" columns="*, *, *" rows="auto, auto">
+        <!-- Recording - Placement-Tab - Action-Tab -->
+        <StackLayout row="0" colSpan="3" class="header-color"></StackLayout>
+        <StackLayout row="0" col="0"
+                     style="margin-left: 5%;">
+            <Label textWrap="true" [text]="collector.timeString"></Label>
+            <Label [visibility]="collector.recordedString.length > 0 ? 'visible' : 'collapse'"
+                   textWrap="true" [text]="collector.recordedString"></Label>
+            <GridLayout columns="*, auto">
+                <Label col="0"
+                       [text]="['NOT RECORDING', 'PAUSE', 'RECORDING'][collector.recording]"></Label>
+                <Label col="1" [class]="collector.flash ? 'recordSmallRed' : 'recordSmallWhite'"></Label>
+            </GridLayout>
+        </StackLayout>
+
+        <StackLayout row="0" col="1"
+                     (tap)="tab = 0"
+                     [class]="tab === 0 ? 'choice-active' : 'choice-inactive'">
+            <Label text="PLACEMENT" class="center"></Label>
+            <Label [text]="collector.labels.placementLabels[collector.labels.placement] | uppercase"
+                   class="tabHeader" textWrap="true"></Label>
+        </StackLayout>
+        <StackLayout row="0" col="2" horizontalAlignment="left"
+                     (tap)="tab = 1"
+                     [class]="tab === 1 ? 'choice-active' : 'choice-inactive'">
+            <Label text="ACTION" class="center"></Label>
+            <Label [text]="collector.labels.activityLabels[collector.labels.activity] | uppercase"
+                   class="tabHeader" textWrap="true"></Label>
+        </StackLayout>
+
+        <!-- Dashed line - eventual overlap from tab -->
+        <Image row="1" colSpan="3" src="~/samples/dotted.png"></Image>
+        <Label row="1" colSpan="3"
+               class="passage-inactive" style="width: 100%;"></Label>
+        <Label row="1" col="1"
+               [class]="tab === 0 ? 'passage-active' : ''">
+        </Label>
+        <Label row="1" col="2" horizontalAlignment="left"
+               [class]="tab === 1 ? 'passage-active' : ''">
+        </Label>
+    </GridLayout>
+
+    <!-- This is the pocket -->
+    <StackLayout row="2">
+        <GridLayout rows="*, auto">
+            <GridLayout row="0" rows="*, auto">
+                <GridLayout row="0" rows="auto, *" class="pocket">
+                    <Image row="0" src="~/samples/dotted.png"></Image>
+
+                    <GridLayout row="1" columns="*, *, *" rows="*, *, *"
+                                [visibility]="tab === 0 ? 'visible' : 'collapse'">
+                        <!-- Placement buttons -->
+                        <Button *ngFor="let i of zeroToSeven"
+                                [col]="i%3" [row]="((i - (i % 3)) / 3 + 2) % 3"
+                                [text]="collector.labels.placementLabels[i+1] | titlecase"
+                                (tap)="setPlacement(i+1)"
+                                [class]="collector.labels.placementClasses[i+1]"
+                                textWrap="true"
+                        ></Button>
+                    </GridLayout>
+
+                    <GridLayout row="1" columns="*, *, *" rows="*, *, *"
+                                [visibility]="tab === 1 ? 'visible' : 'collapse'">
+                        <!-- Action buttons -->
+                        <Button *ngFor="let i of zeroToEight"
+                                [col]="i%3" [row]="(i - (i % 3)) / 3"
+                                [text]="collector.labels.activityLabels[i] | titlecase"
+                                (tap)="collector.labels.setActivity(i)"
+                                [class]="collector.labels.activityClasses[i]"
+                                textWrap="true"
+                        ></Button>
+                    </GridLayout>
+
+                </GridLayout>
+
+                <Image row="1" src="~/samples/bottom_pocket.png" class="pocket-bottom"></Image>
+
+            </GridLayout>
+
+            <!-- Lock / Record / Stop -->
+            <GridLayout row="1" width="60%" columns="*, *, *" marginTop="3%" marginBottom="2%"
+                        [visibility]="collector.lessClicks ? 'collapse' : 'visible'">
+                <Image row="0" col="0" src="~/samples/icon-lock.png" class="button-bottom"
+                       (tap)="goLock()"></Image>
+                <Label row="0" col="1" horizontalAlignment="center"
+                       [visibility]="collector.recording < 2 ? 'visible' : 'collapse'"
+                       class="recordWhite"></Label>
+                <Label row="0" col="1" horizontalAlignment="center"
+                       [visibility]="collector.recording < 2 ? 'visible' : 'collapse'"
+                       (tap)="start()"
+                       [visibility]="collector.labels.active ? 'visible' : 'collapse'"
+                       class="recordRed"></Label>
+                <Image row="0" col="1" src="~/samples/icon-pause.png"
+                       [visibility]="collector.recording === 2 ? 'visible' : 'collapse'"
+                       (tap)="pause()"
+                       class="button-bottom-center"></Image>
+                <Image row="0" col="2" src="~/samples/icon-stop.png" class="button-bottom"
+                       (tap)="stop()"></Image>
+            </GridLayout>
+        </GridLayout>
+    </StackLayout>
+    <!-- End of pocket -->
+
+</GridLayout>

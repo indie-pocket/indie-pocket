@@ -1,4 +1,3 @@
-import {alert} from "tns-core-modules/ui/dialogs";
 import {Component, OnInit} from '@angular/core';
 import {allowSleepAgain, keepAwake} from "nativescript-insomnia";
 import {RouterExtensions} from "@nativescript/angular";
@@ -23,7 +22,6 @@ export class InsomniaComponent implements OnInit {
     public uploading = 0;
 
     private countdownInterval;
-    private progressUpdate;
     private zipperInterval;
     private zipperCounter = Math.PI;
     private zipperSliderImage: Image;
@@ -33,10 +31,10 @@ export class InsomniaComponent implements OnInit {
         private routerExtensions: RouterExtensions,
         public collector: CollectorService,
         private page: Page,
-        private appsync: AppSyncService,
+        private appSync: AppSyncService,
         private data: DataService,
     ) {
-        this.version = appsync.getVersion();
+        this.version = appSync.getVersion();
         this.page.actionBarHidden = true;
     }
 
@@ -45,7 +43,6 @@ export class InsomniaComponent implements OnInit {
     }
 
     async ngOnInit() {
-        this.collector.labels.tab = -1;
         this.currentSpeed = "Recording speed is: " + this.data.getKV("speed");
         this.zipperImage = <Image>this.page.getViewById('zipper');
         this.zipperSliderImage = <Image>this.page.getViewById('zipper-slider');
@@ -56,7 +53,7 @@ export class InsomniaComponent implements OnInit {
                 if (this.countdown === 0) {
                     if (debugOpt.testTab === 2){
                         this.zipperClear();
-                        return this.leave("choose");
+                        return this.leave("/choose");
                     }
                     clearInterval(this.countdownInterval);
                     await this.lock();
@@ -70,13 +67,13 @@ export class InsomniaComponent implements OnInit {
 
     async lock() {
         this.collector.lock = true;
-        this.appsync.block = true;
+        this.appSync.block = true;
         await keepAwake();
     }
 
     async unlock() {
         this.collector.lock = false;
-        this.appsync.block = false;
+        this.appSync.block = false;
         await allowSleepAgain();
     }
 
@@ -132,9 +129,9 @@ export class InsomniaComponent implements OnInit {
             case 3:
                 if (this.zipperSliderImage.translateX === width) {
                     if (this.collector.lessClicks && this.collector.recording === 2) {
-                        return this.leave("upload");
+                        return this.leave("/upload");
                     } else {
-                        return this.leave("choose");
+                        return this.leave("/choose");
                     }
                 }
                 this.zipperSliderImage.translateX = 0;
@@ -159,7 +156,7 @@ export class InsomniaComponent implements OnInit {
         await this.unlock();
         this.zipperClear();
         clearInterval(this.countdownInterval);
-        return this.routerExtensions.navigateByUrl("/measure/" + path,
+        return this.routerExtensions.navigateByUrl(path,
             {clearHistory: true});
     }
 }

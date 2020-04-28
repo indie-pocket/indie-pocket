@@ -42,6 +42,24 @@ Button.-primary {
     text-align: center;
 }
 
+.debug {
+    color: #888888;
+}
+
+.recordSmallWhite {
+    width: 10em;
+    height: 10em;
+    border-radius: 5em;
+    background-color: gray;
+}
+
+.recordSmallRed {
+    width: 10em;
+    height: 10em;
+    border-radius: 5em;
+    background-color: red;
+}
+
 .choice-active {
     border-width: 12px 12px 0 12px;
     border-color: black;
