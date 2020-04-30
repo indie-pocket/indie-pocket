@@ -1,0 +1,3 @@
+[submodule "classify-app/app/src/main/cpp/eigen"]
+	path = classify-app/app/src/main/cpp/eigen
+	url = git@gitlab.com:libeigen/eigen.git

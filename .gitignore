@@ -33,4 +33,10 @@ typings/
 !.vscode/extensions.json
 releases/
 *.asv
+
+# MATLAB
 .MATLABDriveTag
+
+# Qt Creator compilation files
+build-*-Debug/
+build-*-Release/
