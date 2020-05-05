@@ -1,4 +1,4 @@
-package net.romainbaud.indiepockettest;
+package ch.epfl.indiepocket.classifier;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -23,21 +23,8 @@ import androidx.core.app.TaskStackBuilder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AnalysisService extends Service {

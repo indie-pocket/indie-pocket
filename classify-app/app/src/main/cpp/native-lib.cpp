@@ -11,7 +11,7 @@ vector<double> fromJavaArray(jdoubleArray array, JNIEnv* env);
 Classifier classifier;
 
 extern "C" JNIEXPORT void JNICALL
-Java_net_romainbaud_indiepockettest_AnalysisService_setTrainingData(
+Java_ch_epfl_indiepocket_classifier_AnalysisService_setTrainingData(
         JNIEnv* env,
         jobject /* this */,
         jstring calibFileContent) {
@@ -24,7 +24,7 @@ Java_net_romainbaud_indiepockettest_AnalysisService_setTrainingData(
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_net_romainbaud_indiepockettest_AnalysisService_classify(
+Java_ch_epfl_indiepocket_classifier_AnalysisService_classify(
         JNIEnv* env,
         jobject /* this */,
         jdoubleArray axSignal,
